@@ -22,12 +22,3 @@ class Posicion:
         assert type(x) == int, "type(x) debe ser int"
         assert type(y) == str, "type(y) debe ser str"
         assert len(y) == 1, "y debe ser una cadena de un solo caracter"
-
-posiciones = [Posicion(1, 12), Posicion(1, 'c'), Posicion(1, 'd'), Posicion(1, 'e')]
-
-hola = (1, 'g')
-
-print(Posicion(1, 'g') == (1, 'g'))
-print(hola in posiciones)
-
-print(posiciones[1].get_posicion())
