@@ -3,14 +3,14 @@ class Posicion:
         
     """
 
-    def __init__(self, x, y):
+    def __init__(self, y, x):
         self.verificar_formato(x, y)
 
         self.x = x
         self.y = y.upper()
 
     def get_posicion(self):
-        return self.x, self.y
+        return self.y, self.x
 
     def __eq__(self, other):
         assert type(other) == tuple, "No es posible comparar una Posicion con otro objeto"
