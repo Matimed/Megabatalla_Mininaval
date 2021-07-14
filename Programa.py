@@ -15,7 +15,7 @@ class Programa:
         self.tableros = []
         [self.tableros.append(Tablero(self.posiciones, cant_barcos)) for i in range(2)]
         self.jugadores = []
-        [self.jugadores.append(Jugador(self, self.tableros[i])) for i in range(2)]
+        [self.jugadores.append(Jugador(self.tableros[i], self)) for i in range(2)]
 
     def validar_posicion(self, y, x):
         return (y, x) in self.posiciones
