@@ -12,14 +12,16 @@ class Programa:
             [self.posiciones.append(Posicion(string.ascii_uppercase[i], x)) for x in range(cant_filas)]
 
         cant_barcos = 8
-        self.tableros = [Tablero(self.posiciones, cant_barcos), Tablero(self.posiciones, cant_barcos)]
-        self.jugadores = [Jugador(self, self.tableros[0]), Jugador(self, self.tableros[1])]
+        self.tableros = []
+        [self.tableros.append(Tablero(self.posiciones, cant_barcos)) for i in range(2)]
+        self.jugadores = []
+        [self.jugadores.append(Jugador(self, self.tableros[i])) for i in range(2)]
 
     def validar_posicion(self, y, x):
         return (y, x) in self.posiciones
 
     def traducir_posicion(self, y, x):
-        return self.posiciones.index((y, x))
+        return self.posiciones[self.posiciones.index((y, x))]
 
     def juego(self):
         for jugador in self.jugadores:
