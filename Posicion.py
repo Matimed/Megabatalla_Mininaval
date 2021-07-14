@@ -23,3 +23,6 @@ class Posicion:
         assert type(x) == int, "'x' debe ser int"
         assert type(y) == str, "'y' debe ser str"
         assert len(y) == 1, "'y' debe ser una cadena de un solo caracter"
+
+    def __repr__(self):
+        return f"({self.y}, {self.x})"
