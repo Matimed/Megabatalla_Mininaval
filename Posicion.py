@@ -1,6 +1,6 @@
 class Posicion:
     """ Sistema de coordenadas que utiliza la notacion 'x', 'y'
-        para representar una ubicacion particular 
+        para representar univocamente una ubicacion particular 
         en cualquier instancia de Tablero. """
 
     def __init__(self, y, x):
@@ -37,7 +37,7 @@ class Posicion:
     def verificar_formato(self, y, x):
         assert type(x) == int, "'x' debe ser int"
         assert type(y) == str, "'y' debe ser str"
-        assert len(y) == 1, "'y' debe ser una cadena de un solo caracter"
+        assert len(y) == 1, "'y' debe constar de un solo caracter"
 
 
     def __repr__(self):
