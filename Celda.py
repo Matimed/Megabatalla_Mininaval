@@ -1,4 +1,4 @@
-import Barco
+from Barco import *
 
 class Celda:
     def __init__(self):
@@ -25,5 +25,9 @@ class Celda:
         self.barco = barco
 
     def quitar_barco(self):
+        """Borra el atributo barco de la celda y lo devuelve"""
+
+        barco = self.barco
         self.barco = None
+        return barco
     
