@@ -26,7 +26,7 @@ class Tablero:
 
             assert isinstance(posicion, Posicion), "La posicion debe ser un objeto tipo Posicion"
             if posicion in self.celdas:
-                return self.celdas.get(posicion)
+                return self.celdas.get(posicion)[0]
             else:
                 raise ValueError("La posicion no esta en la lista")
 
@@ -54,7 +54,7 @@ class Tablero:
         return celda.haber_barco(), celda.get_marca()
 
 
-    def barcos_disponibles(self):
+    def cant_barcos_disponibles(self):
         """Devuelve la cantidad de barcos disponibles"""
 
         return len(self.barcos_disponibles)
