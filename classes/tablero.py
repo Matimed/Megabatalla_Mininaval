@@ -30,6 +30,9 @@ class Tablero:
 
 
     def agregar_barco(self, posicion):
+        """ Recibe una instancia de Posicion y agrega, si es posible, 
+            un barco en la celda que corresponda con dicha Posicion"""
+
         if not self.get_barcos_disponibles(): 
             celda = self.get_celda(posicion)
             celda.agregar_barco(self.barcos_disponibles.pop())
@@ -38,10 +41,16 @@ class Tablero:
         
 
     def quitar_barco(self, posicion):
-            celda = self.get_celda(posicion)
-            self.barcos_disponibles.append(celda.quitar_barco())
+        """ Recibe una instancia de Posicion y 
+            quita el barco de la celda correspondiente con esta"""
+
+        celda = self.get_celda(posicion)
+        self.barcos_disponibles.append(celda.quitar_barco())
 
 
     def get_barcos_disponibles(self):
+        """ Devuelve un numero que representa la cantidad de barcos 
+            que aún no están en una Celda"""
+
         return len(self.barcos_disponibles)
     
