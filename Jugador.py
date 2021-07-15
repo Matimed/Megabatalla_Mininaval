@@ -41,8 +41,6 @@ class Jugador:
         
     
     def preparar_tablero(self):
-        posciones_utilizadas = []
-
         while self.tablero.get_barcos_disponibles():
             print("Barcos disponibles: ", self.tablero.get_barcos_disponibles())
 
@@ -54,35 +52,46 @@ class Jugador:
 
                 system('cls')
 
-                if accion == 'a':
-                    posicion = self.ingresar_posicion()
-                    if posicion in posciones_utilizadas:
-                        print("Ya hay un barco en esa posicion")
+                if accion   == 'a': self.agregar_barco()
 
-                    self.tablero.agregar_barco(posicion)
-                    posciones_utilizadas.append(posicion)
-
-
-                elif accion == 'q':
-                    if posicion in posciones_utilizadas:
-                        print("Ya hay un barco en esa posicion")
-
-                    self.tablero.quitar_barco(self.ingresar_posicion())
-                    posciones_utilizadas.append(posicion)
+                elif accion == 'q': self.quitar_barco()
                     
                 elif accion == 'v': self.vaciar_tablero()
 
                 elif accion == 'u': self.ubicacion_aleatoria()
 
-                else:
-                    print("La respuesta debe ser 'a' o 'q'. Vuelva a intentar")
+                else: print("La respuesta debe ser 'q', 'a', 'v' o 'u'. Vuelva a intentar")
+
+
+    def agregar_barco(self):
+
+        while True:
+            posicion = self.ingresar_posicion()
+            try:
+                self.tablero.agregar_barco(posicion)
+            except (NotEnoughtBoatsError, CellFullError) as custom_error:
+                print(custom_error + " Intentelo nuevamente")
+            except: print("Por favor intentelo nuevamente")
+            else: break
+
+
+    def quitar_barco(self):
+        while True:
+            posicion = self.ingresar_posicion()
+            try:
+                self.tablero.quitar_barco(posicion)
+            except (CellEmptyError) as custom_error:
+                print(custom_error + " Intentelo nuevamente")
+            except: print("Por favor intentelo nuevamente")
+            else: break
+        self.tablero.quitar_barco(self.ingresar_posicion())     
 
     
-    def vaciar_tablero():
+    def vaciar_tablero(self):
         return NotImplementedError
 
 
-    def ubicacion_aleatoria():
+    def ubicacion_aleatoria(self):
         return NotImplementedError
 
 
