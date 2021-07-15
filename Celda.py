@@ -1,3 +1,5 @@
+from custom_errors.CellEmptyError import CellEmptyError
+from custom_errors.CellFullError import CellFullError
 from Barco import *
 
 class Celda:
@@ -21,13 +23,19 @@ class Celda:
         return self.barco != None
 
     def agregar_barco(self, barco):
-        assert isinstance(barco, Barco), "Solo recibe objetos tipo Barco"
-        self.barco = barco
+        "Recibe una instancia de Barco y la guarda en el atributo homónimo"
+
+        if self.barco:
+            self.barco = barco
+
+        else: raise CellFullError()
+            
 
     def quitar_barco(self):
         """Borra el atributo barco de la celda y lo devuelve"""
 
-        barco = self.barco
-        self.barco = None
-        return barco
-    
+        if not self.barco:
+            barco, self.barco = self.barco, None
+            return barco
+
+        else: raise CellEmptyError()

@@ -1,3 +1,4 @@
+from custom_errors.NotEnoughtBoatsError import NotEnoughtBoatsError
 from Barco import *
 from Posicion import *
 from Celda import *
@@ -32,26 +33,16 @@ class Tablero:
 
 
     def agregar_barco(self, posicion):
-        celda = self.get_celda(posicion)
-        celda.agregar_barco(self.barcos_disponibles.pop())
+        if not self.get_barcos_disponibles(): 
+            celda = self.get_celda(posicion)
+            celda.agregar_barco(self.barcos_disponibles.pop())
 
+        else: raise NotEnoughtBoatsError()
+        
 
     def quitar_barco(self, posicion):
             celda = self.get_celda(posicion)
             self.barcos_disponibles.append(celda.quitar_barco())
-
-
-    def estado_celda(self, posicion):
-        """ Dada una posicion de una celda devuelve su estado
-            Argumentos:
-                posicion: Posicion
-            Devuelve: 
-                bool: si contiene un barco
-                bool: si esta marcada.
-        """
-
-        celda = self.get_celda(posicion)
-        return celda.haber_barco(), celda.get_marca()
 
 
     def get_barcos_disponibles(self):
