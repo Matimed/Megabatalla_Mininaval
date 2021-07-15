@@ -1,4 +1,5 @@
 from Tablero import Tablero
+from os import system
 
 class Jugador:
     def __init__(self, tablero, programa):
@@ -30,8 +31,42 @@ class Jugador:
         return self.programa.traducir_posicion(y, x)
         
     
-    def preparar_tablero():
-        return NotImplementedError
+    def preparar_tablero(self):
+        posciones_utilizadas = []
+
+        while self.tablero.get_barcos_disponibles():
+            print("Barcos disponibles: ", self.tablero.get_barcos_disponibles())
+
+            while True:
+                accion = input(
+                    "¿Desea quitar u agregar un barco, vaciar el tablero o " +
+                    "ubicar aleatoriamente los barcos restantes? q|a|v|u"
+                    ).strip().lower()
+
+                system('cls')
+
+                if accion == 'a':
+                    posicion = self.ingresar_posicion()
+                    if posicion in posciones_utilizadas:
+                        print("Ya hay un barco en esa posicion")
+
+                    self.tablero.agregar_barco(posicion)
+                    posciones_utilizadas.append(posicion)
+
+
+                elif accion == 'q':
+                    if posicion in posciones_utilizadas:
+                        print("Ya hay un barco en esa posicion")
+
+                    self.tablero.quitar_barco(self.ingresar_posicion())
+                    posciones_utilizadas.append(posicion)
+                    
+                elif accion == 'v': self.vaciar_tablero()
+
+                elif accion == 'u': self.ubicacion_aleatoria()
+
+                else:
+                    print("La respuesta debe ser 'a' o 'q'. Vuelva a intentar")
 
     
     def vaciar_tablero():
