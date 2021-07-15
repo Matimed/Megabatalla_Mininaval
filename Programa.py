@@ -30,8 +30,6 @@ class Programa:
                     Posicion(string.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
         
         return posiciones
-        #Alternativa:
-        #for i in range(cant_filas): [self.posiciones.append(Posicion(string.ascii_uppercase[i], x + 1)) for x in range(cant_filas)]
                 
 
     def validar_posicion(self, y, x):
@@ -83,7 +81,9 @@ class Programa:
             y devuelve al ganador."""
 
         print("Que comience el juego!")
-        atacante = 0
+
+        # 0 y 1 son las posiciones de los jugadores en la lista de jugadores
+        atacante = 0 
         defensor = 1
 
         while True: #Hasta que el juego termine
