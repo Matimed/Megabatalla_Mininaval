@@ -1,19 +1,28 @@
+from Programa import Programa
 from Tablero import Tablero
 
 class Jugador:
     def __init__(self, tablero, programa):
         assert isinstance(tablero, Tablero), "El argumento tablero debe ser instacia de la clase Tablero"
-        
-        self.nombre = ''
+        assert isinstance(programa, Programa), "El argumento programa debe ser instacia de la clase Programa"
+
         self.tablero = tablero
-        self.mapa = {}
         self.programa = programa
+        self.nombre = None
+        self.mapa = {}
+
 
     def set_nombre(self, nombre):
         assert type(nombre) == str, "El argumento nombre debe ser de tipo str"
         assert nombre, "El argumento nombre no puede estar vacio"
 
         self.nombre = nombre
+
+
+    def get_nombre(self): return self.nombre
+
+    
+    def get_mapa(self): return self.mapa
 
 
     def ingresar_posicion(self):
@@ -42,9 +51,24 @@ class Jugador:
         return NotImplementedError
 
 
-    def disparar():
-        return NotImplementedError
+    def apuntar(self):
+        """ Le pide ingresar una ubicacion al jugador
+            hasta que ponga una posicion correcta 
+            a la que no le haya disparado antes.
+        """
+
+        while True:
+            posicion = self.ingresar_posicion()
+            if not self.mapa[posicion]:
+                return posicion
+            print("No esta permitido dispararle dos veces a la misma celda")
 
 
-    def recibir_disparo(posicion):
-        return NotImplementedError
+    def mapa_add(self, posicion, celda):
+        if not self.mapa[posicion]: self.mapa[posicion] = celda
+
+
+    def recibir_disparo(self, posicion):
+        celda = self.tablero.get_celda(posicion)
+        celda.marcar()
+        return celda
