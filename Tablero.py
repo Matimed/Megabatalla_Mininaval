@@ -21,7 +21,7 @@ class Tablero:
             self.barcos_disponibles.append(Barco())
 
 
-    def _buscar_celda(self, posicion):
+    def get_celda(self, posicion):
             """Dada una posicion devuelve la celda correspondiente"""
 
             assert isinstance(posicion, Posicion), "La posicion debe ser un objeto tipo Posicion"
@@ -32,12 +32,12 @@ class Tablero:
 
 
     def agregar_barco(self, posicion):
-        celda = self._buscar_celda(posicion)
+        celda = self.get_celda(posicion)
         celda.agregar_barco(self.barcos_disponibles.pop())
 
 
     def quitar_barco(self, posicion):
-            celda = self._buscar_celda(posicion)
+            celda = self.get_celda(posicion)
             self.barcos_disponibles.append(celda.quitar_barco())
 
 
@@ -50,12 +50,10 @@ class Tablero:
                 bool: si esta marcada.
         """
 
-        celda = self._buscar_celda(posicion)
+        celda = self.get_celda(posicion)
         return celda.haber_barco(), celda.get_marca()
 
 
-    def cant_barcos_disponibles(self):
-        """Devuelve la cantidad de barcos disponibles"""
-
+    def get_barcos_disponibles(self):
         return len(self.barcos_disponibles)
     
