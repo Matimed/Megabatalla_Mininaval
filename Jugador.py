@@ -31,7 +31,7 @@ class Jugador:
         
     
     def preparar_tablero():
-        return NotImplementedError
+        print()
 
 
     def ubicacion_aleatoria():
