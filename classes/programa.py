@@ -1,11 +1,9 @@
-from Jugador import Jugador
-from Posicion import Posicion
-from Tablero import Tablero
-import string
+import classes as clss
+import string as str
 
 class Programa:
     def __init__(self, cant_filas = 10, cant_barcos = 8):
-        assert cant_filas <= len(string.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
+        assert cant_filas <= len(str.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
 
         self.posiciones = self.generar_posiciones(cant_filas)
         self.tableros = []
@@ -13,10 +11,10 @@ class Programa:
         self.cant_barcos = cant_barcos
 
         #Genera los tableros:
-        [self.tableros.append(Tablero(self.posiciones, cant_barcos)) for i in range(2)]
+        [self.tableros.append(clss.Tablero(self.posiciones, cant_barcos)) for i in range(2)]
 
         #Genera los jugadores:
-        [self.jugadores.append(Jugador(self.tableros[i], self)) for i in range(2)]
+        [self.jugadores.append(clss.Jugador(self.tableros[i], self)) for i in range(2)]
         self.asignar_nombres()
     
 
@@ -27,7 +25,7 @@ class Programa:
         for i in range(cant_filas): 
             for x in range (cant_filas): # La cantidad de columnas (x) se define a partir de cant_filas
                 posiciones.append(
-                    Posicion(string.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
+                    clss.Posicion(str.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
         
         return posiciones
                 

@@ -1,6 +1,4 @@
-from custom_errors.CellEmptyError import CellEmptyError
-from custom_errors.CellFullError import CellFullError
-from Barco import *
+from custom_errors import CellFullError, CellEmptyError
 
 class Celda:
     def __init__(self):

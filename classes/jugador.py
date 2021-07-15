@@ -1,11 +1,8 @@
-from Programa import Programa
-from Tablero import Tablero
+import custom_errors as ex
 from os import system
 
 class Jugador:
     def __init__(self, tablero, programa):
-        assert isinstance(tablero, Tablero), "El argumento tablero debe ser instacia de la clase Tablero"
-        assert isinstance(programa, Programa), "El argumento programa debe ser instacia de la clase Programa"
 
         self.tablero = tablero
         self.programa = programa
@@ -69,8 +66,8 @@ class Jugador:
             posicion = self.ingresar_posicion()
             try:
                 self.tablero.agregar_barco(posicion)
-            except (NotEnoughtBoatsError, CellFullError) as custom_error:
-                print(custom_error + " Intentelo nuevamente")
+            except (ex.NotEnoughtBoatsError or ex.CellFullError) as error:
+                print(error + " Intentelo nuevamente")
             except: print("Por favor intentelo nuevamente")
             else: break
 
@@ -80,8 +77,8 @@ class Jugador:
             posicion = self.ingresar_posicion()
             try:
                 self.tablero.quitar_barco(posicion)
-            except (CellEmptyError) as custom_error:
-                print(custom_error + " Intentelo nuevamente")
+            except (ex.CellEmptyError) as error:
+                print(error + " Intentelo nuevamente")
             except: print("Por favor intentelo nuevamente")
             else: break
         self.tablero.quitar_barco(self.ingresar_posicion())     

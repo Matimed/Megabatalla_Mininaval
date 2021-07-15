@@ -1,7 +1,5 @@
-from custom_errors.NotEnoughtBoatsError import NotEnoughtBoatsError
-from Barco import *
-from Posicion import *
-from Celda import *
+from custom_errors import NotEnoughtBoatsError
+import classes as clss
 
 class Tablero:
     def __init__(self, posiciones, cant_barcos):
@@ -15,17 +13,16 @@ class Tablero:
 
         #Crea el diccionario de celdas a partir de las posiciones
         for posicion in posiciones: 
-            self.celdas[posicion] = [Celda()]
+            self.celdas[posicion] = [clss.Celda()]
 
         #Crea la lista de barcos de la cantidad pedida
         for i in range(cant_barcos):
-            self.barcos_disponibles.append(Barco())
+            self.barcos_disponibles.append(clss.Barco())
 
 
     def get_celda(self, posicion):
             """Dada una posicion devuelve la celda correspondiente"""
 
-            assert isinstance(posicion, Posicion), "La posicion debe ser un objeto tipo Posicion"
             if posicion in self.celdas:
                 return self.celdas.get(posicion)[0]
             else:
