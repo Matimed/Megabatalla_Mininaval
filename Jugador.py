@@ -33,14 +33,6 @@ class Jugador:
     def preparar_tablero():
         return NotImplementedError
 
-
-    def disparar():
-        return NotImplementedError
-
-
-    def recibir_disparo(posicion):
-        return NotImplementedError
-
     
     def vaciar_tablero():
         return NotImplementedError
@@ -48,6 +40,11 @@ class Jugador:
 
     def ubicacion_aleatoria():
         return NotImplementedError
+
+
+    def disparar():
+        return NotImplementedError
+
 
     def recibir_disparo(posicion):
         return NotImplementedError
