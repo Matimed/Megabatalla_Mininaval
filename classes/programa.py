@@ -1,9 +1,11 @@
-import classes as clss
-import string as str
+from tablero import *
+from jugador import *
+from posicion import * 
+import string
 
 class Programa:
     def __init__(self, cant_filas = 10, cant_barcos = 8):
-        assert cant_filas <= len(str.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
+        assert cant_filas <= len(string.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
 
         self.posiciones = self.generar_posiciones(cant_filas)
         self.tableros = []
@@ -11,10 +13,10 @@ class Programa:
         self.cant_barcos = cant_barcos
 
         #Genera los tableros:
-        [self.tableros.append(clss.Tablero(self.posiciones, cant_barcos)) for i in range(2)]
+        [self.tableros.append(Tablero(self.posiciones, cant_barcos)) for i in range(2)]
 
         #Genera los jugadores:
-        [self.jugadores.append(clss.Jugador(self.tableros[i], self)) for i in range(2)]
+        [self.jugadores.append(Jugador(self.tableros[i], self)) for i in range(2)]
         self.asignar_nombres()
     
 
@@ -25,7 +27,7 @@ class Programa:
         for i in range(cant_filas): 
             for x in range (cant_filas): # La cantidad de columnas (x) se define a partir de cant_filas
                 posiciones.append(
-                    clss.Posicion(str.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
+                    Posicion(string.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
         
         return posiciones
                 
@@ -56,13 +58,15 @@ class Programa:
             "Turna a los jugadores para que ingresen su nombre"
 
             nombres = []
-            for i in range (self.jugadores):
+            for i in range(len(self.jugadores)):
                 while True:
-                    nombre = (input("Ingrese el nombre del Jugador "+ i+1)).strip()
-                    if nombre: #No es null
-                        if not nombre in nombres: #No se repite
-                            self.jugadores[i].set_nombre(nombre)
-                        else: print("No se puede colocar el mismo nombre a 2 jugadores")
+                    nombre = (input("Ingrese el nombre del Jugador "+ str(i + 1))).strip()
+
+                    if nombre and not nombre in nombres: #No es null y no se repite 
+                        self.jugadores[i].set_nombre(nombre)
+                        break
+
+                    else: print("No se puede colocar el mismo nombre a 2 jugadores")
 
 
     def preparar_juego(self):
@@ -104,8 +108,8 @@ class Programa:
 
 
     def mostrar_mapa(self, mapa):
-        return NotImplementedError
-    
+        return NotImplementedError()     
+
 
 """Ejecutar programa:
 programa = Programa()

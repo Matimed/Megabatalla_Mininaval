@@ -1,4 +1,5 @@
-from custom_errors import CellFullError, CellEmptyError
+from custom_errors.cell_full_error import CellFullError
+from custom_errors.cell_empty_error import CellEmptyError
 
 class Celda:
     def __init__(self):

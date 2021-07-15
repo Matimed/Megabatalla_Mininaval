@@ -1,4 +1,6 @@
-import custom_errors as ex
+from custom_errors.cell_full_error import CellFullError
+from custom_errors.cell_empty_error import CellEmptyError
+from custom_errors.not_enought_boatsError import NotEnoughtBoatsError
 from os import system
 
 class Jugador:
@@ -61,13 +63,15 @@ class Jugador:
 
 
     def agregar_barco(self):
-
         while True:
             posicion = self.ingresar_posicion()
+
             try:
                 self.tablero.agregar_barco(posicion)
-            except (ex.NotEnoughtBoatsError or ex.CellFullError) as error:
+
+            except (ex.NotEnoughtBoatsError or CellFullError) as error:
                 print(error + " Intentelo nuevamente")
+
             except: print("Por favor intentelo nuevamente")
             else: break
 
@@ -75,21 +79,20 @@ class Jugador:
     def quitar_barco(self):
         while True:
             posicion = self.ingresar_posicion()
+
             try:
                 self.tablero.quitar_barco(posicion)
-            except (ex.CellEmptyError) as error:
+
+            except (CellEmptyError) as error:
                 print(error + " Intentelo nuevamente")
+
             except: print("Por favor intentelo nuevamente")
-            else: break
-        self.tablero.quitar_barco(self.ingresar_posicion())     
+            
+            else:break
 
     
     def vaciar_tablero(self):
-        return NotImplementedError
-
-
-    def ubicacion_aleatoria(self):
-        return NotImplementedError
+        return NotImplementedError()
 
 
     def apuntar(self):

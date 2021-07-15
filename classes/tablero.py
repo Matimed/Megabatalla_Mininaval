@@ -1,5 +1,8 @@
-from custom_errors import NotEnoughtBoatsError
-import classes as clss
+from custom_errors.cell_full_error import CellFullError
+from custom_errors.not_enought_boatsError import NotEnoughtBoatsError
+from celda import Celda
+from barco import Barco
+import random
 
 class Tablero:
     def __init__(self, posiciones, cant_barcos):
@@ -13,11 +16,11 @@ class Tablero:
 
         #Crea el diccionario de celdas a partir de las posiciones
         for posicion in posiciones: 
-            self.celdas[posicion] = [clss.Celda()]
+            self.celdas[posicion] = [Celda()]
 
         #Crea la lista de barcos de la cantidad pedida
         for i in range(cant_barcos):
-            self.barcos_disponibles.append(clss.Barco())
+            self.barcos_disponibles.append(Barco())
 
 
     def get_celda(self, posicion):
@@ -32,8 +35,8 @@ class Tablero:
     def agregar_barco(self, posicion):
         """ Recibe una instancia de Posicion y agrega, si es posible, 
             un barco en la celda que corresponda con dicha Posicion"""
-
-        if not self.get_barcos_disponibles(): 
+  
+        if self.get_barcos_disponibles(): 
             celda = self.get_celda(posicion)
             celda.agregar_barco(self.barcos_disponibles.pop())
 
@@ -54,3 +57,11 @@ class Tablero:
 
         return len(self.barcos_disponibles)
     
+
+    def ubicacion_aleatoria(self):
+        while self.get_barcos_disponibles():
+            posicion = random.choice(list(self.celdas.keys()))
+            print(posicion)
+            try:
+                self.agregar_barco(posicion)
+            except (CellFullError): pass
