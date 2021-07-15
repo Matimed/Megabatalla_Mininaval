@@ -30,7 +30,7 @@ class Celda:
             
 
     def quitar_barco(self):
-        """Borra el atributo barco de la celda y lo devuelve"""
+        """Borra el objeto Barco de su atributo homónimo para devolverlo"""
 
         if not self.barco:
             barco, self.barco = self.barco, None
