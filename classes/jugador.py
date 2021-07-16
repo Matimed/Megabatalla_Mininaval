@@ -69,7 +69,7 @@ class Jugador:
             try:
                 self.tablero.agregar_barco(posicion)
 
-            except (ex.NotEnoughtBoatsError or CellFullError) as error:
+            except (NotEnoughtBoatsError or CellFullError) as error:
                 print(error + " Intentelo nuevamente")
 
             except: print("Por favor intentelo nuevamente")
