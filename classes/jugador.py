@@ -61,7 +61,7 @@ class Jugador:
                     
                 elif accion == 'v': self.vaciar_tablero()
 
-                elif accion == 'u': self.ubicacion_aleatoria()
+                elif accion == 'u': self.tablero.ubicacion_aleatoria()
 
                 else: 
                     print("Respuesta invalida, vuelva a intentar:")
