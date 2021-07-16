@@ -29,8 +29,12 @@ class Jugador:
         "De acuerdo a la entrada del usuario devuelve una instancia de Posicion"
 
         while True:
-            y = input("Ingrese la fila: ").strip().upper()
-            x = int(input("Ingrese la columna: ").strip())
+            try:
+                y = input("Ingrese la fila: ").strip().upper()
+                x = int(input("Ingrese la columna: ").strip())
+            except:
+                print("El formato ingresado es invalido.")
+                continue
 
             if self.programa.validar_posicion(y, x): break
 
@@ -59,7 +63,11 @@ class Jugador:
 
                 elif accion == 'u': self.ubicacion_aleatoria()
 
-                else: print("La respuesta debe ser 'q', 'a', 'v' o 'u'. Vuelva a intentar")
+                else: 
+                    print("Respuesta invalida, vuelva a intentar:")
+                    continue
+                
+                break
 
 
     def agregar_barco(self):
@@ -103,13 +111,13 @@ class Jugador:
 
         while True:
             posicion = self.ingresar_posicion()
-            if not self.mapa[posicion]:
+            if not posicion in self.mapa: 
                 return posicion
             print("No esta permitido dispararle dos veces a la misma celda")
 
 
     def mapa_add(self, posicion, celda):
-        if not self.mapa[posicion]: self.mapa[posicion] = celda
+        if not posicion in self.mapa: self.mapa[posicion] = celda
 
 
     def recibir_disparo(self, posicion):
