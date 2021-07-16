@@ -24,7 +24,7 @@ class Celda:
     def agregar_barco(self, barco):
         "Recibe una instancia de Barco y la guarda en el atributo homónimo"
 
-        if self.barco:
+        if not self.barco:
             self.barco = barco
 
         else: raise CellFullError()
@@ -33,7 +33,7 @@ class Celda:
     def quitar_barco(self):
         """Borra el objeto Barco de su atributo homónimo para devolverlo"""
 
-        if not self.barco:
+        if self.barco:
             barco, self.barco = self.barco, None
             return barco
 
