@@ -59,9 +59,15 @@ class Tablero:
     
 
     def ubicacion_aleatoria(self):
+        """ Mientras hayan barcos disponibles 
+            toma una Posicion aleatoria de su diccionario de celdas e 
+            intenta agregar un barco en ella, 
+            si falla lo vuelve a intentar con otra Posicion"""
+
         while self.get_barcos_disponibles():
             posicion = random.choice(list(self.celdas.keys()))
-            print(posicion)
+
             try:
                 self.agregar_barco(posicion)
+
             except (CellFullError): pass
