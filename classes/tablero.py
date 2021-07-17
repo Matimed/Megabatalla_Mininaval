@@ -65,7 +65,7 @@ class Tablero:
         """ Recibe una instancia de Posicion y 
             devuelve un bool que indica si hay un barco en esa celda"""
         
-        return self.get_celda(posicion).haber_barco
+        return self.get_celda(posicion).haber_barco()
         
 
     def count_barcos_disponibles(self):

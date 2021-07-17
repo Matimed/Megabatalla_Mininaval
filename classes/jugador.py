@@ -1,4 +1,3 @@
-from classes import tablero
 from custom_errors.cell_full_error import CellFullError
 from custom_errors.cell_empty_error import CellEmptyError
 from custom_errors.not_enought_boatsError import NotEnoughtBoatsError
@@ -33,20 +32,22 @@ class Jugador:
             try:
                 y = input("Ingrese la fila: ").strip().upper()
                 x = int(input("Ingrese la columna: ").strip())
+                if self.programa.validar_posicion(y, x): break
+
+                print("Esa posicion no existe, vuelva a intentar")
             except:
                 print("El formato ingresado es invalido.")
                 continue
-
-            if self.programa.validar_posicion(y, x): break
-
-            print("Esa posicion no existe, vuelva a intentar")
         
         return self.programa.traducir_posicion(y, x)
         
     
-    def preparar_tablero(self):
-        while self.tablero.get_barcos_disponibles():
-            print("Barcos disponibles: ", self.tablero.get_barcos_disponibles())
+    def accion_preparar_tablero(self):
+        """ Le permite al usuario realizar una accion para preparar su tablero,
+            y devuelve la cantidad de barcos que le quedan disponibles."""
+
+        while True:
+            print("Barcos disponibles: ", self.tablero.count_barcos_disponibles())
             
             accion = input(
                 "¿Desea quitar u agregar un barco, vaciar el tablero o " +
@@ -69,6 +70,8 @@ class Jugador:
             
             break
 
+        return self.tablero.count_barcos_disponibles()
+
     
 
     def agregar_barco(self):
@@ -78,8 +81,8 @@ class Jugador:
             try:
                 self.tablero.agregar_barco(posicion)
 
-            except (NotEnoughtBoatsError or CellFullError) as error:
-                print(error + " Intentelo nuevamente")
+            except (NotEnoughtBoatsError or CellFullError) as err:
+                print("{0} Intentelo nuevamente".format(err))
 
             except: print("Por favor intentelo nuevamente")
             else: break
@@ -91,9 +94,9 @@ class Jugador:
 
             try:
                 self.tablero.quitar_barco(posicion)
-
-            except (CellEmptyError) as error:
-                print(error + " Intentelo nuevamente")
+                
+            except (CellEmptyError) as err:
+                print("{0} Intentelo nuevamente".format(err))
 
             except: print("Por favor intentelo nuevamente")
             
@@ -125,3 +128,4 @@ class Jugador:
         celda = self.tablero.get_celda(posicion)
         celda.marcar()
         return celda
+
