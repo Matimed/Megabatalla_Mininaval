@@ -4,28 +4,29 @@ from posicion import *
 import string
 
 class Programa:
-    def __init__(self, cant_filas = 10, cant_barcos = 8):
-        assert cant_filas <= len(string.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
+    def __init__(self, orden = 10, cant_barcos = 8):
+        assert orden <= len(string.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
 
-        self.posiciones = self.generar_posiciones(cant_filas)
+        self.posiciones = self.generar_posiciones(orden)
         self.tableros = []
         self.jugadores = []
-        self.cant_barcos = cant_barcos
 
         #Genera los tableros:
         [self.tableros.append(Tablero(self.posiciones, cant_barcos)) for i in range(2)]
+        Tablero.cant_barcos = cant_barcos
+        Tablero.orden = orden
 
         #Genera los jugadores:
         [self.jugadores.append(Jugador(self.tableros[i], self)) for i in range(2)]
         self.asignar_nombres()
     
 
-    def generar_posiciones(self, cant_filas): 
+    def generar_posiciones(self, orden): 
         "Dada una cantidad de filas genera una lista con esa cantidad al cuadrado de posiciones"
 
         posiciones = []    
-        for i in range(cant_filas): 
-            for x in range (cant_filas): # La cantidad de columnas (x) se define a partir de cant_filas
+        for i in range(orden): 
+            for x in range (orden): # La cantidad de columnas es la misma que de filas
                 posiciones.append(
                     Posicion(string.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
         
@@ -49,7 +50,7 @@ class Programa:
             for celda in celdas:
                 if (celda.haber_barco()):
                     barcos_hundidos += 1
-                    if barcos_hundidos == self.cant_barcos: return True
+                    if barcos_hundidos == Tablero.cant_barcos: return True
 
             return False
 
@@ -60,7 +61,7 @@ class Programa:
             nombres = []
             for i in range(len(self.jugadores)):
                 while True:
-                    nombre = (input("Ingrese el nombre del Jugador "+ str(i + 1))).strip()
+                    nombre = (input("Ingrese el nombre del Jugador "+ str(i + 1)) + ": ").strip()
 
                     if nombre and not nombre in nombres: #No es null y no se repite 
                         self.jugadores[i].set_nombre(nombre)
