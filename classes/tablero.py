@@ -4,7 +4,16 @@ from celda import Celda
 from barco import Barco
 import random
 
+
 class Tablero:
+    """ Representa una matriz de celdas,
+        tiene como atributos la cantidad de barcos a jugar 
+        y el orden de dicha matriz"""
+
+    cant_barcos = 8
+    orden = 10 
+
+
     def __init__(self, posiciones, cant_barcos):
         """ Recibe una lista de objetos tipo Posicion a los que asignara
             una celda por cada uno y la cantidad de barcos que se quieren utilizar"""
@@ -13,6 +22,7 @@ class Tablero:
         assert type(cant_barcos) == int
         self.celdas = {}
         self.barcos_disponibles = []
+        
 
         #Crea el diccionario de celdas a partir de las posiciones
         for posicion in posiciones: 
@@ -36,7 +46,7 @@ class Tablero:
         """ Recibe una instancia de Posicion y agrega, si es posible, 
             un barco en la celda que corresponda con dicha Posicion"""
   
-        if self.get_barcos_disponibles(): 
+        if self.count_barcos_disponibles(): 
             celda = self.get_celda(posicion)
             celda.agregar_barco(self.barcos_disponibles.pop())
 
@@ -51,7 +61,14 @@ class Tablero:
         self.barcos_disponibles.append(celda.quitar_barco())
 
 
-    def get_barcos_disponibles(self):
+    def haber_barco(self, posicion):
+        """ Recibe una instancia de Posicion y 
+            devuelve un bool que indica si hay un barco en esa celda"""
+        
+        return self.get_celda(posicion).haber_barco
+        
+
+    def count_barcos_disponibles(self):
         """ Devuelve un numero que representa la cantidad de barcos 
             que aún no están en una Celda"""
 
@@ -61,13 +78,28 @@ class Tablero:
     def ubicacion_aleatoria(self):
         """ Mientras hayan barcos disponibles 
             toma una Posicion aleatoria de su diccionario de celdas e 
-            intenta agregar un barco en ella, 
-            si falla lo vuelve a intentar con otra Posicion"""
+            intenta agregar un barco en ella"""
 
-        while self.get_barcos_disponibles():
-            posicion = random.choice(list(self.celdas.keys()))
+        posiciones = list(self.celdas.keys())  
+        while self.count_barcos_disponibles():
+            
+            posicion = random.choice(posiciones)
 
-            try:
+            if not self.haber_barco(posicion): #Si esta ocupada busca una nueva
                 self.agregar_barco(posicion)
 
-            except (CellFullError): pass
+
+    def vaciar_celdas(self):
+        "Remueve todos los barcos de las celdas."
+
+        for posicion in self.celdas:
+
+            if self.haber_barco(posicion):
+
+                self.quitar_barco(posicion)
+
+                if self.count_barcos_disponibles() == Tablero.cant_barcos: 
+                    break
+
+            
+

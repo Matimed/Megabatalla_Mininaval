@@ -1,3 +1,4 @@
+from classes import tablero
 from custom_errors.cell_full_error import CellFullError
 from custom_errors.cell_empty_error import CellEmptyError
 from custom_errors.not_enought_boatsError import NotEnoughtBoatsError
@@ -46,29 +47,29 @@ class Jugador:
     def preparar_tablero(self):
         while self.tablero.get_barcos_disponibles():
             print("Barcos disponibles: ", self.tablero.get_barcos_disponibles())
+            
+            accion = input(
+                "¿Desea quitar u agregar un barco, vaciar el tablero o " +
+                "ubicar aleatoriamente los barcos restantes? q|a|v|u"
+                ).strip().lower()
 
-            while True:
-                accion = input(
-                    "¿Desea quitar u agregar un barco, vaciar el tablero o " +
-                    "ubicar aleatoriamente los barcos restantes? q|a|v|u"
-                    ).strip().lower()
+            system('cls')
 
-                system('cls')
+            if accion   == 'a': self.agregar_barco()
 
-                if accion   == 'a': self.agregar_barco()
-
-                elif accion == 'q': self.quitar_barco()
-                    
-                elif accion == 'v': self.vaciar_tablero()
-
-                elif accion == 'u': self.tablero.ubicacion_aleatoria()
-
-                else: 
-                    print("Respuesta invalida, vuelva a intentar:")
-                    continue
+            elif accion == 'q': self.quitar_barco()
                 
-                break
+            elif accion == 'v': self.tablero.vaciar_celdas()
 
+            elif accion == 'u': self.tablero.ubicacion_aleatoria()
+
+            else: 
+                print("Respuesta invalida, vuelva a intentar:")
+                continue
+            
+            break
+
+    
 
     def agregar_barco(self):
         while True:
