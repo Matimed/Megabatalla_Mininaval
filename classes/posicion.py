@@ -1,16 +1,19 @@
-from functools import singledispatch, singledispatchmethod
+from functools import singledispatchmethod
+
 
 class Posicion:
-    """ Sistema de coordenadas que utiliza la notacion 'x', 'y'
-        para representar univocamente una ubicacion particular 
-        en cualquier instancia de Tablero. """
+    """ Sistema de coordenadas que utiliza la notación 'x', 'y'
+        para representar unívocamente una ubicación particular 
+        en cualquier instancia de Tablero. 
+    """
 
     def __init__(self, y, x):
         """ Recibe:
-            y:<str> len = 1
-            x:<int>"""
+                y:<str> len = 1
+                x:<int>
+        """
 
-        self.verificar_formato(y, x)
+        self._verificar_formato(y, x)
 
         self.x = x
         self.y = y.upper()
@@ -22,6 +25,10 @@ class Posicion:
 
     @singledispatchmethod
     def __eq__(self, other):
+        """ Iguala dos instancias de Posicion utilizando 
+            el método get_posicion.
+        """
+
         try:
             other_get_posicion = other.get_posicion
         except AttributeError:
@@ -32,8 +39,14 @@ class Posicion:
 
     @__eq__.register(tuple)
     def _(self, other):
-        assert len(other) == 2, "La tupla pasada por parámetro debe constar de dos elementos"
-        self.verificar_formato(other[0], other[1])
+        """ Iguala una instancia de Posicion con una tupla 
+            utilizando el método get_posicion de Posicion.
+        """
+
+        assert len(other) == 2, ("La tupla pasada por parámetro" 
+            + " debe constar de dos elementos.")
+
+        self._verificar_formato(other[0], other[1])
 
         return (other[0].upper(), other[1]) == self.get_posicion()
 
@@ -42,10 +55,10 @@ class Posicion:
         return hash((self.y, self.x))
 
 
-    def verificar_formato(self, y, x):
-        assert type(x) == int, "'x' debe ser int"
-        assert type(y) == str, "'y' debe ser str"
-        assert len(y) == 1, "'y' debe constar de un solo caracter"
+    def _verificar_formato(self, y, x):
+        assert type(x) == int, "'x' debe ser int."
+        assert type(y) == str, "'y' debe ser str."
+        assert len(y) == 1, "'y' debe constar de un solo caracter."
 
 
     def __repr__(self):

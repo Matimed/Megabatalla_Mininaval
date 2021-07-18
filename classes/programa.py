@@ -1,14 +1,15 @@
-from tablero import *
-from jugador import *
-from posicion import * 
+from tablero import Tablero
+from jugador import Jugador
+from posicion import Posicion
 import string
 from os import system
+
 
 class Programa:
     def __init__(self, orden = 10, cant_barcos = 8):
         assert orden <= len(string.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
 
-        self.posiciones = self.generar_posiciones(orden)
+        self.posiciones = self._generar_posiciones(orden)
         self.tableros = []
         self.jugadores = []
 
@@ -22,19 +23,34 @@ class Programa:
         self.asignar_nombres()
     
 
-    def generar_posiciones(self, orden): 
-        "Dada una cantidad de filas genera una lista con esa cantidad al cuadrado de posiciones"
+    def _generar_posiciones(self, orden): 
+        """ Dado un orden genera una lista con ese numero 
+            de filas y columnas posiciones.
+
+            Recibe:
+                orden:<int>
+        """
+
+        assert type(orden) == int, (
+            "La cantidad de filas y columnas"
+             + " debe determinarse a través de un valor entero")
 
         posiciones = []    
         for i in range(orden): 
-            for x in range (orden): # La cantidad de columnas es la misma que de filas
+            for x in range (orden):
                 posiciones.append(
-                    Posicion(string.ascii_uppercase[i], x + 1)) # Se usa (x + 1) porque el tablero no tiene 0
+                    # Se usa (x + 1) porque el tablero no tiene 0
+                    Posicion(string.ascii_uppercase[i], x + 1)) 
         
         return posiciones
                 
 
     def validar_posicion(self, y, x):
+        """ Devuelve un booleano según si (y, x) 
+            se encuentra en su atributo posiciones.
+        """
+
+        # La validacion de los argumentos se lleva a cabo en Posicion.
         return (y, x) in self.posiciones
 
 
@@ -43,7 +59,12 @@ class Programa:
 
 
     def comprobar_ganador(self, jugador):
-            "Dado un jugador, devuelve True si este hundio todos los barcos del rival"
+            """ Dado un jugador, devuelve True 
+                si este hundió todos los barcos de su rival.
+
+                Recibe:
+                    jugador:<Jugador>
+            """
             
             barcos_hundidos = 0
             celdas = list(jugador.get_mapa().values())
@@ -57,47 +78,59 @@ class Programa:
 
 
     def asignar_nombres(self):
-            "Turna a los jugadores para que ingresen su nombre"
+            """Turna a los jugadores para que ingresen sus nombres."""
 
             nombres = []
             for i in range(len(self.jugadores)):
                 while True:
-                    nombre = (input("Ingrese el nombre del Jugador "+ str(i + 1) + ": ")).strip()
-
-                    if nombre and not nombre in nombres: #No es null y no se repite 
+                    nombre = (
+                        input(
+                            "Ingrese el nombre del Jugador "
+                            + str(i + 1) + ": "
+                             )).strip()
+                    
+                    #No es null y no se repite.
+                    if nombre and not nombre in nombres: 
                         self.jugadores[i].set_nombre(nombre)
                         break
 
-                    else: print("No se puede colocar el mismo nombre a 2 jugadores")
+                    else: print(
+                        "No se puede colocar el mismo nombre a 2 jugadores"
+                        )
 
             system('cls')
 
 
     def preparar_juego(self):
-        "Turna a los jugadores para que coloquen sus barcos"
+        """Turna los jugadores para que coloquen sus barcos."""
 
         for jugador in self.jugadores:
             system('cls')
             print(jugador.get_nombre() + " coloca tus barcos!")
 
-            while True: # Hasta que el jugador decida terminar su turno
-                if jugador.accion_preparar_tablero() == 0: # Si se le acaban los barcos
+            
+            while True: # Hasta que jugador decida terminar su turno.  
+
+                # Si se acaban los barcos.
+                if jugador.accion_preparar_tablero() == 0: 
                     resp = input("Desea terminar su turno (S/N)").strip().lower()
                     if resp == 's': break
+
                 system('cls')
 
     def jugar(self):
         """ Turna a los jugadores para que se disparen entre si
             hasta que alguno hunda todos los barcos del rival
-            y devuelve al ganador."""
+            y devuelve al ganador.
+        """
 
-        print("Que comience el juego!")
-
-        # 0 y 1 son las posiciones de los jugadores en la lista de jugadores
+        # 0 y 1 son las posiciones de los jugadores en la lista de jugadores.
         atacante = 0 
         defensor = 1
 
-        while True: #Hasta que el juego termine
+        print("Que comience el juego!")
+
+        while True: #Hasta que el juego termine.
 
             print("Es turno de " + self.jugadores[atacante].get_nombre())
             
@@ -108,13 +141,14 @@ class Programa:
             self.mostrar_mapa(self.jugadores[atacante].get_mapa())
             system('cls')
 
-            if not celda.haber_barco(): #Si no toca un barco pierde el turno
+            if not celda.haber_barco(): #Si no toca un barco pierde el turno.
                 print("Agua")
                 atacante, defensor = defensor, atacante
             else:
                 print("Tocado!")
                 if self.comprobar_ganador(self.jugadores[atacante]): 
-                    return self.jugadores[atacante] #Devuelve al jugador ganador
+                    #Devuelve al jugador ganador.
+                    return self.jugadores[atacante] 
 
 
     def mostrar_mapa(self, mapa):

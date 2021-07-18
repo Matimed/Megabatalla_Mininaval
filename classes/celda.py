@@ -1,13 +1,16 @@
 from custom_errors.cell_full_error import CellFullError
 from custom_errors.cell_empty_error import CellEmptyError
 
+
 class Celda:
     def __init__(self):
         self.marca = False
         self.barco = None
 
     def marcar(self):
-        """Marca la celda y si tiene un barco lo hunde"""
+        """Cambia el atributo marca a True y si tiene un barco lo hunde."""
+
+        assert self.marca != True, "No se puede marcar múltiples veces una misma celda."
 
         self.marca = True
         if (self.haber_barco()):
@@ -17,12 +20,12 @@ class Celda:
         return self.marca
 
     def haber_barco(self):
-        """"Devuelve True si hay un barco en la celda"""
+        """Devuelve True si hay un barco en la celda."""
 
         return self.barco != None
 
     def agregar_barco(self, barco):
-        "Recibe una instancia de Barco y la guarda en el atributo homónimo"
+        """Recibe una instancia de Barco y la guarda en el atributo homónimo."""
 
         if not self.barco:
             self.barco = barco
@@ -31,7 +34,7 @@ class Celda:
             
 
     def quitar_barco(self):
-        """Borra el objeto Barco de su atributo homónimo para devolverlo"""
+        """Borra el objeto Barco de su atributo homónimo para devolverlo."""
 
         if self.barco:
             barco, self.barco = self.barco, None
