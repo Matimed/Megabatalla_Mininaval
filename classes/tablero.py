@@ -1,4 +1,5 @@
 from custom_errors.not_enought_boats_error import NotEnoughtBoatsError
+from custom_errors.cell_full_error import CellFullError
 from celda import Celda
 from barco import Barco
 import random
@@ -11,26 +12,22 @@ class Tablero:
     """
 
     cant_barcos = 8
-    orden = 10 
-
-
-    def __init__(self, posiciones, cant_barcos):
+    
+    def __init__(self, posiciones):
         """ Recibe una lista de objetos tipo Posicion a los que asignara
             una celda por cada uno y la cantidad de barcos que se quieren utilizar.
         """
 
         assert type(posiciones) == list
-        assert type(cant_barcos) == int
         self.celdas = {}
         self.barcos_disponibles = []
-        
 
         #Crea el diccionario de celdas a partir de las posiciones.
         for posicion in posiciones: 
-            self.celdas[posicion] = [Celda()]
+            self.celdas[posicion] = (Celda())
 
         #Crea la lista de barcos de la cantidad pedida.
-        for i in range(cant_barcos):
+        for i in range(self.cant_barcos):
             self.barcos_disponibles.append(Barco())
 
 
@@ -38,19 +35,28 @@ class Tablero:
         """Dada una posición devuelve la celda correspondiente."""
 
         if posicion in self.celdas:
-            return self.celdas.get(posicion)[0]
+            return self.celdas.get(posicion)
         else:
             raise ValueError("La posicion no esta en la lista")
+
+
+    def marcar_celda(self, posicion):
+        self.celdas[posicion].marcar()
 
 
     def agregar_barco(self, posicion):
         """ Recibe una instancia de Posicion y agrega, si es posible, 
             un barco en la celda que corresponda con dicha Posicion.
         """
-  
+
+        # Verifica que hayan barcos disponibles.
         if self.count_barcos_disponibles(): 
             celda = self.get_celda(posicion)
-            celda.agregar_barco(self.barcos_disponibles.pop())
+            
+            if not celda.haber_barco():
+                celda.agregar_barco(self.barcos_disponibles.pop())
+
+            else: raise CellFullError()
 
         else: raise NotEnoughtBoatsError()
         
@@ -107,5 +113,5 @@ class Tablero:
 
                 self.quitar_barco(posicion)
 
-                if self.count_barcos_disponibles() == Tablero.cant_barcos:
+                if self.count_barcos_disponibles() == self.cant_barcos:
                     return
