@@ -5,10 +5,13 @@ from os import system
 
 
 class Jugador:
-    def __init__(self, tablero, programa):
+    """ Documentación"""
+
+    programa = None
+
+    def __init__(self, tablero):
         self.tablero = tablero
-        self.programa = programa
-        self.nombre = None
+        self.nombre = ""
         self.mapa = {}
 
 
@@ -47,10 +50,10 @@ class Jugador:
     def accion_preparar_tablero(self):
         """ Le permite al usuario realizar una acción para preparar 
             su tablero, y devuelve la cantidad de barcos 
-            que le queden disponibles.
+            que le queden disponibles luego de la acción realizada.
         """
 
-        while True:
+        while True: # Hasta que el jugador realice una acción valida.
             print("Barcos disponibles: ", self.tablero.count_barcos_disponibles())
             
             accion = input(
@@ -116,29 +119,31 @@ class Jugador:
 
 
     def apuntar(self):
-        """ Le pide ingresar una ubicación al jugador
-            hasta que escriba una posición correcta 
-            a la que no se le haya disparado antes.
+        """ Se pide al jugador ingresar una posición
+            a la cual no se le haya disparado antes.
         """
 
-        while True:
+        while True:  # Hasta que posicion sea valida para ser disparada.
             posicion = self.ingresar_posicion()
+
             if not posicion in self.mapa: 
                 return posicion
+
             print("No está permitido dispararle dos veces a la misma celda")
 
 
     def mapa_add(self, posicion, celda):
         """ Añade una clave Posicion con una Celda como valor
-            al diccionario mapa.
+            a su diccionario mapa.
             
             Recibe:
                 posicion:<Posicion>
                 celda:<Celda>
         """
 
-        # Verifica que la posicion pasada por parametro no este ya en mapa.
-        if not posicion in self.mapa: self.mapa[posicion] = celda
+        # Verifica que posicion no este ya en mapa.
+        if not posicion in self.mapa: 
+            self.mapa[posicion] = celda
 
 
     def recibir_disparo(self, posicion):
@@ -148,7 +153,5 @@ class Jugador:
                 posicion:<Posicion>
         """
 
-        celda = self.tablero.get_celda(posicion)
-        celda.marcar()
-        return celda
-
+        self.tablero.marcar_celda(posicion)
+        return self.tablero.get_celda(posicion)
