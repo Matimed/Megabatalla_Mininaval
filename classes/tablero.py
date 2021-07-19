@@ -7,8 +7,7 @@ import random
 
 class Tablero:
     """ Representa una matriz de celdas,
-        tiene como atributos la cantidad de barcos a jugar 
-        y el orden de dicha matriz.
+        tiene como atributos la cantidad de barcos a jugar.
     """
 
     cant_barcos = 8
@@ -24,10 +23,10 @@ class Tablero:
 
         #Crea el diccionario de celdas a partir de las posiciones.
         for posicion in posiciones: 
-            self.celdas[posicion] = (Celda())
+            self.celdas[posicion] = Celda()
 
         #Crea la lista de barcos de la cantidad pedida.
-        for i in range(self.cant_barcos):
+        for i in range(Tablero.cant_barcos):
             self.barcos_disponibles.append(Barco())
 
 
@@ -41,6 +40,12 @@ class Tablero:
 
 
     def marcar_celda(self, posicion):
+        """ Marca la celda según su posicion.
+            
+            Recibe:
+                posicion:<Posicion>
+        """
+
         self.celdas[posicion].marcar()
 
 
@@ -103,9 +108,7 @@ class Tablero:
 
 
     def vaciar_celdas(self):
-        """ Remueve los barcos de todas las instancias de Celda 
-            dentro del diccionario celdas.
-        """
+        """Remueve los barcos de todas sus celdas."""
 
         for posicion in self.celdas:
 
@@ -113,5 +116,5 @@ class Tablero:
 
                 self.quitar_barco(posicion)
 
-                if self.count_barcos_disponibles() == self.cant_barcos:
+                if self.count_barcos_disponibles() == Tablero.cant_barcos:
                     return
