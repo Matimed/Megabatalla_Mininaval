@@ -7,20 +7,23 @@ from os import system
 
 class Programa:
     def __init__(self, orden = 10, cant_barcos = 8):
-        assert orden <= len(string.ascii_uppercase), "Cantidad de filas mayor a cantidad de letras"
+        assert orden <= len(string.ascii_uppercase), (
+            "Cantidad de filas mayor a cantidad de letras")
 
         self.posiciones = self._generar_posiciones(orden)
         self.tableros = []
         self.jugadores = []
 
-        #Genera los tableros:
-        [self.tableros.append(Tablero(self.posiciones, cant_barcos)) for i in range(2)]
         Tablero.cant_barcos = cant_barcos
-        Tablero.orden = orden
+        # Genera los tableros:
+        [self.tableros.append(Tablero(self.posiciones)) for i in range(2)]
 
-        #Genera los jugadores:
-        [self.jugadores.append(Jugador(self.tableros[i], self)) for i in range(2)]
-        self.asignar_nombres()
+        # Se asigna a si mismo como programa de los jugadores que genere.
+        Jugador.programa = self
+
+        # Genera los jugadores:
+        [self.jugadores.append(Jugador(self.tableros[i])) for i in range(2)]
+        self._asignar_nombres() # Asigna los nombres de los jugadores.
     
 
     def _generar_posiciones(self, orden): 
@@ -46,8 +49,8 @@ class Programa:
                 
 
     def validar_posicion(self, y, x):
-        """ Devuelve un booleano según si (y, x) 
-            se encuentra en su atributo posiciones.
+        """ Devuelve un booleano según si una posicion
+            coincide con los valores (y, x).
         """
 
         # La validacion de los argumentos se lleva a cabo en Posicion.
@@ -77,28 +80,30 @@ class Programa:
             return False
 
 
-    def asignar_nombres(self):
-            """Turna a los jugadores para que ingresen sus nombres."""
+    def _asignar_nombres(self):
+        """Turna a los jugadores para que ingresen sus nombres."""
 
-            nombres = []
-            for i in range(len(self.jugadores)):
-                while True:
-                    nombre = (
-                        input(
-                            "Ingrese el nombre del Jugador "
-                            + str(i + 1) + ": "
-                             )).strip()
-                    
-                    #No es null y no se repite.
+        nombres = []
+        for i in range(len(self.jugadores)):
+            while True: # Hasta que se ingrese un nombre valido.
+                nombre = (
+                    input(
+                        "Ingrese el nombre del Jugador " + str(i + 1) + ": "
+                         )).strip().title()
+                
+                # No es null y no se repite.
+                if nombre and not nombre in nombres: 
                     if nombre and not nombre in nombres: 
-                        self.jugadores[i].set_nombre(nombre)
-                        break
+                if nombre and not nombre in nombres: 
+                    if nombre and not nombre in nombres: 
+                if nombre and not nombre in nombres: 
+                    self.jugadores[i].set_nombre(nombre)
+                    break
 
-                    else: print(
-                        "No se puede colocar el mismo nombre a 2 jugadores"
-                        )
+                else: 
+                    print("No se puede colocar el mismo nombre a 2 jugadores")
 
-            system('cls')
+        system('cls')
 
 
     def preparar_juego(self):
@@ -113,15 +118,16 @@ class Programa:
 
                 # Si se acaban los barcos.
                 if jugador.accion_preparar_tablero() == 0: 
-                    resp = input("Desea terminar su turno (S/N)").strip().lower()
+                    resp = input("¿Desea terminar su turno?. s|n").strip().lower()
                     if resp == 's': break
 
                 system('cls')
 
+
     def jugar(self):
         """ Turna a los jugadores para que se disparen entre si
-            hasta que alguno hunda todos los barcos del rival
-            y devuelve al ganador.
+            hasta que alguno hunda todos los barcos del rival.
+            Devuelve el jugador ganador.
         """
 
         # 0 y 1 son las posiciones de los jugadores en la lista de jugadores.
