@@ -93,10 +93,6 @@ class Programa:
                 
                 # No es null y no se repite.
                 if nombre and not nombre in nombres: 
-                    if nombre and not nombre in nombres: 
-                if nombre and not nombre in nombres: 
-                    if nombre and not nombre in nombres: 
-                if nombre and not nombre in nombres: 
                     self.jugadores[i].set_nombre(nombre)
                     break
 
