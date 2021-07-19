@@ -82,11 +82,11 @@ class Jugador:
     
 
     def agregar_barco(self):
-        """ Pide al jugador que ingrese una posición y 
-            llama al método de tablero agregar_barco con dicha posición.
+        """ Permite al jugador agregar un barco 
+            según la posicion que el ingrese.
         """
 
-        while True:
+        while True: # Hasta que se termine realizar la operación con exito.
             posicion = self.ingresar_posicion()
 
             try:
@@ -100,11 +100,11 @@ class Jugador:
 
 
     def quitar_barco(self):
-        """ Pide al jugador que ingrese una posición y 
-            llama al metodo de método quitar_barco con dicha posición.
+        """ Permite al jugador quitar un barco 
+            según la posicion que el ingrese.
         """
 
-        while True:
+        while True: # Hasta que se termine realizar la operación con exito.
             posicion = self.ingresar_posicion()
 
             try:
