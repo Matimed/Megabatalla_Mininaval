@@ -31,7 +31,11 @@ class Tablero:
 
 
     def get_celda(self, posicion):
-        """Dada una posición devuelve la celda correspondiente."""
+        """ Dada una posición devuelve la celda correspondiente.
+            
+            Recibe:
+                posicion:<Posicion>
+        """
 
         if posicion in self.celdas:
             return self.celdas.get(posicion)
