@@ -54,22 +54,36 @@ class Jugador:
         """
 
         while True: # Hasta que el jugador realice una acción valida.
-            print("Barcos disponibles: ", self.tablero.count_barcos_disponibles())
+            barcos_disponibles = self.tablero.count_barcos_disponibles()
+
+            print("Barcos disponibles: ", barcos_disponibles)
             
             accion = input(
                 "¿Desea quitar u agregar un barco, vaciar el tablero o"
-                + " ubicar aleatoriamente los barcos restantes? q|a|v|u"
+                + " ubicar aleatoriamente los barcos restantes? q|a|v|u\n"
                 ).strip().lower()
 
             system('cls')
 
-            if accion   == 'a': self.agregar_barco()
+            if accion   == 'a':
+                if barcos_disponibles: # Verifica que hayan barcos disponibles.
+                    self.agregar_barco()
+
+                else:
+                    print("No hay barcos disponibles para agregar.")
+                    continue
 
             elif accion == 'q': self.quitar_barco()
                 
             elif accion == 'v': self.tablero.vaciar_celdas()
 
-            elif accion == 'u': self.tablero.ubicacion_aleatoria()
+            elif accion == 'u':
+                if barcos_disponibles: # Verifica que hayan barcos disponibles.  
+                    self.tablero.ubicacion_aleatoria()
+                
+                else:
+                    print("No hay barcos disponibles para agregar.")
+                    continue
 
             else: 
                 print("Respuesta invalida, vuelva a intentar:")
