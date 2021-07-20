@@ -129,7 +129,8 @@ class Programa:
         # 0 y 1 son las posiciones de los jugadores en la lista de jugadores.
         atacante = 0 
         defensor = 1
-
+        
+        system('cls')
         print("Que comience el juego!")
 
         while True: #Hasta que el juego termine.
@@ -145,12 +146,18 @@ class Programa:
 
             if not celda.haber_barco(): #Si no toca un barco pierde el turno.
                 print("Agua")
+                input("Precione Enter para continuar.")
+                system('cls')
+
                 atacante, defensor = defensor, atacante
             else:
                 print("Tocado!")
                 if self.comprobar_ganador(self.jugadores[atacante]): 
                     #Devuelve al jugador ganador.
                     return self.jugadores[atacante] 
+                
+                input("Precione Enter para continuar.")
+                system('cls')
 
 
     def mostrar_mapa(self, mapa):
@@ -158,6 +165,6 @@ class Programa:
 
 
 #Ejecutar programa:
-"""programa = Programa(4, 4)
+programa = Programa(4, 4)
 programa.preparar_juego()
-print("El jugador "+ programa.jugar().get_nombre() + " ha ganado la partida" )"""
+print("El jugador "+ programa.jugar().get_nombre() + " ha ganado la partida" )
