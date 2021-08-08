@@ -1,6 +1,6 @@
-from . import Estado
+from . import EstadoJuego
 
-class Bautizo(Estado):
+class Bautizo(EstadoJuego):
     """ Etapa donde se le asigna un nombre a cada uno de los jugadores.
     """
 

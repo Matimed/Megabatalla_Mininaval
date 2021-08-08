@@ -1,6 +1,6 @@
-from . import Estado
+from . import EstadoJuego
 
-class Colocacion(Estado):
+class Colocacion(EstadoJuego):
     """ Etapa donde los jugadores distribuyen sus barcos
         en posiciones determinadas de sus tableros
         que termina cuando todos los barcos de ambos jugadores

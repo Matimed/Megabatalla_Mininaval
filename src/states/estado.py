@@ -2,8 +2,6 @@ class Estado:
     """ Una etapa definida que transitan los jugadores
         a lo largo de la partida.
     """
-
-    jugadores = []
     controlador_estados = None
 
     def actualizar(self):
@@ -11,7 +9,7 @@ class Estado:
             y realiza las tareas que conciernen a ese estado particular.
         """
 
-        return NotImplementedError
+        raise NotImplementedError
 
 
     def finalizar(self):
@@ -19,4 +17,4 @@ class Estado:
             cuando se terminan todas las tareas pertinentes al estado.
         """
 
-        return NotImplementedError
+        raise NotImplementedError

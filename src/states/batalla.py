@@ -1,6 +1,6 @@
-from . import Estado
+from . import EstadoJuego
 
-class Batalla(Estado):
+class Batalla(EstadoJuego):
     """ Etapa de ejecución y conclusión de los disparos
         que termina cuando todos los barcos de un jugador se hunden.
     """
