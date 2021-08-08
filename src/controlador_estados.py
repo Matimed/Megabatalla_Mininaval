@@ -1,4 +1,4 @@
-from . import InterfazGrafica
+from graphics import InterfazGrafica
 from states import *
 
 class ControladorEstados:
@@ -16,7 +16,6 @@ class ControladorEstados:
  
         self.indice = 0
         self.estado_actual = self.estados[self.indice]()
-
 
 
     def actualizar(self):
