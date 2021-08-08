@@ -1,3 +1,4 @@
+from . import InterfazGrafica
 from states import *
 
 class ControladorEstados:
@@ -8,12 +9,14 @@ class ControladorEstados:
 
     def __init__(self):
         Estado.contolador_estado = self
+        Estado.interfaz = InterfazGrafica()
 
         # Secuencia ordenada de estados.
-        self.estados = [Configuracion, Bautizo, Colocacion, Batalla] 
+        self.estados = [Configuracion, Bautizo, Colocacion, Batalla]
  
         self.indice = 0
         self.estado_actual = self.estados[self.indice]()
+
 
 
     def actualizar(self):
