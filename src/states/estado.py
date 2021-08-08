@@ -3,6 +3,7 @@ class Estado:
         a lo largo de la partida.
     """
     controlador_estados = None
+    interfaz = None
 
     def actualizar(self):
         """ Muestra los cambios en la interfaz gráfica
