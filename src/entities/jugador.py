@@ -1,6 +1,4 @@
-from custom_errors.cell_full_error import CellFullError
-from custom_errors.cell_empty_error import CellEmptyError
-from custom_errors.not_enought_boats_error import NotEnoughtBoatsError
+from custom_errors import CellEmptyError, CellFullError, NotEnoughtBoatsError
 from os import system
 
 

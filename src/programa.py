@@ -1,6 +1,4 @@
-from tablero import Tablero
-from jugador import Jugador
-from posicion import Posicion
+from entities import Tablero, Jugador, Posicion
 import string
 from os import system
 

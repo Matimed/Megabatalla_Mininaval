@@ -1,4 +1,4 @@
-from estado import Estado
+from . import Estado
 
 class Configuracion(Estado):
     """ Etapa donde se definen las características generales de la partida

@@ -1,4 +1,4 @@
-from estado import Estado
+from . import Estado
 
 class Batalla(Estado):
     """ Etapa de ejecución y conclusión de los disparos

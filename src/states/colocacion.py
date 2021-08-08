@@ -1,4 +1,4 @@
-from estado import Estado
+from . import Estado
 
 class Colocacion(Estado):
     """ Etapa donde los jugadores distribuyen sus barcos

@@ -1,7 +1,5 @@
-from custom_errors.not_enought_boats_error import NotEnoughtBoatsError
-from custom_errors.cell_full_error import CellFullError
-from celda import Celda
-from barco import Barco
+from custom_errors import CellFullError, NotEnoughtBoatsError
+from . import Celda, Barco
 import random
 
 
