@@ -1,20 +1,23 @@
-from . import ControladorEstados
+from vista import Ventana, GestorEstados
+from modelo import Juego
+from controlador import *
+
 
 class Principal:
-    """ Inicia el juego y lo mantiene en acción."""
-
+    """ Prepara el juego para ser iniciado y lo ejecuta."""
+    
     def __init__(self):
-        self.controlador_estados = ControladorEstados()
-
-
-    def actualizar(self):
-        self.controlador_estados.actualizar()
+        ventana = Ventana()
+        gestor_estados = GestorEstados(ventana)
+        juego = Juego()
+        controlador_eventos = ControladorEventos(ventana, gestor_estados, juego)
+        self.controlador_tics = ControladorTics(controlador_eventos)
 
 
     def ejecutar(self):
-        while True:
-            self.actualizar()
+        self.controlador_tics.ejecutar()
 
     
 if __name__ == '__main__':
-    Principal().ejecutar()
+    principal = Principal()
+    principal.ejecutar()

@@ -1,3 +1,0 @@
-from programa import Programa
-from controlador_estados import ControladorEstados
-from principal import Principal

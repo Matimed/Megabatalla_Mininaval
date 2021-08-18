@@ -1,7 +1,6 @@
-from graphics import InterfazGrafica
-from states import *
 
-class ControladorEstados:
+
+class GestorEstados:
     """ Define los estados que existen en el juego y su orden
         ademas actualiza el estado por el que está transitando
         un jugador.

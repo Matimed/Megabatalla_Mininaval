@@ -1,0 +1,2 @@
+from controlador.controlador_tics import ControladorTics
+from controlador.controlador_eventos import ControladorEventos
