@@ -1,5 +1,5 @@
 from view.states import *
-from events import EventosGenerales as e
+from events import EventoGlobal as ev
 
 
 class GestorEstados:
@@ -8,16 +8,38 @@ class GestorEstados:
     """
 
     def __init__(self):
-        self.estado_inicial = MenuPrincipal # Primer estado del juego.
-        self.estado_actual = self.estado_inicial()
+        self.estados = {
+            'menu': Menu,
+            'configuracion': Configuracion,
+            'bautizo': Bautizo,
+            'colocacion': Colocacion,
+            'batalla': Batalla
+        }
+
+        self.estado_actual = self.estados['menu']()
 
 
     def actualizar(self, eventos):
         for evento in list(eventos):
-            if evento.type == e.CAMBIAR_ESTADO:
-                self._set_estado_actual(evento.estado)
+            if evento.type == ev.VOLVER_MENU:
+                self._set_estado_actual(self.estados['menu'])
                 eventos.remove(evento) # Los estados no necesitan ese evento.
-        
+
+            if evento.type == ev.FINALIZAR_ESTADO:
+                if evento.estado == self.estados['menu']:
+                    self._set_estado_actual(self.estados['configuracion'])
+                
+                if evento.estado == self.estados['configuracion']:
+                    self._set_estado_actual(self.estados['bautizo'])
+                
+                if evento.estado == self.estados['bautizo']:
+                    self._set_estado_actual(self.estados['colocacion'])
+
+                if evento.estado == self.estados['colocacion']:
+                    self._set_estado_actual(self.estados['batalla'])
+
+                eventos.remove(evento)
+
         self.estado_actual.actualizar(eventos)
 
 
