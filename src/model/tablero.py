@@ -10,18 +10,18 @@ class Tablero:
 
     cant_barcos = 8
     posiciones = []
-
-    def __init__(self, posiciones):
+    
+    def __init__(self):
         """ Recibe una lista de objetos tipo Posicion a los que asignara
             una celda por cada uno y la cantidad de barcos que se quieren utilizar.
         """
 
-        assert type(posiciones) == list
+        assert type(Tablero.posiciones) == list
         self.celdas = {}
         self.barcos_disponibles = []
 
         #Crea el diccionario de celdas a partir de las posiciones.
-        for posicion in posiciones: 
+        for posicion in Tablero.posiciones: 
             self.celdas[posicion] = Celda()
 
         #Crea la lista de barcos de la cantidad pedida.
