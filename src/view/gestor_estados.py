@@ -1,28 +1,31 @@
+from view.states import *
+from events import EventosGenerales as e
 
 
 class GestorEstados:
-    """ Define los estados que existen en el juego y su orden
-        ademas actualiza el estado por el que está transitando
-        un jugador.
+    """ Intermediario en la comunicación con los estados, 
+        además realiza operaciones pertinentes a estos.
     """
 
     def __init__(self):
-        Estado.contolador_estado = self
-        Estado.interfaz = InterfazGrafica()
-
-        # Secuencia ordenada de estados.
-        self.estados = [Configuracion, Bautizo, Colocacion, Batalla]
- 
-        self.indice = 0
-        self.estado_actual = self.estados[self.indice]()
+        self.estado_inicial = MenuPrincipal # Primer estado del juego.
+        self.estado_actual = self.estado_inicial()
 
 
-    def actualizar(self):
-        self.estado_actual.actualizar()
+    def actualizar(self, eventos):
+        for evento in list(eventos):
+            if evento.type == e.CAMBIAR_ESTADO:
+                self._set_estado_actual(evento.estado)
+                eventos.remove(evento) # Los estados no necesitan ese evento.
+        
+        self.estado_actual.actualizar(eventos)
 
 
-    def siguiente_estado(self):
-        """ Asigna el estado a ejecutar como el que sucede al actual."""
+    def _set_estado_actual(self, estado):
+        """ Cambia el estado actual por otro
 
-        self.indice += 1
-        self.estado_actual = self.estados[self.indice]()
+            Recibe:
+                estado:<Estado>
+        """
+
+        self.estado_actual = estado()
