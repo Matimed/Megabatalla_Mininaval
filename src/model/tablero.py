@@ -9,7 +9,8 @@ class Tablero:
     """
 
     cant_barcos = 8
-    
+    posiciones = []
+
     def __init__(self, posiciones):
         """ Recibe una lista de objetos tipo Posicion a los que asignara
             una celda por cada uno y la cantidad de barcos que se quieren utilizar.

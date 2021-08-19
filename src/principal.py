@@ -1,16 +1,15 @@
-from vista import Ventana, GestorEstados
-from modelo import Juego
-from controlador import *
+from view import GestorEstados
+from model import Juego
+from controller import *
 
 
 class Principal:
     """ Prepara el juego para ser iniciado y lo ejecuta."""
     
     def __init__(self):
-        ventana = Ventana()
-        gestor_estados = GestorEstados(ventana)
+        gestor_estados = GestorEstados()
         juego = Juego()
-        controlador_eventos = ControladorEventos(ventana, gestor_estados, juego)
+        controlador_eventos = ControladorEventos(gestor_estados, juego)
         self.controlador_tics = ControladorTics(controlador_eventos)
 
 
