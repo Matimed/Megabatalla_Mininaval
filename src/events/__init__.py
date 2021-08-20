@@ -1,1 +1,4 @@
-from events.eventos_generales import EventosGenerales
+from events.evento import Evento
+from events.evento_global import EventoGlobal
+from events.evento_tablero import EventoTablero
+
