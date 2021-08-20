@@ -94,7 +94,7 @@ class Tablero:
         return len(self.barcos_disponibles)
     
 
-    def ubicacion_aleatoria(self):
+    def ubicar_aleatoriamente(self):
         """ Mientras hayan barcos disponibles 
             toma una Posicion aleatoria de su diccionario de celdas e 
             intenta agregar un barco en ella.

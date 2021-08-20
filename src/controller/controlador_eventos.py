@@ -1,4 +1,4 @@
-from events import EventosGenerales
+from events import EventoGlobal
 
 
 class ControladorEventos:
