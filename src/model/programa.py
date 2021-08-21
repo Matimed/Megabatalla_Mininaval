@@ -144,7 +144,7 @@ class Programa:
 
             if not celda.haber_barco(): #Si no toca un barco pierde el turno.
                 print("Agua")
-                input("Precione Enter para continuar.")
+                input("Presione Enter para continuar.")
                 system('cls')
 
                 atacante, defensor = defensor, atacante
