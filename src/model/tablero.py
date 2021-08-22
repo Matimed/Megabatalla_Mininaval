@@ -123,3 +123,20 @@ class Tablero:
                     break
 
 
+    def get_estado_celdas(self):
+        """ Devuelve un diccionario con todas las posiciones 
+            y los estados de las celdas:
+            
+            estado_celdas<Dict>{
+                key = posicion <Posicion>,
+                value = celda_ocupada <bool>
+            }
+        """
+
+        estado_celdas = {}
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+            estado_celdas[posicion] = celda.haber_barco()
+        
+        return estado_celdas
+

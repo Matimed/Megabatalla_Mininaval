@@ -40,3 +40,18 @@ class Jugador:
             self.mapa[posicion] = celda
 
 
+    def get_marcas(self):
+        """ Devuelve un diccionario con las posiciones de las celdas marcadas
+            y sus estados:
+
+            estado_mapa<Dict>{
+                key = posicion <Posicion>,
+                value = celda_ocupada <bool>
+            }
+        """
+
+        estado_mapa = {}
+        for posicion in self.mapa:
+            celda =  self.mapa[posicion]
+            estado_mapa[posicion] = celda.haber_barco()
+
