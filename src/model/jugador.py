@@ -1,5 +1,8 @@
 
 
+from view.states import estado
+
+
 class Jugador:
     """ Almacena información relevante 
         relacionada con la persona que juega al juego"""
@@ -35,4 +38,5 @@ class Jugador:
         # Verifica que posicion no este ya en mapa.
         if not posicion in self.mapa: 
             self.mapa[posicion] = celda
+
 

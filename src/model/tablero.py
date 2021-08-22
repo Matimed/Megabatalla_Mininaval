@@ -1,5 +1,5 @@
 from custom_errors import CellFullError, NotEnoughtBoatsError
-from . import Celda, Barco
+from model import Celda, Barco
 import random
 
 
@@ -49,7 +49,7 @@ class Tablero:
                 posicion:<Posicion>
         """
 
-        self.celdas[posicion].marcar()
+        self.get_celda(posicion).marcar()
 
 
     def agregar_barco(self, posicion):
@@ -120,4 +120,6 @@ class Tablero:
                 self.quitar_barco(posicion)
 
                 if self.count_barcos_disponibles() == Tablero.cant_barcos:
-                    return
+                    break
+
+
