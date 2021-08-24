@@ -4,7 +4,7 @@ from view.states import Estado
 from view.states.colocacion import Colocacion
 
 
-class MenuPrincipal(Estado):
+class Menu(Estado):
     def __init__(self):
         super().__init__()
         

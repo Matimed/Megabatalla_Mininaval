@@ -1,21 +1,21 @@
+from ventana import Ventana
+
+
 class Estado:
-    """ Una etapa definida que transitan los jugadores
-        a lo largo de la partida.
-    """
-    controlador_estados = None
-    interfaz = None
+    ventana = Ventana()
 
-    def actualizar(self):
-        """ Muestra los cambios en la interfaz gráfica
-            y realiza las tareas que conciernen a ese estado particular.
-        """
-
-        raise NotImplementedError
+    def __init__(self):
+        self.nombre = ''
 
 
-    def finalizar(self):
-        """ Le avisa al controlador de estados
-            cuando se terminan todas las tareas pertinentes al estado.
-        """
+    def actualizar(self, eventos):
+        """ Recibe una lista de eventos y decide como interpretar
+            cada uno."""
 
-        raise NotImplementedError
+        raise NotImplementedError()
+
+
+    def representar(self):
+        """ Dibuja todos los sprites que contiene."""
+
+        raise NotImplementedError()
