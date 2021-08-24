@@ -1,5 +1,5 @@
 from custom_errors import CellFullError, NotEnoughtBoatsError
-from . import Celda, Barco
+from model import Celda, Barco
 import random
 
 
@@ -49,7 +49,7 @@ class Tablero:
                 posicion:<Posicion>
         """
 
-        self.celdas[posicion].marcar()
+        self.get_celda(posicion).marcar()
 
 
     def agregar_barco(self, posicion):
@@ -120,4 +120,23 @@ class Tablero:
                 self.quitar_barco(posicion)
 
                 if self.count_barcos_disponibles() == Tablero.cant_barcos:
-                    return
+                    break
+
+
+    def get_estado_celdas(self):
+        """ Devuelve un diccionario con todas las posiciones 
+            y los estados de las celdas:
+            
+            estado_celdas<Dict>{
+                key = posicion <Posicion>,
+                value = celda_ocupada <bool>
+            }
+        """
+
+        estado_celdas = {}
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+            estado_celdas[posicion] = celda.haber_barco()
+        
+        return estado_celdas
+

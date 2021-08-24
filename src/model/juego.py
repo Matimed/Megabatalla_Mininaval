@@ -11,10 +11,6 @@ class Juego:
         self.jugadores = []
         self.turno = 0
 
-
-        # Genera los tableros:
-        [self.tableros.append(Tablero()) for i in range(2)]
-
         # Genera los jugadores:
         [self.jugadores.append(Jugador()) for i in range(2)]
         
@@ -24,6 +20,9 @@ class Juego:
             if ev.type == evento.CONFIGURADO:
                 Tablero.posiciones = self._generar_posiciones(ev.orden)
                 Tablero.cant_barcos = ev.cant_barcos
+
+                # Genera los tableros:
+                [self.tableros.append(Tablero()) for i in range(2)]
                 
             if ev.type == evento.ASIGNAR_NOMBRES:
                 self.jugadores[0].set_nombre(ev.nombre_j1)
