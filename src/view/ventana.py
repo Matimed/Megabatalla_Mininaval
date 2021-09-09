@@ -24,7 +24,7 @@ class Ventana:
             pygame.display.Info().current_h
         ) # Obtiene la resolucion de la pantalla.
 
-        self.fondo
+        self.fondo = None
         self.set_fondo((0,0,0))
 
 
