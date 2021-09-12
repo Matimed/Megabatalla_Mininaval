@@ -9,7 +9,7 @@ class SpriteBarco(pygame.sprite.Sprite):
         self.posicion = None
 
 
-    def update(self, hundido):
+    def update(self, hundido = False):
         """Recibe un booleano que indica si el barco esta hundido"""
          
         self.image = self.imagenes[hundido]
@@ -26,3 +26,10 @@ class SpriteBarco(pygame.sprite.Sprite):
         
         self.rect.center(posX,posY)
 
+
+    def draw(self, surface):
+        """ Recibe una superficie y se dibuja a si mismo en ella."""
+
+        surface.blit(self.image, self.rect)
+
+        

@@ -12,7 +12,7 @@ class SpriteCelda(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.posicion = None
 
-    def update(self, marca):
+    def update(self, marca = False):
         """Recibe un booleano que indica si la celda tiene que estar marcada"""
 
         self.image = self.imagenes[marca]
@@ -33,4 +33,11 @@ class SpriteCelda(pygame.sprite.Sprite):
         """Recibe un objeto de tipo Posicion"""
 
         self.posicion = posicion
+
+
+    def draw(self, surface):
+        """ Recibe una superficie y se dibuja a si misma en ella."""
+
+        surface.blit(self.image, self.rect)
+
 
