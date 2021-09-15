@@ -4,6 +4,7 @@ import pygame
 class EventoGlobal(Evento):
     SALIR = pygame.QUIT
     CLICK = pygame.MOUSEBUTTONDOWN, 'pos (x (int), y (int))', 'button (int)'
+    TECLA_PRECIONADA = pygame.KEYDOWN
 
     CONFIGURADO = pygame.event.custom_type(), 'orden (int)', 'cant_barcos (int)'
     VOLVER_MENU = pygame.event.custom_type()

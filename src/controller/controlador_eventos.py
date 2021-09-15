@@ -1,4 +1,4 @@
-from events import EventoGlobal
+from events.evento_global import EventoGlobal as ev
 import pygame
 
 
@@ -12,10 +12,13 @@ class ControladorEventos:
         eventos_modelo = []
         eventos_visuales = []
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            
+            if evento.type == ev.TECLA_PRECIONADA:
+                eventos_visuales.append(evento)
 
         self.juego.actualizar(eventos_modelo)
         self.gestor_estados.actualizar(eventos_visuales)
