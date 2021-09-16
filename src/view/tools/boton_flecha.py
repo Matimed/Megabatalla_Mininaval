@@ -19,7 +19,7 @@ class SpriteBotonFlecha(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
-        self._precionado = False
+        self._presionado = False
 
 
     def _ajustar_superficie(self, superficie, alto, angulo):
@@ -43,15 +43,25 @@ class SpriteBotonFlecha(pygame.sprite.Sprite):
         focus = self.rect.collidepoint(pygame.mouse.get_pos())
 
         if focus:
-            if pygame.mouse.get_pressed()[0] and not self._precionado:
-                self._precionado = not self._precionado
+            if pygame.mouse.get_pressed()[0] and not self._presionado:
+                self._presionado = not self._presionado
                 self.index = 1
         
-        if not pygame.mouse.get_pressed()[0] and self._precionado: 
-            self._precionado = not self._precionado
+        if not pygame.mouse.get_pressed()[0] and self._presionado: 
+            self._presionado = not self._presionado
             self.index = 0
             
         self.image = self.boton[self.index]
+
+        return self._presionado
+
+    
+    
+    def draw(self, surface):
+        """ Recibe una superficie y se dibuja a si misma en ella."""
+
+        surface.blit(self.image, self.rect)
+
 
     
     def _escalar(self, superficie, alto):

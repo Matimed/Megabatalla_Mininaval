@@ -37,3 +37,9 @@ class SpriteCajaTexto(pygame.sprite.Sprite):
 
 
     def get_tamaño(self): return self.image.get_size()
+
+    
+    def draw(self, surface):
+        """ Recibe una superficie y se dibuja a si misma en ella."""
+
+        surface.blit(self.image, self.rect)
