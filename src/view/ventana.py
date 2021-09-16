@@ -8,7 +8,7 @@ class Ventana:
 
     def __init__(self):
         pygame.display.set_caption('Batalla naval')
-        
+
         self.resolucion_maxima = (
             pygame.display.Info().current_w,
             pygame.display.Info().current_h
@@ -26,6 +26,12 @@ class Ventana:
 
         self.fondo = None
         self.set_fondo((0,0,0))
+
+
+    def get_center(self):
+        """ Devuelve el punto medio de la pantalla."""
+        
+        return (self.resolucion[0]//2, self.resolucion[1]//2)
 
 
     def get_surface(self):
