@@ -9,7 +9,12 @@ class Ventana:
     def __init__(self):
         pygame.display.set_caption('Batalla naval')
         
-        self.escala = 3 # Escala por defecto.
+        self.resolucion_maxima = (
+            pygame.display.Info().current_w,
+            pygame.display.Info().current_h
+        ) # Obtiene la resolucion de la pantalla.
+        
+        self.escala = 2 # Escala por defecto.
 
         # Resolución minima y por defecto.
         self.resolucion_nativa = (480, 270)
@@ -18,11 +23,6 @@ class Ventana:
         self.resolucion = self.get_resolucion(self.escala)
 
         self.ventana_sur = pygame.display.set_mode(self.resolucion)
-
-        self.resolucion_maxima = (
-            pygame.display.Info().current_w,
-            pygame.display.Info().current_h
-        ) # Obtiene la resolucion de la pantalla.
 
         self.fondo = None
         self.set_fondo((0,0,0))
