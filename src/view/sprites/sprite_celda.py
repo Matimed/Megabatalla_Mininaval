@@ -1,7 +1,6 @@
 import pygame
 from view.referencias import CELDA
-from events import EventoPulsacion as evPulsacion
-from events import EventoGlobal as evGlobal
+from events import EventoGlobal as evento
 
 class SpriteCelda(pygame.sprite.Sprite):
 
@@ -11,19 +10,27 @@ class SpriteCelda(pygame.sprite.Sprite):
         self.image = self.imagenes[0]
         self.rect = self.image.get_rect()
         self.posicion = None
+        self._presionado = 0
 
     def update(self, marca = False):
         """Recibe un booleano que indica si la celda tiene que estar marcada"""
 
         self.image = self.imagenes[marca]
 
-        if  pygame.mouse.get_pressed()[0]: 
-            pulsar = pygame.event.Event(
-                        evGlobal.PULSACION, 
-                        tipo = evPulsacion.CELDA, 
-                        posicion = self.posicion
-                        )
-            pygame.post(pulsar)
+        focus = self.rect.collidepoint(pygame.mouse.get_pos())
+
+        if focus:
+            if pygame.mouse.get_pressed()[0] and not self._presionado:
+                self._presionado = not self._presionado
+
+                pulsar = pygame.event.Event(
+                            evento.CELDA_PRESIONADA, 
+                            posicion = self.posicion
+                            )
+                pygame.post(pulsar)
+        
+        if not pygame.mouse.get_pressed()[0] and self._presionado: 
+            self._presionado = not self._presionado
 
 
     def get_rect(self):

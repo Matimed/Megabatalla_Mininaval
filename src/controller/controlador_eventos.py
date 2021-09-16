@@ -17,7 +17,7 @@ class ControladorEventos:
                 pygame.quit()
                 exit()
             
-            if evento.type == ev.TECLA_PRECIONADA:
+            if evento.type == ev.TECLA_PRESIONADA:
                 eventos_visuales.append(evento)
 
         self.juego.actualizar(eventos_modelo)
