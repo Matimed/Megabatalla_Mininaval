@@ -36,9 +36,11 @@ class TableroView(AbstractGroup):
         else:
             for barco in barcos:
                 barco.update(False)
-            for celda in self.celdas.values:
-                celda.update(False)
-        
+            
+            for fila in self.celdas:
+                for celda in fila:
+                    celda.update(False)
+
         return barcos
 
 
@@ -47,8 +49,9 @@ class TableroView(AbstractGroup):
             y coloca en ella todos los sprites del tablero.
         """
 
-        for celda in self.celdas.values():
-            celda.draw(surface)
+        for fila in self.celdas:
+            for celda in fila:
+                celda.draw(surface)
         for barco in barcos:
             barco.draw(surface)
 
@@ -146,8 +149,14 @@ class TableroView(AbstractGroup):
 
         barcos = iter(self.barcos)
         barcos_visibles = []
+        
         for posicion in posiciones:
-            celda = self.celdas[posicion]
+            index = self.convertir_posicion_index(posicion)
+            self.celdas[index[0]][index[1]]
+        
+        for posicion in posiciones:
+            index = self.convertir_posicion_index(posicion)
+            celda = self.celdas[index[0]][index[1]]
             barco = next(barcos)
 
             # Ubica el barco en el medio de la celda correspondiente.
