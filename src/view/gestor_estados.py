@@ -8,7 +8,12 @@ class GestorEstados:
         además realiza operaciones pertinentes a estos.
     """
 
-    def __init__(self):
+    def __init__(self, juego):
+        """ Recibe una instancia de Juego para poder comunicarse con ella.
+        """
+
+        self.juego = juego
+
         self.estados = {
             'menu': Menu,
             'configuracion': Configuracion,
@@ -34,25 +39,30 @@ class GestorEstados:
                         self._set_estado_actual(self.estados['configuracion'])
                     
                     if ev.estado == self.estados['configuracion']:
-                        self._set_estado_actual(self.estados['bautizo'])
+                       self.estado_actual = self.estados['bautizo']
                     
                     if ev.estado == self.estados['bautizo']:
-                        self._set_estado_actual(self.estados['colocacion'])
+                        tableros = self.juego.get_tableros()
+                        self.estado_actual = self.estados['colocacion'](tableros)
 
                     if ev.estado == self.estados['colocacion']:
-                        self._set_estado_actual(self.estados['batalla'])
+                         self.estado_actual = self.estados['batalla']()
 
                     eventos.remove(ev)
 
         self.estado_actual.actualizar(eventos)
 
 
-    def _set_estado_actual(self, estado):
+    def _set_estado_actual(self, estado, *args):
         """ Cambia el estado actual por otro
 
             Recibe:
                 estado:<Estado>
+                args: <Any>[*] Atributos extra dependiendo del estado.
         """
 
-        self.estado_actual = estado()
+        if args:
+            self.estado_actual = estado(args)
+        else:
+            self.estado_actual = estado()
 

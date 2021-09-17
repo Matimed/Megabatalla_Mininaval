@@ -46,6 +46,9 @@ class Juego:
                 self._disparar()
                 
 
+    def get_tableros(self):
+        return self.tableros
+
 
     def _generar_posiciones(self, orden): 
         """ Dado un orden genera una lista con ese numero 
@@ -102,4 +105,5 @@ class Juego:
                 if barcos_hundidos == Tablero.cant_barcos: return True
 
         return False
+
 
