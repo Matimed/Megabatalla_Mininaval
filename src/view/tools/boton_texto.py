@@ -23,6 +23,37 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         self._presionado = 0
 
 
+    def update(self):
+        focus = self.rect.collidepoint(pygame.mouse.get_pos())
+
+        if focus:
+            self.index = 1
+            if pygame.mouse.get_pressed()[0] and not self._presionado:
+                self._presionado = not self._presionado
+                
+                return True
+        else:
+            self.index = 0
+
+        self.image = self.boton[self.index]
+
+        if not pygame.mouse.get_pressed()[0] and self._presionado: 
+            self._presionado = not self._presionado
+        
+        return False
+
+    
+    
+    def draw(self, surface):
+        """ Recibe una superficie y se dibuja a si misma en ella."""
+
+        surface.blit(self.image, self.rect)
+
+
+    def get_rect(self):
+        return self.rect
+
+
     def _get_tamaño_nativo(self):
         """ Obtiene el tamaño del botón según su atributo texto."""
 
@@ -127,30 +158,3 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
             superficie, (largo_nativo * escala, alto_nativo  * escala)
             )
 
-    
-    def update(self):
-        focus = self.rect.collidepoint(pygame.mouse.get_pos())
-
-        if focus:
-            if pygame.mouse.get_pressed()[0] and not self._presionado:
-                self._presionado = not self._presionado
-                self.index = 1
-        
-        if not pygame.mouse.get_pressed()[0] and self._presionado: 
-            self._presionado = not self._presionado
-            self.index = 0
-            
-        self.image = self.boton[self.index]
-        
-        return self._presionado
-
-    
-    
-    def draw(self, surface):
-        """ Recibe una superficie y se dibuja a si misma en ella."""
-
-        surface.blit(self.image, self.rect)
-
-
-    def get_rect(self):
-        return self.rect
