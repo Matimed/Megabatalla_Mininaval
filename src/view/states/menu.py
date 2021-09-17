@@ -9,7 +9,7 @@ from view.tools import SpriteBotonTexto
 class Menu(Estado):
     def __init__(self):
         super().__init__()
-        Estado.ventana.set_fondo((255,255,255))
+        Estado.ventana.set_fondo((192, 192, 192))
         self.sprites = self._crear_sprites()
 
 
@@ -45,8 +45,8 @@ class Menu(Estado):
         # relativa al tamaño de la ventana.
 
         titulo.get_rect().center = (centro_x, centro_y - centro_y* 2/3 )
-        btJugar.get_rect().center = (centro_x, centro_y - centro_y* 1/4)
-        btSalir.get_rect().center = (centro_x, centro_y + centro_y* 1/4)
+        btJugar.get_rect().center = (centro_x, centro_y - centro_y* 1/6)
+        btSalir.get_rect().center = (centro_x, centro_y + centro_y* 1/3)
 
         sprites = {
             'titulo' : titulo,
