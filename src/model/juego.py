@@ -77,7 +77,11 @@ class Juego:
         if not celda.haber_barco(): self.turno = not self.turno
         else:
             if self.comprobar_ganador(self.jugadores[self.turno]): 
-                ganar = pygame.Event(evento_gb.ESTADO.valor, tipo= evento_estado.VICTORIA ,ganador = self.jugadores[self.turno])
+                ganar = pygame.Event(
+                            evento_gb.ESTADO.valor, 
+                            tipo= evento_estado.VICTORIA,
+                            ganador = self.jugadores[self.turno]
+                            )
                 pygame.event.post(ganar)
                 
 
