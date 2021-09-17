@@ -16,6 +16,33 @@ class Colocacion(Estado):
 
         super().__init__()
         self.modelo_tableros = tableros
+        self.sprites, self.vista_tablero = self._setup_interfaz()
+
+
+    def cambiar_turno(self, jugador_actual):
+        """ Cambia el tx_turno por uno con el nombre del jugador actual.
+        """
+
+        raise NotImplementedError
+
+
+    def _setup_interfaz(self):
+        """ Crea y ubica todos los elementos de la interfaz y
+            devuelve un diccionario de los sprites y el tablero.
+        """
+
+        sprites = self._crear_sprites()
+        origen,limite = self._posisionar_elementos(sprites)
+        tablero = self._crear_tablero(origen, limite)
+        return sprites, tablero
+
+
+    def _crear_tablero(self, origen, limite):
+        cant_barcos = self.modelo_tableros[0].get_cant_barcos()
+        posiciones =  self.modelo_tableros[0].get_posiciones()
+
+
+        return TableroView(cant_barcos, posiciones, origen, limite)
 
 
     def _crear_sprites(self):
