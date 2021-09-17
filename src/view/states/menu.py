@@ -1,5 +1,6 @@
 import pygame
-from events import EventoGlobal as evento
+from events import EventoEstado as evento_estado
+from events import EventoGlobal as evento_gb
 from view.states import Estado
 from view.tools import SpriteCajaTexto
 from view.tools import SpriteBotonTexto
@@ -16,12 +17,12 @@ class Menu(Estado):
         for sprite in self.sprites.values():
             if sprite.update():
                 if sprite == self.sprites['btJugar']:
-                    finalizar_estado = pygame.event.Event(evento.FINALIZAR_ESTADO.valor, estado=Menu)
+                    finalizar_estado = pygame.event.Event(evento_gb.ESTADO.valor, tipo=evento_estado.FINALIZAR_ESTADO, estado=Menu)
                     pygame.event.post(finalizar_estado)
 
 
                 if sprite == self.sprites['btSalir']:
-                    salir = pygame.event.Event(evento.SALIR.valor)
+                    salir = pygame.event.Event(evento_gb.SALIR.valor)
                     pygame.event.post(salir)
             sprite.draw(Estado.ventana_sur)
 
