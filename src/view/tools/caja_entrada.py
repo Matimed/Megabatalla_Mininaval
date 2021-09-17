@@ -28,6 +28,23 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         return self.rect
 
 
+    def actualizar(self, eventos):
+        for evento in eventos:
+            if evento.type == ev.TECLA_PRESIONADA:
+                if evento.key == pygame.K_BACKSPACE:
+                    self.texto = self.texto[:-1]
+
+                    self._generar_texto_sprite()
+
+                elif evento.key == pygame.K_SPACE:
+                    return
+
+                else:
+                    self.texto += evento.unicode
+
+                    self._generar_texto_sprite()
+
+
     def _verificar_largo_texto(self, texto_sprite):
         """ Verifica que la longitud de la superficie de un texto sea 
             adecuada para la superfice del fondo rectangular.
@@ -48,3 +65,30 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
 
         else:
             self.texto = self.texto[:-1]
+
+    
+    def update(self):
+        focus = self.rect.collidepoint(pygame.mouse.get_pos())
+
+        if focus:
+            if pygame.mouse.get_pressed()[0] and not self.precionado:
+                self.precionado = True
+        else:
+            if pygame.mouse.get_pressed()[0] and self.precionado: 
+                self.precionado = False
+
+        return self.precionado
+
+
+    def draw(self, surface):
+        """ Recibe una superficie y dibuja  la superficie de la caja y del texto en ella."""
+
+        surface.blit(self.caja_sur, self.rect)
+        
+        self.texto_sprite.get_rect().center = self.caja_sur.get_rect().center
+
+        surface.blit(self.texto_sprite.get_surface(), self.texto_sprite.get_rect())
+
+
+    def get_texto(self):
+        return self.texto
