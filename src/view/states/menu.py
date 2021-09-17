@@ -47,7 +47,7 @@ class Menu(Estado):
         centro_y = Estado.ventana.get_center()[1]
 
         # Posiciona los sprites de forma
-        # relativa al tamaño de la ventana.
+        # relativa al centro de la ventana.
 
         tx_titulo.get_rect().center = (centro_x, centro_y - centro_y* 2/3 )
         bt_jugar.get_rect().center = (centro_x, centro_y - centro_y* 1/6)
