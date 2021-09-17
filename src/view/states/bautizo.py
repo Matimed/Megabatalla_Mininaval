@@ -1,6 +1,6 @@
-from . import EstadoJuego
+from view.states import Estado
 
-class Bautizo(EstadoJuego):
+class Bautizo(Estado):
     """ Etapa donde se le asigna un nombre a cada uno de los jugadores.
     """
 

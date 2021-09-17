@@ -1,6 +1,7 @@
 import pygame
-from events import EventoGlobal as evento
+from events import EventoGlobal as evento_gb, evento_estado
 from events import EventoTablero  as evento_tablero
+from events import EventoEstado  as evento_estado
 from model import Posicion, Tablero, Jugador
 import string
 
@@ -17,18 +18,18 @@ class Juego:
 
     def actualizar(self, eventos):
         for ev in eventos:
-            if ev.type == evento.CONFIGURADO:
+            if ev.type == evento_gb.CONFIGURADO:
                 Tablero.posiciones = self._generar_posiciones(ev.orden)
                 Tablero.cant_barcos = ev.cant_barcos
 
                 # Genera los tableros:
                 [self.tableros.append(Tablero()) for i in range(2)]
                 
-            if ev.type == evento.ASIGNAR_NOMBRES:
+            if ev.type == evento_gb.ASIGNAR_NOMBRES:
                 self.jugadores[0].set_nombre(ev.nombre_j1)
                 self.jugadores[1].set_nombre(ev.nombre_j2)
 
-            if ev.type == evento.TABLERO:
+            if ev.type == evento_gb.TABLERO:
                 if ev.tipo == evento_tablero.COLOCAR_BARCO: 
                     self.tableros[self.turno].agregar_barco(ev.posicion)
 
@@ -41,7 +42,7 @@ class Juego:
                 if ev.tipo == evento_tablero.UBICAR_ALEATORIAMENTE:
                     self.tableros[self.turno].ubicar_aleatoriamente()
             
-            if ev.type == evento.DISPARAR:
+            if ev.type == evento_gb.DISPARAR:
                 self._disparar()
                 
 
@@ -76,7 +77,7 @@ class Juego:
         if not celda.haber_barco(): self.turno = not self.turno
         else:
             if self.comprobar_ganador(self.jugadores[self.turno]): 
-                ganar = pygame.Event(evento.VICTORIA.valor, ganador = self.jugadores[self.turno])
+                ganar = pygame.Event(evento_gb.ESTADO.valor, tipo= evento_estado.VICTORIA ,ganador = self.jugadores[self.turno])
                 pygame.event.post(ganar)
                 
 
@@ -97,3 +98,4 @@ class Juego:
                 if barcos_hundidos == Tablero.cant_barcos: return True
 
         return False
+

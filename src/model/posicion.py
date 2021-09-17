@@ -29,6 +29,7 @@ class Posicion:
             el método get_posicion.
         """
 
+        # Metodo del pato para saber si other es de tipo Posicion:
         try:
             other_get_posicion = other.get_posicion
         except AttributeError:
@@ -54,6 +55,33 @@ class Posicion:
     def __hash__(self):
         return hash((self.y, self.x))
 
+    def __lt__(self, other):
+        """ Compara dos instancias de Posicion utilizando 
+            el método get_posicion y devuelve True si la segunda
+            es mayor que si misma.
+        """
+
+        # Metodo del pato para saber si other es de tipo Posicion:
+        try:
+            other_get_posicion = other.get_posicion
+        except AttributeError:
+            raise NotImplementedError()
+
+        return self.get_posicion() < other.get_posicion()
+
+    def __gt__(self, other):
+        """ Compara dos instancias de Posicion utilizando 
+            el método get_posicion y devuelve True si la segunda
+            es menor que si misma.
+        """
+
+        # Metodo del pato para saber si other es de tipo Posicion:
+        try:
+            other_get_posicion = other.get_posicion
+        except AttributeError:
+            raise NotImplementedError()
+
+        return self.get_posicion() > other.get_posicion()
 
     def _verificar_formato(self, y, x):
         assert type(x) == int, "'x' debe ser int."
@@ -63,3 +91,5 @@ class Posicion:
 
     def __repr__(self):
         return f"({self.y}, {self.x})"
+
+
