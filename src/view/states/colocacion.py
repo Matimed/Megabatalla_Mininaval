@@ -51,7 +51,58 @@ class Colocacion(Estado):
         return sprites
 
 
+    def _posisionar_elementos(self, sprites):
+        """ Recorre el diccionario de sprites, los ubica y
+            devuelve la posiciones de origen y limite para el
+            tablero.
+        """
 
+        centro_x = Estado.ventana.get_center()[0]
+        centro_y = Estado.ventana.get_center()[1]
+
+        origen_tablero = (centro_x*1/2 , centro_y * 1/2)
+        limite_tablero = (centro_x*3/2, centro_y*18/10)
+
+        centro_zona_botones_x = origen_tablero[0] / 2
+        centro_zona_info_x= ((centro_x*2 - limite_tablero[0])/ 2) + limite_tablero[0]
+
+        # Posiciona los sprites de forma relativa 
+        # al centro de la ventana las zonas.
+
+        sprites['tx_titulo'].get_rect().center = (centro_x, centro_y* 1/6 )
+        
+        sprites['tx_turno'].get_rect().center = (
+            centro_zona_info_x , centro_y*5/8
+            )
+        sprites['tx_jugador'].get_rect().center = (
+            sprites['tx_turno'].get_rect().centerx, 
+            sprites['tx_turno'].get_rect().bottom + centro_y*1/12 
+            )
+
+        sprites['tx_barcos'].get_rect().center = (
+            centro_zona_info_x , centro_y
+            )
+        sprites['tx_restantes'].get_rect().center = (
+            sprites['tx_barcos'].get_rect().centerx, 
+            sprites['tx_barcos'].get_rect().bottom + centro_y*1/12 
+            )
+        sprites['tx_cant_barcos'].get_rect().center = (
+            sprites['tx_restantes'].get_rect().centerx, 
+            sprites['tx_restantes'].get_rect().bottom + centro_y*1/12 
+            )
+
+        sprites['bt_vaciar'].get_rect().center = (
+            centro_zona_botones_x, centro_y - centro_y* 1/2
+            )
+        sprites['bt_ubicar'].get_rect().center = (
+            centro_zona_botones_x, centro_y + centro_y* 1/2
+            )
+        sprites['bt_continuar'].get_rect().center = (
+            centro_x*21/12, centro_y * 20/12
+            )
+
+
+        return origen_tablero, limite_tablero
 
     def _crear_tablero(self):
         cant_barcos = self.modelo_tableros[0].cant_barcos
