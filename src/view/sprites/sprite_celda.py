@@ -22,11 +22,11 @@ class SpriteCelda(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[0] and not self._presionado:
             self._presionado = not self._presionado
             pulsar = pygame.event.Event(
-                        evento_gb.ESTADO, 
-                        tipo = evento_estado.CELDA, 
+                        evento_gb.ESTADO.valor, 
+                        tipo = evento_estado.CELDA_PRESIONADA,
                         posicion = self.posicion
                         )
-            pygame.post(pulsar)
+            pygame.event.post(pulsar)
 
         if not pygame.mouse.get_pressed()[0] and self._presionado: 
             self._presionado = not self._presionado
