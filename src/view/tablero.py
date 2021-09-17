@@ -1,10 +1,12 @@
 from pygame.sprite import AbstractGroup
 from view.sprites import SpriteCelda
 from view.sprites import SpriteBarco
+import string
 
 class TableroView(AbstractGroup):
-    def __init__(self, cant_barcos, posiciones):
-        self.celdas = self._preparar_celdas(posiciones)
+    def __init__(self, cant_barcos, posiciones, origen, limite):
+        self.posiciones = self._generar_matriz_posiciones(posiciones)
+        self.celdas = self._preparar_celdas(posiciones, origen)
         self.barcos = self._generar_barcos(cant_barcos)
 
 
@@ -24,9 +26,13 @@ class TableroView(AbstractGroup):
         if pos_celdas_marcadas:
             for barco in barcos:
                 barco.update(True)
-            for posicion in self.celdas.keys:
-                marcada = posicion in pos_celdas_marcadas
-                self.celdas[posicion].update(marcada)
+            
+            for fila in self.posiciones:
+                for posicion in fila:
+                    
+                    marcada = posicion in pos_celdas_marcadas
+                    index=self.convertir_posicion_index(posicion)
+                    self.celdas[index[0]][index[1]].update(marcada)
         else:
             for barco in barcos:
                 barco.update(False)
@@ -57,75 +63,79 @@ class TableroView(AbstractGroup):
         return barcos
 
 
-    def _preparar_celdas(self, posiciones):
+    def _preparar_celdas(self, posiciones, origen):
         """ Segun la lista de objetos tipo Posicion dada genera y ubica
             una celda por cada posicion y devuelve dicha lista.
         """
         
         celdas = self._generar_celdas(posiciones)
-        self._ubicar_celdas(posiciones, celdas)
-        self._asignar_posiciones_celdas(celdas)
+        self._ubicar_celdas(celdas, origen)
         return celdas
+
+
+    def _ubicar_celdas(self, celdas, origen):
+        """ Recorre todas las celdas y las posiciona de manera ordenada.
+            
+            Recibe:
+                celdas:<SpriteCelda> matriz[*][*]
+                origen: <Tuple> (x: <int>, y: <int>)
+        """ 
+        
+        for fila in celdas:
+            for celda in fila:
+                celda.rect.topleft = origen
+                origen = celda.rect.topright
+            
+            origen = fila[0].rect.bottomleft
 
 
     def _generar_celdas(self, posiciones):
         """ Recibe una lista de posiciones y genera 
-            un SpritesCelda por cada una."""
+            una matriz bidimensional de SpritesCeldas ordenadas.
+        """
 
         celdas = []
-        [celdas.append(SpriteCelda()) for i in range (len(posiciones))]
+
+        # La raiz de la cantidad de posiciones es el ancho y alto de la matriz 
+        orden = int(len(posiciones)**(1/2))
+        for y in range(orden):
+            lista_columnas = []
+
+            for x in range(orden):
+                celda = SpriteCelda()
+                
+                index_actual = x + y * orden
+                celda.set_posicion(posiciones[index_actual])
+                lista_columnas.append(celda)
+            
+            celdas.append(lista_columnas)
+
         return celdas
 
 
-    def _ubicar_celdas(self, posiciones, celdas, origen):
-        """ Recorre todas las Posiciones y asigna un SpriteCelda
-            a cada una de manera ordenada.
+    def _generar_matriz_posiciones(self, posiciones):
+        matriz = []
+        orden = int(len(posiciones)**(1/2))
+        for y in range(orden):
+            lista_columnas = []
+
+            for x in range(orden): 
+                index_actual = x + y * orden
+                lista_columnas.append(posiciones[index_actual])
             
-            Recibe:
-                posiciones:<Posicion>[]
-                celdas:<SpriteCelda>[]
-                origen: <Tuple> (x: <int>, y: <int>)
-        """ 
+            matriz.append(lista_columnas)
 
-        # La raiz de la cantidad de posiciones es el ancho y alto de la matriz 
-        orden = len(posiciones)**(1/2) 
-        celdas = iter(celdas)
-        posiciones = iter(posiciones)
+        return matriz
 
-        for fila in range(orden):
-            celda_actual = next(celdas)         
-            self.celdas[next(posiciones)] = celda_actual
+    def convertir_posicion_index(posicion):
+        """ Recibe un objeto tipo Posicion y 
+            devuelve el index de matriz donde se encuentra.
+        """
 
-            # La celda inicial es la primer celda de cada fila
-            celda_inicial = celda_actual
-
-            # La celda anterior es la última celda ubicada
-            celda_anterior = celda_actual
-            
-
-            # Si es la primera celda la pone en el origen, de lo contrario 
-            # la pone debajo de la primera celda de la fila anterior.
-            if (celda_actual == posiciones[0]):
-                celda_actual.get_rect().topleft = origen
-            else:
-                celda_actual.get_rect().midtop = celda_inicial.get_rect().midbottom
-            
-
-            for columna in range(orden-1): # -1 porque la primera celda la pone la fila
-                celda_actual = next(celdas)
-                self.celdas[next(posiciones)] = celda_actual
-
-                celda_actual.get_rect().midleft = celda_anterior.get_rect().midright
-                celda_anterior = celda_actual
-
-
-    def _asignar_posiciones_celdas(self, celdas):
-        """ Recorre un diccionario de celdas y le indica
-            a cada una de ellas cual es su posición."""
-
-        for posicion in celdas:
-            celda = celdas[posicion]
-            celda.set_posicion(posicion)
+        pos = posicion.convertir_tupla()
+        pos_y = string.ascii_uppercase.find(pos[0])
+        pos_x = pos[1] - 1
+        return (pos_y, pos_x)
 
 
     def _ubicar_barcos(self, posiciones):
@@ -147,3 +157,4 @@ class TableroView(AbstractGroup):
 
         return barcos_visibles
         
+

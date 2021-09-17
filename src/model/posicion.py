@@ -93,3 +93,5 @@ class Posicion:
         return f"({self.y}, {self.x})"
 
 
+    def convertir_tupla(self):
+        return (self.y, self.x)
