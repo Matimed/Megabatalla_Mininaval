@@ -19,6 +19,17 @@ class Colocacion(Estado):
         self.sprites, self.vista_tablero = self._setup_interfaz()
 
 
+    def actualizar(self, eventos):
+        for sprite in self.sprites.values():
+            sprite.update()
+            sprite.draw(Estado.ventana_sur)
+
+        # Deberia mandar lista de barcos en vez de lista vacia.
+        barcos = self.vista_tablero.update([]) 
+        self.vista_tablero.draw(Estado.ventana_sur, barcos)
+        Estado.ventana.actualizar()
+
+
     def cambiar_turno(self, jugador_actual):
         """ Cambia el tx_turno por uno con el nombre del jugador actual.
         """
@@ -44,7 +55,7 @@ class Colocacion(Estado):
 
         return TableroView(cant_barcos, posiciones, origen, limite)
 
-
+    
     def _crear_sprites(self):
         """ Crea y ubica todos las instancias de Sprite
             y devuelve un diccinario que los contiene.
@@ -131,8 +142,3 @@ class Colocacion(Estado):
 
         return origen_tablero, limite_tablero
 
-    def _crear_tablero(self):
-        cant_barcos = self.modelo_tableros[0].cant_barcos
-        posiciones =  self.modelo_tableros[0].posiciones
-         
-        return TableroView(cant_barcos, posiciones, (0,0),(50,50))
