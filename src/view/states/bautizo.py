@@ -1,4 +1,7 @@
 from view.states import Estado
+import pygame
+from events import EventoEstado as evento_estado
+from events import EventoGlobal as evento_gb
 from view.tools import SpriteCajaTexto
 from view.tools import SpriteBotonTexto
 from view.tools import SpriteCajaEntrada
@@ -11,6 +14,47 @@ class Bautizo(Estado):
     def __init__(self):
         super().__init__()
         self.sprites = self._crear_sprites()
+
+
+    def actualizar(self, eventos):
+        for sprite in self.sprites.values():
+            if sprite.update():
+                if (sprite == self.sprites['in_jugador_1'] or 
+                    sprite == self.sprites['in_jugador_2']):
+                    
+                    sprite.escribir(eventos)
+
+                if sprite == self.sprites['bt_jugar']:
+                    nombre_j1 = self.sprites['in_jugador_1'].get_texto()
+                    nombre_j2 = self.sprites['in_jugador_1'].get_texto()
+                    # ToDo: Validar que se hayan escrito los nombres.
+
+                    asignar_nombres = pygame.event.Event(
+                                        evento_gb.ASIGNAR_NOMBRES.valor, 
+                                        nombre_j1 = nombre_j1,
+                                        nombre_j2 = nombre_j2
+                                        )
+                    
+                    finalizar_estado = pygame.event.Event(
+                                        evento_gb.ESTADO.valor, 
+                                        tipo=evento_estado.FINALIZAR_ESTADO, 
+                                        estado=Bautizo
+                                        )
+
+                    pygame.event.post(asignar_nombres)
+                    pygame.event.post(finalizar_estado)
+
+                if sprite == self.sprites['bt_volver']:
+                    volver = pygame.event.Event(
+                                evento_gb.ESTADO.valor, 
+                                tipo=evento_estado.VOLVER_MENU
+                                )
+                    
+                    pygame.event.post(volver)
+
+            sprite.draw(Estado.ventana_sur)
+
+        Estado.ventana.actualizar()
 
 
     def _crear_sprites(self):
