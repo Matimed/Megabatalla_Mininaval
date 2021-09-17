@@ -19,8 +19,8 @@ class Juego:
     def actualizar(self, eventos):
         for ev in eventos:
             if ev.type == evento_gb.CONFIGURADO:
-                Tablero.posiciones = self._generar_posiciones(ev.orden)
-                Tablero.cant_barcos = ev.cant_barcos
+                Tablero.set_cant_barcos(ev.cant_barcos)
+                Tablero.set_posiciones(self._generar_posiciones(ev.orden))
 
                 # Genera los tableros:
                 [self.tableros.append(Tablero()) for i in range(2)]
@@ -48,6 +48,10 @@ class Juego:
 
     def get_tableros(self):
         return self.tableros
+
+
+    def get_turno(self):
+        return self.jugadores[self.turno].get_nombre()
 
 
     def _generar_posiciones(self, orden): 
@@ -102,7 +106,7 @@ class Juego:
         for celda in celdas:
             if (celda.haber_barco()):
                 barcos_hundidos += 1
-                if barcos_hundidos == Tablero.cant_barcos: return True
+                if barcos_hundidos == Tablero.get_cant_barcos(): return True
 
         return False
 
