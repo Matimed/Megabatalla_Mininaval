@@ -6,7 +6,7 @@ from view.tools import SpriteCajaTexto
 class SpriteCajaEntrada(pygame.sprite.Sprite):
     """ Rectángulo en el cual se puede digitar texto y acceder a este."""
 
-    def __init__(self, texto_inicial = '', margen=(2,2), tamaño=(200,40), color_texto=(255,255,255), color_caja=(0,0,0)):
+    def __init__(self, texto_inicial = '', margen=(5,20), tamaño=(350,50), color_texto=(255,255,255), color_caja=(0,0,0)):
         super().__init__()
 
         self.caja_sur = pygame.Surface(tamaño)
@@ -21,14 +21,23 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         
         self.rect = self.caja_sur.get_rect()
 
-        self.precionado = False
-    
-
-    def get_rect(self):
-        return self.rect
+        self._presionado = False
 
 
-    def actualizar(self, eventos):
+    def update(self):
+        focus = self.rect.collidepoint(pygame.mouse.get_pos())
+
+        if focus:
+            if pygame.mouse.get_pressed()[0] and not self._presionado:
+                self._presionado = True
+        else:
+            if pygame.mouse.get_pressed()[0] and self._presionado: 
+                self._presionado = False
+
+        return self._presionado
+
+
+    def escribir(self, eventos):
         for evento in eventos:
             if evento.type == ev.TECLA_PRESIONADA:
                 if evento.key == pygame.K_BACKSPACE:
@@ -43,6 +52,23 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
                     self.texto += evento.unicode
 
                     self._generar_texto_sprite()
+
+
+    def draw(self, surface):
+        """ Recibe una superficie y dibuja  la superficie de la caja y del texto en ella."""
+
+        surface.blit(self.caja_sur, self.rect)
+        
+        self.texto_sprite.get_rect().center = self.get_rect().center
+
+        surface.blit(self.texto_sprite.get_surface(), self.texto_sprite.get_rect())
+
+
+    def get_texto(self):
+        return self.texto
+
+    def get_rect(self):
+        return self.rect
 
 
     def _verificar_largo_texto(self, texto_sprite):
@@ -66,29 +92,3 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         else:
             self.texto = self.texto[:-1]
 
-    
-    def update(self):
-        focus = self.rect.collidepoint(pygame.mouse.get_pos())
-
-        if focus:
-            if pygame.mouse.get_pressed()[0] and not self.precionado:
-                self.precionado = True
-        else:
-            if pygame.mouse.get_pressed()[0] and self.precionado: 
-                self.precionado = False
-
-        return self.precionado
-
-
-    def draw(self, surface):
-        """ Recibe una superficie y dibuja  la superficie de la caja y del texto en ella."""
-
-        surface.blit(self.caja_sur, self.rect)
-        
-        self.texto_sprite.get_rect().center = self.caja_sur.get_rect().center
-
-        surface.blit(self.texto_sprite.get_surface(), self.texto_sprite.get_rect())
-
-
-    def get_texto(self):
-        return self.texto
