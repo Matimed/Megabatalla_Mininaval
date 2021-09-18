@@ -1,17 +1,26 @@
+import pygame
 from pygame.sprite import AbstractGroup
+from events import EventoGlobal as evento_gb
+from events import EventoTablero as evento_tablero
 from view.sprites import SpriteCelda
 from view.sprites import SpriteBarco
 import string
 
 class TableroView(AbstractGroup):
     def __init__(self, cant_barcos, posiciones, origen, limite):
-        # Verifica que el origen y el limite formen un cuadrado.
-        assert (origen[0] < limite[0]) and (origen[1] < limite[1])
+        assert (origen[0] < limite[0]) and (origen[1] < limite[1]), (
+        "El origen y el limite no forman un cuadrilatero")
 
+        # La raiz de la cantidad de posiciones es el ancho y alto del tablero.
+        orden = int(len(posiciones)**(1/2))
+        self.set_size(origen, limite, orden)
         
         self.posiciones = self._generar_matriz_posiciones(posiciones)
-        self.celdas = self._preparar_celdas(posiciones, origen, limite)
+        self.celdas = self._generar_celdas(posiciones)
         self.barcos = self._generar_barcos(cant_barcos)
+
+
+        self._ubicar_celdas(self.celdas, origen)
 
 
     def update(self, pos_barcos, pos_celdas_marcadas = []):
@@ -41,9 +50,25 @@ class TableroView(AbstractGroup):
             for barco in barcos:
                 barco.update(False)
             
-            for fila in self.celdas:
-                for celda in fila:
-                    celda.update(False)
+            for y,fila in enumerate(self.celdas):
+                for x,celda in enumerate(fila):
+                    if celda.update(False):
+                        pos_celda = self.posiciones[y][x]
+
+                        if pos_celda in pos_barcos:
+                            evento = pygame.event.Event(
+                                            evento_gb.TABLERO.valor, 
+                                            tipo= evento_tablero.QUITAR_BARCO,
+                                            posicion = pos_celda
+                                            )
+                        else:
+                            evento = pygame.event.Event(
+                                            evento_gb.TABLERO.valor, 
+                                            tipo= evento_tablero.COLOCAR_BARCO,
+                                            posicion = pos_celda
+                                            )
+                        
+                        pygame.event.post(evento)
 
         return barcos
 
@@ -70,16 +95,6 @@ class TableroView(AbstractGroup):
         return barcos
 
 
-    def _preparar_celdas(self, posiciones, origen, limite):
-        """ Segun la lista de objetos tipo Posicion dada genera y ubica
-            una celda por cada posicion y devuelve dicha lista.
-        """
-        
-        celdas = self._generar_celdas(posiciones, origen, limite)
-        self._ubicar_celdas(celdas, origen)
-        return celdas
-
-
     def _ubicar_celdas(self, celdas, origen):
         """ Recorre todas las celdas y las posiciona de manera ordenada.
             
@@ -96,19 +111,14 @@ class TableroView(AbstractGroup):
             origen = fila[0].rect.bottomleft
 
 
-    def _generar_celdas(self, posiciones, origen, limite):
+    def _generar_celdas(self, posiciones):
         """ Recibe una lista de posiciones y genera 
             una matriz bidimensional de SpritesCeldas ordenadas.
         """
 
         celdas = []
-        # La raiz de la cantidad de posiciones es el ancho y alto de la matriz 
+        # La raiz de la cantidad de posiciones es el ancho y alto del tablero 
         orden = int(len(posiciones)**(1/2))
-
-        SpriteCelda.set_tamaño((
-            int((limite[0] - origen[0]) / orden), 
-            int((limite[1] - origen[1]) / orden)
-            ))
 
         for y in range(orden):
             lista_columnas = []
@@ -139,7 +149,8 @@ class TableroView(AbstractGroup):
 
         return matriz
 
-    def convertir_posicion_index(posicion):
+
+    def convertir_posicion_index(self, posicion):
         """ Recibe un objeto tipo Posicion y 
             devuelve el index de matriz donde se encuentra.
         """
@@ -169,10 +180,36 @@ class TableroView(AbstractGroup):
             barco = next(barcos)
 
             # Ubica el barco en el medio de la celda correspondiente.
-            barco.ubicar(celda.get_rect().center)
+            barco.ubicar(celda.get_rect().centerx, celda.get_rect().centery)
             barcos_visibles.append(barco)
         
 
         return barcos_visibles
         
+
+    def _interactuar_barco(self, pos_celda, pos_barcos):
+        """ Recibe la posicion de la celda con la que se va a interactuar y la lista de los barcos colocados """
+
+        if pos_celda in pos_barcos:
+            evento = pygame.Event(
+                            evento_gb.TABLERO.valor, 
+                            tipo= evento_tablero.QUITAR_BARCO,
+                            posicion = pos_celda
+                            )
+        else:
+            evento = pygame.Event(
+                            evento_gb.TABLERO.valor, 
+                            tipo= evento_tablero.COLOCAR_BARCO,
+                            posicion = pos_celda
+                            )
+        
+        return evento
+
+
+    def set_size(self, origen, limite, orden):
+        size_x = int((limite[0] - origen[0]) / orden)
+        size_y = int((limite[1] - origen[1]) / orden)
+        
+        SpriteCelda.set_size((size_x, size_y))
+        SpriteBarco.set_size((size_x, size_y))
 

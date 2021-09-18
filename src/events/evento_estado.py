@@ -6,4 +6,3 @@ class EventoEstado(Evento):
     VOLVER_MENU = auto()
     FINALIZAR_ESTADO = auto(), 'estado (Estado)'
     VICTORIA = auto(), 'ganador (Jugador)'
-    CELDA_PRESIONADA = auto(), 'posicion (Posicion)'

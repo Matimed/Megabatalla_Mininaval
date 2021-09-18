@@ -20,11 +20,22 @@ class ControladorEventos:
             if ev.type == evento_gb.CONFIGURADO:
                 eventos_modelo.append(ev)
 
+            if ev.type == evento_gb.TABLERO:
+                eventos_modelo.append(ev)
+
             if ev.type == evento_gb.TECLA_PRESIONADA:
                 eventos_visuales.append(ev)
             
             if ev.type == evento_gb.ESTADO:
                 eventos_visuales.append(ev)
+
+            if ev.type == evento_gb.CAMBIAR_TURNO:
+                eventos_modelo.append(ev)
+                eventos_visuales.append(ev)
+
+            if ev.type == evento_gb.ASIGNAR_NOMBRES:
+                eventos_modelo.append(ev)
+
 
         self.juego.actualizar(eventos_modelo)
         self.gestor_estados.actualizar(eventos_visuales)

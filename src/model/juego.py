@@ -29,6 +29,9 @@ class Juego:
                 self.jugadores[0].set_nombre(ev.nombre_j1)
                 self.jugadores[1].set_nombre(ev.nombre_j2)
 
+            if ev.type == evento_gb.CAMBIAR_TURNO:
+                self.turno = ev.nuevo_turno
+
             if ev.type == evento_gb.TABLERO:
                 if ev.tipo == evento_tablero.COLOCAR_BARCO: 
                     self.tableros[self.turno].agregar_barco(ev.posicion)
@@ -50,8 +53,14 @@ class Juego:
         return self.tableros
 
 
-    def get_turno(self):
-        return self.jugadores[self.turno].get_nombre()
+    def get_jugadores(self):
+        """ Devuelve una lista con el nombre de cada jugador.
+        """
+
+        nombre_jugadores = []
+        for jugador in self.jugadores:
+            nombre_jugadores.append(jugador.get_nombre())
+        return nombre_jugadores
 
 
     def _generar_posiciones(self, orden): 
@@ -84,7 +93,7 @@ class Juego:
         if not celda.haber_barco(): self.turno = not self.turno
         else:
             if self.comprobar_ganador(self.jugadores[self.turno]): 
-                ganar = pygame.Event(
+                ganar = pygame.event.Event(
                             evento_gb.ESTADO.valor, 
                             tipo= evento_estado.VICTORIA,
                             ganador = self.jugadores[self.turno]

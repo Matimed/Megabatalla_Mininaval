@@ -1,3 +1,7 @@
+import pygame
+from events import EventoGlobal as evento_gb
+from events import EventoTablero as evento_tablero
+from events import EventoEstado as evento_estado
 from view.states import Estado
 from view.tablero import TableroView
 from view.tools import SpriteCajaTexto
@@ -10,31 +14,68 @@ class Colocacion(Estado):
         fueron colocados de manera satisfactoria.
     """
 
-    def __init__(self, tableros):
+    def __init__(self, tableros, jugadores):
         """ Recibe la referencia del tablero del modelo 
             para poder comunicarse con él."""
 
         super().__init__()
+        self.turno = 0
+        self.jugadores = jugadores
         self.modelo_tableros = tableros
         self.sprites, self.vista_tablero = self._setup_interfaz()
 
 
+
     def actualizar(self, eventos):
+        for ev in eventos:
+            if ev.type == evento_gb.CAMBIAR_TURNO:
+                self.actualizar_turno(ev.nuevo_turno)
+        
+        self.actualizar_cant_barcos()
+
         for sprite in self.sprites.values():
-            sprite.update()
+            if sprite.update():
+                if sprite == self.sprites['bt_vaciar']:
+                    vaciar = pygame.event.Event(
+                                evento_gb.TABLERO.valor, 
+                                tipo=evento_tablero.VACIAR_TABLERO
+                                )
+                                        
+                    pygame.event.post(vaciar)
+                
+                if sprite == self.sprites['bt_automatico']:
+                    ubicar_aleatorio = pygame.event.Event(
+                                        evento_gb.TABLERO.valor, 
+                                        tipo=evento_tablero.UBICAR_ALEATORIAMENTE
+                                        )
+
+                    pygame.event.post(ubicar_aleatorio)
+
+                if sprite == self.sprites['bt_continuar']:
+                    if self.turno == 0:
+                        cambiar_turno = pygame.event.Event(
+                            evento_gb.CAMBIAR_TURNO.valor, 
+                            nuevo_turno=not self.turno
+                            )                                
+                        pygame.event.post(cambiar_turno)
+                    else:
+                    
+                        finalizar_estado = pygame.event.Event(
+                                            evento_gb.ESTADO.valor, 
+                                            tipo=evento_estado.FINALIZAR_ESTADO, 
+                                            estado=Colocacion
+                                            )
+                                        
+                        pygame.event.post(finalizar_estado)
+            
             sprite.draw(Estado.ventana_sur)
 
-        # Deberia mandar lista de barcos en vez de lista vacia.
-        barcos = self.vista_tablero.update([]) 
+
+
+        barcos = self.vista_tablero.update(self._get_pos_barcos()) 
         self.vista_tablero.draw(Estado.ventana_sur, barcos)
+        
         Estado.ventana.actualizar()
-
-
-    def cambiar_turno(self, jugador_actual):
-        """ Cambia el tx_turno por uno con el nombre del jugador actual.
-        """
-
-        raise NotImplementedError
 
 
     def _setup_interfaz(self):
@@ -49,8 +90,8 @@ class Colocacion(Estado):
 
 
     def _crear_tablero(self, origen, limite):
-        cant_barcos = self.modelo_tableros[0].get_cant_barcos()
-        posiciones =  self.modelo_tableros[0].get_posiciones()
+        cant_barcos = self.modelo_tableros[self.turno].get_cant_barcos()
+        posiciones =  self.modelo_tableros[self.turno].get_posiciones()
 
 
         return TableroView(cant_barcos, posiciones, origen, limite)
@@ -62,17 +103,17 @@ class Colocacion(Estado):
         """
 
 
-        tx_titulo = SpriteCajaTexto('Colocacion   de   barcos', (0,0,0), 28)
+        tx_titulo = SpriteCajaTexto('Coloca   tus   barcos', (0,0,0), 28)
         tx_turno = SpriteCajaTexto('Turno', (0,0,0), 18)
-        tx_jugador = SpriteCajaTexto('Nombre', (0,0,0), 18)
+        tx_jugador = SpriteCajaTexto(self.jugadores[0], (0,0,0), 18)
 
         tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 18)
         tx_restantes = SpriteCajaTexto('Restantes', (0,0,0), 18)
         tx_cant_barcos = SpriteCajaTexto('5', (0,0,0), 18)
 
 
-        bt_vaciar = SpriteBotonTexto('Vaciar   tablero ', 40)
-        bt_ubicar = SpriteBotonTexto('Ubicar   Barcos', 40)
+        bt_vaciar = SpriteBotonTexto('Vaciar', 40)
+        bt_automatico = SpriteBotonTexto('Automatico', 40)
         bt_continuar = SpriteBotonTexto('Continuar', 50)
 
         sprites = {
@@ -83,7 +124,7 @@ class Colocacion(Estado):
             'tx_restantes' : tx_restantes,
             'tx_cant_barcos' : tx_cant_barcos,
             'bt_vaciar' : bt_vaciar,
-            'bt_ubicar' : bt_ubicar,
+            'bt_automatico' : bt_automatico,
             'bt_continuar' : bt_continuar
         }
         return sprites
@@ -98,8 +139,8 @@ class Colocacion(Estado):
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]
 
-        origen_tablero = (centro_x*1/2 , centro_y * 1/2)
-        limite_tablero = (centro_x*3/2, centro_y*18/10)
+        origen_tablero = (centro_x*7/12, centro_y * 4/10)
+        limite_tablero = (centro_x*17/12, centro_y*17/10)
 
         centro_zona_botones_x = origen_tablero[0] / 2
         centro_zona_info_x= ((centro_x*2 - limite_tablero[0])/ 2) + limite_tablero[0]
@@ -130,15 +171,46 @@ class Colocacion(Estado):
             )
 
         sprites['bt_vaciar'].get_rect().center = (
-            centro_zona_botones_x, centro_y - centro_y* 1/2
+            centro_zona_botones_x, centro_y*6/8
             )
-        sprites['bt_ubicar'].get_rect().center = (
-            centro_zona_botones_x, centro_y + centro_y* 1/2
+        sprites['bt_automatico'].get_rect().center = (
+            centro_zona_botones_x,  centro_y*7/6
             )
         sprites['bt_continuar'].get_rect().center = (
-            centro_x*21/12, centro_y * 20/12
+            centro_zona_info_x, centro_y * 22/12
             )
 
 
         return origen_tablero, limite_tablero
 
+
+    def _get_pos_barcos(self):
+        posiciones = self.modelo_tableros[self.turno].get_estado_celdas()
+        posiciones = posiciones.items()
+        pos_barcos = [pos  for (pos, barco) in posiciones if barco == True]
+        return pos_barcos
+
+    
+    def actualizar_cant_barcos(self):
+        """ Actualiza el tx_cant_barcos para que la información
+            que aparece en el coincida con la del modelo.
+        """
+
+        cant_barcos = str(self.modelo_tableros[self.turno].count_barcos_disponibles())
+        pos_tx = self.sprites['tx_cant_barcos'].get_rect().center 
+        tx_nuevo = SpriteCajaTexto(cant_barcos, (0,0,0), 18)
+        tx_nuevo.get_rect().center = pos_tx
+        self.sprites['tx_cant_barcos'] = tx_nuevo
+    
+
+    def actualizar_turno(self, turno):
+        """ Actualiza el tx_jugador para que la información
+            que aparece en el coincida con la del modelo.
+        """
+
+        self.turno = turno
+        jugador = self.jugadores[turno]
+        pos_tx = self.sprites['tx_jugador'].get_rect().center 
+        tx_nuevo = SpriteCajaTexto(jugador, (0,0,0), 18)
+        tx_nuevo.get_rect().center = pos_tx
+        self.sprites['tx_jugador'] = tx_nuevo
