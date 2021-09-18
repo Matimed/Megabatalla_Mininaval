@@ -26,7 +26,7 @@ class Bautizo(Estado):
 
                 if sprite == self.sprites['bt_jugar']:
                     nombre_j1 = self.sprites['in_jugador_1'].get_texto()
-                    nombre_j2 = self.sprites['in_jugador_1'].get_texto()
+                    nombre_j2 = self.sprites['in_jugador_2'].get_texto()
                     # ToDo: Validar que se hayan escrito los nombres.
 
                     asignar_nombres = pygame.event.Event(
@@ -65,8 +65,8 @@ class Bautizo(Estado):
         tx_titulo = SpriteCajaTexto('Ingrese   su   nombre', (0,0,0), 30)
         tx_jugador_1 = SpriteCajaTexto('Jugador   1', (0,0,0), 26)
         tx_jugador_2 = SpriteCajaTexto('Jugador   2', (0,0,0), 26)
-        in_jugador_1 = SpriteCajaEntrada()
-        in_jugador_2 = SpriteCajaEntrada()
+        in_jugador_1 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44))
+        in_jugador_2 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44))
         bt_jugar = SpriteBotonTexto('Jugar', 55)
         bt_volver = SpriteBotonTexto('Vover', 55)
         
@@ -74,7 +74,7 @@ class Bautizo(Estado):
         centro_y = Estado.ventana.get_center()[1]
 
         # Posiciona los sprites de forma
-        # relativa al tamaño de la ventana.
+        # relativa al centro de la ventana.
 
         tx_titulo.get_rect().center = (centro_x, centro_y - centro_y* 3/4 )
         
