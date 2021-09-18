@@ -43,7 +43,8 @@ class GestorEstados:
                     
                     if ev.estado == self.estados['bautizo']:
                         tableros = self.juego.get_tableros()
-                        self.estado_actual = self.estados['colocacion'](tableros)
+                        jugadores = self.juego.get_jugadores()
+                        self.estado_actual = self.estados['colocacion'](tableros, jugadores)
 
                     if ev.estado == self.estados['colocacion']:
                          self.estado_actual = self.estados['batalla']()
