@@ -17,11 +17,18 @@ class SpriteCelda(pygame.sprite.Sprite):
 
 
     @staticmethod
-    def set_tamaño(nuevo_tamaño):
-        for i in range(len(SpriteCelda.imagenes)):
-            SpriteCelda.imagenes[i] = pygame.transform.scale(
-                SpriteCelda.imagenes[i],nuevo_tamaño
-            )
+    def set_size(nuevo_size):
+        """ Escala todas las imagenes de la clase al tamaño recibido (x,y).
+        """
+        
+        for i,lista_imagenes in enumerate(SpriteCelda.imagenes):
+            lista_imagenes_escaladas = []
+            
+            for imagen in lista_imagenes:
+                imagen_escalada = pygame.transform.scale(imagen,nuevo_size)
+                lista_imagenes_escaladas.append(imagen_escalada)
+
+            SpriteCelda.imagenes[i] = lista_imagenes_escaladas
 
 
     def update(self, marca = False):
@@ -32,8 +39,8 @@ class SpriteCelda(pygame.sprite.Sprite):
 
         if focus:
             index = 1
-        if pygame.mouse.get_pressed()[0] and not self._presionado:
-            self._presionado = not self._presionado
+            if pygame.mouse.get_pressed()[0] and not self._presionado:
+                self._presionado = not self._presionado
                 return True
         else:
             index = 0

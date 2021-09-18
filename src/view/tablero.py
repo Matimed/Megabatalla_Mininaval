@@ -1,3 +1,4 @@
+import pygame
 from pygame.sprite import AbstractGroup
 from view.sprites import SpriteCelda
 from view.sprites import SpriteBarco
@@ -175,4 +176,12 @@ class TableroView(AbstractGroup):
 
         return barcos_visibles
         
+
+
+    def set_size(self, origen, limite, orden):
+        size_x = int((limite[0] - origen[0]) / orden)
+        size_y = int((limite[1] - origen[1]) / orden)
+        
+        SpriteCelda.set_size((size_x, size_y))
+        SpriteBarco.set_size((size_x, size_y))
 
