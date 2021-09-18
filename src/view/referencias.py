@@ -4,8 +4,10 @@ import pygame
 pygame.init()
 FUENTE = pygame.font.Font('./resources/fonts/Fuente.ttf', 8)
 CELDA = {
-    'libre': pygame.image.load('./resources/graphics/CeldaLibre.png').convert(),
-    'marcada': pygame.image.load('./resources/graphics/CeldaMarcada.png').convert()
+    'libre': pygame.image.load('./resources/graphics/Celda_liberada.png').convert(),
+    'libre_presionada': pygame.image.load('./resources/graphics/Celda_presionada.png').convert(),
+    'marcada': pygame.image.load('./resources/graphics/Celda_marcada_liberada.png').convert(),
+    'marcada_presionada': pygame.image.load('./resources/graphics/Celda_marcada_presionada.png').convert()
 }
 BARCO = {
     'sano':pygame.image.load('./resources/graphics/Barco.png').convert_alpha(),
