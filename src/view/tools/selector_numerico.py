@@ -12,12 +12,19 @@ class SelectorNumerico(AbstractGroup):
             'El valor maximo no puede ser menor o igual que el minimo.'
         )
 
+
+        self.tamaño_caja = tamaño_caja
         self.maximo = maximo
         self.minimo = minimo
         self.numero = minimo
-        self.boton_arriba = SpriteBotonFlecha(tamaño_caja[0], 90)
-        self.boton_abajo = SpriteBotonFlecha(tamaño_caja[0], 270)
-        self.caja = SpriteCajaEntrada(str(minimo), (10, int(tamaño_caja[1] * 1/3)), tamaño_caja, color_texto, color_caja, True)
+        self.boton_arriba = SpriteBotonFlecha(self.tamaño_caja[0], 90)
+        self.boton_abajo = SpriteBotonFlecha(self.tamaño_caja[0], 270)
+        self.caja = SpriteCajaEntrada(
+            str(minimo),
+            (10, int(self.tamaño_caja[1] * 1/3)),
+            self.tamaño_caja, color_texto, color_caja, 
+            True
+        )
 
 
     def update(self):
@@ -34,9 +41,8 @@ class SelectorNumerico(AbstractGroup):
     
 
     def draw(self, superficie):
-        self.caja.get_rect().center = (100, 100)
-        self.boton_arriba.get_rect().midbottom = (self.caja.get_rect().midtop[0], self.caja.get_rect().midtop[1] - 5)
-        self.boton_abajo.get_rect().midtop = (self.caja.get_rect().midbottom[0], self.caja.get_rect().midbottom[1] + 5)
+        self.boton_arriba.get_rect().midbottom = (self.caja.get_rect().midtop[0], self.caja.get_rect().midtop[1] - self.tamaño_caja[1] / 10)
+        self.boton_abajo.get_rect().midtop = (self.caja.get_rect().midbottom[0], self.caja.get_rect().midbottom[1] + self.tamaño_caja[1] / 10)
 
         self.caja.draw(superficie)
         self.boton_arriba.draw(superficie)
@@ -45,3 +51,7 @@ class SelectorNumerico(AbstractGroup):
 
     def get_numero(self):
         return self.numero
+
+    
+    def get_rect(self):
+        return self.caja.get_rect()
