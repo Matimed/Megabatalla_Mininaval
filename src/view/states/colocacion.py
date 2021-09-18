@@ -21,20 +21,42 @@ class Colocacion(Estado):
 
     def actualizar(self, eventos):
         for sprite in self.sprites.values():
+            if sprite.update():
+                if sprite == self.sprites['bt_vaciar']:
+                    vaciar = pygame.event.Event(
+                                evento_gb.TABLERO.valor, 
+                                tipo=evento_tablero.VACIAR_TABLERO
+                                )
+                                        
+                    pygame.event.post(vaciar)
+                
+                if sprite == self.sprites['bt_automatico']:
+                    ubicar_aleatorio = pygame.event.Event(
+                                        evento_gb.TABLERO.valor, 
+                                        tipo=evento_tablero.UBICAR_ALEATORIAMENTE
+                                        )
+
+                    pygame.event.post(ubicar_aleatorio)
+
+                if sprite == self.sprites['bt_continuar']:
             sprite.update()
+                    
+                        finalizar_estado = pygame.event.Event(
+                                            evento_gb.ESTADO.valor, 
+                                            tipo=evento_estado.FINALIZAR_ESTADO, 
+                                            estado=Colocacion
+                                            )
+                                        
+                        pygame.event.post(finalizar_estado)
+            
             sprite.draw(Estado.ventana_sur)
 
-        # Deberia mandar lista de barcos en vez de lista vacia.
-        barcos = self.vista_tablero.update([]) 
+
+
+        barcos = self.vista_tablero.update(self._get_pos_barcos()) 
         self.vista_tablero.draw(Estado.ventana_sur, barcos)
+
         Estado.ventana.actualizar()
-
-
-    def cambiar_turno(self, jugador_actual):
-        """ Cambia el tx_turno por uno con el nombre del jugador actual.
-        """
-
-        raise NotImplementedError
 
 
     def _setup_interfaz(self):
@@ -49,8 +71,8 @@ class Colocacion(Estado):
 
 
     def _crear_tablero(self, origen, limite):
-        cant_barcos = self.modelo_tableros[0].get_cant_barcos()
-        posiciones =  self.modelo_tableros[0].get_posiciones()
+        cant_barcos = self.modelo_tableros[self.turno].get_cant_barcos()
+        posiciones =  self.modelo_tableros[self.turno].get_posiciones()
 
 
         return TableroView(cant_barcos, posiciones, origen, limite)
@@ -142,3 +164,9 @@ class Colocacion(Estado):
 
         return origen_tablero, limite_tablero
 
+
+    def _get_pos_barcos(self):
+        posiciones = self.modelo_tableros[self.turno].get_estado_celdas()
+        posiciones = posiciones.items()
+        pos_barcos = [pos  for (pos, barco) in posiciones if barco == True]
+        return pos_barcos
