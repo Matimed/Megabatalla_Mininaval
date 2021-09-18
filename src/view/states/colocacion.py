@@ -103,17 +103,17 @@ class Colocacion(Estado):
         """
 
 
-        tx_titulo = SpriteCajaTexto('Colocacion   de   barcos', (0,0,0), 28)
+        tx_titulo = SpriteCajaTexto('Coloca   tus   barcos', (0,0,0), 28)
         tx_turno = SpriteCajaTexto('Turno', (0,0,0), 18)
-        tx_jugador = SpriteCajaTexto('Nombre', (0,0,0), 18)
+        tx_jugador = SpriteCajaTexto(self.jugadores[0], (0,0,0), 18)
 
         tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 18)
         tx_restantes = SpriteCajaTexto('Restantes', (0,0,0), 18)
         tx_cant_barcos = SpriteCajaTexto('5', (0,0,0), 18)
 
 
-        bt_vaciar = SpriteBotonTexto('Vaciar   tablero ', 40)
-        bt_ubicar = SpriteBotonTexto('Ubicar   Barcos', 40)
+        bt_vaciar = SpriteBotonTexto('Vaciar', 40)
+        bt_automatico = SpriteBotonTexto('Automatico', 40)
         bt_continuar = SpriteBotonTexto('Continuar', 50)
 
         sprites = {
@@ -124,7 +124,7 @@ class Colocacion(Estado):
             'tx_restantes' : tx_restantes,
             'tx_cant_barcos' : tx_cant_barcos,
             'bt_vaciar' : bt_vaciar,
-            'bt_ubicar' : bt_ubicar,
+            'bt_automatico' : bt_automatico,
             'bt_continuar' : bt_continuar
         }
         return sprites
@@ -139,8 +139,8 @@ class Colocacion(Estado):
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]
 
-        origen_tablero = (centro_x*1/2 , centro_y * 1/2)
-        limite_tablero = (centro_x*3/2, centro_y*18/10)
+        origen_tablero = (centro_x*7/12, centro_y * 4/10)
+        limite_tablero = (centro_x*17/12, centro_y*17/10)
 
         centro_zona_botones_x = origen_tablero[0] / 2
         centro_zona_info_x= ((centro_x*2 - limite_tablero[0])/ 2) + limite_tablero[0]
@@ -171,13 +171,13 @@ class Colocacion(Estado):
             )
 
         sprites['bt_vaciar'].get_rect().center = (
-            centro_zona_botones_x, centro_y - centro_y* 1/2
+            centro_zona_botones_x, centro_y*6/8
             )
-        sprites['bt_ubicar'].get_rect().center = (
-            centro_zona_botones_x, centro_y + centro_y* 1/2
+        sprites['bt_automatico'].get_rect().center = (
+            centro_zona_botones_x,  centro_y*7/6
             )
         sprites['bt_continuar'].get_rect().center = (
-            centro_x*21/12, centro_y * 20/12
+            centro_zona_info_x, centro_y * 22/12
             )
 
 
