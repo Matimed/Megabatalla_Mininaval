@@ -17,8 +17,7 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
 
         self.tamaño_nativo = self._get_tamaño_nativo() # Tamaño del boton sin escalar.        
         self.boton = self._crear_imagenes()
-        self.index = 0
-        self.image = self.boton[self.index]
+        self.image = self.boton[0]
         self.rect = self.image.get_rect()
         self._presionado = 0
 
@@ -27,15 +26,15 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         focus = self.rect.collidepoint(pygame.mouse.get_pos())
 
         if focus:
-            self.index = 1
+            index = 1
             if pygame.mouse.get_pressed()[0] and not self._presionado:
                 self._presionado = not self._presionado
                 
                 return True
         else:
-            self.index = 0
+            index = 0
 
-        self.image = self.boton[self.index]
+        self.image = self.boton[index]
 
         if not pygame.mouse.get_pressed()[0] and self._presionado: 
             self._presionado = not self._presionado
@@ -157,4 +156,3 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         return pygame.transform.scale(
             superficie, (largo_nativo * escala, alto_nativo  * escala)
             )
-

@@ -6,8 +6,9 @@ from view.tools import SpriteCajaTexto
 class SpriteCajaEntrada(pygame.sprite.Sprite):
     """ Rectángulo en el cual se puede digitar texto y acceder a este."""
 
-    def __init__(self, texto_inicial = '', margen=(5,20), tamaño=(350,50), color_texto=(255,255,255), color_caja=(0,0,0)):
+    def __init__(self, texto_inicial = '', margen=(5,20), tamaño=(350,50), color_texto=(255,255,255), color_caja=(0,0,0), solo_lectura=False):
         super().__init__()
+        self.solo_lectura = solo_lectura
 
         self.caja_sur = pygame.Surface(tamaño)
         self.caja_sur.fill(color_caja)
@@ -17,7 +18,7 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         self.color_texto = color_texto
         self.texto = texto_inicial
         self.texto_sprite  = None
-        self._generar_texto_sprite()
+        self.generar_texto_sprite()
         
         self.rect = self.caja_sur.get_rect()
 
@@ -38,20 +39,21 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
 
 
     def escribir(self, eventos):
-        for evento in eventos:
-            if evento.type == ev.TECLA_PRESIONADA:
-                if evento.key == pygame.K_BACKSPACE:
-                    self.texto = self.texto[:-1]
+        if not self.solo_lectura:
+            for evento in eventos:
+                if evento.type == ev.TECLA_PRESIONADA:
+                    if evento.key == pygame.K_BACKSPACE:
+                        self.texto = self.texto[:-1]
 
-                    self._generar_texto_sprite()
+                        self.generar_texto_sprite()
 
-                elif evento.key == pygame.K_SPACE:
-                    return
+                    elif evento.key == pygame.K_SPACE:
+                        return
 
-                else:
-                    self.texto += evento.unicode
+                    else:
+                        self.texto += evento.unicode
 
-                    self._generar_texto_sprite()
+                        self.generar_texto_sprite()
 
 
     def draw(self, surface):
@@ -64,8 +66,13 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         surface.blit(self.texto_sprite.get_surface(), self.texto_sprite.get_rect())
 
 
+    def set_texto(self, texto):
+        self.texto = texto
+
+
     def get_texto(self):
         return self.texto
+
 
     def get_rect(self):
         return self.rect
@@ -79,7 +86,7 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         return texto_sprite.get_tamaño()[0] > self.caja_sur.get_size()[0] - self.margen[0]
 
 
-    def _generar_texto_sprite(self):
+    def generar_texto_sprite(self):
         """ Genera una instancia de SpriteCajaTexto según
             el texto en su atributo homonimo.
         """
@@ -91,4 +98,4 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
 
         else:
             self.texto = self.texto[:-1]
-
+            self.generar_texto_sprite()
