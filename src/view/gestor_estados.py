@@ -39,15 +39,18 @@ class GestorEstados:
                         self._set_estado_actual(self.estados['configuracion'])
                     
                     if ev.estado == self.estados['configuracion']:
-                       self.estado_actual = self.estados['bautizo']
+                       self._set_estado_actual(self.estados['bautizo'])
                     
                     if ev.estado == self.estados['bautizo']:
-                        tableros = self.juego.get_tableros()
-                        jugadores = self.juego.get_jugadores()
-                        self.estado_actual = self.estados['colocacion'](tableros, jugadores)
+                        self._set_estado_actual(
+                            self.estados['colocacion'],
+                            self.juego.get_tableros(),
+                            self.juego.get_jugadores()
+                        )
+                        
 
                     if ev.estado == self.estados['colocacion']:
-                         self.estado_actual = self.estados['batalla']()
+                         self._set_estado_actual(self.estados['batalla'])
 
                     eventos.remove(ev)
 
@@ -63,7 +66,7 @@ class GestorEstados:
         """
 
         if args:
-            self.estado_actual = estado(args)
+            self.estado_actual = estado(*args)
         else:
             self.estado_actual = estado()
 
