@@ -4,20 +4,29 @@ from events import EventoGlobal as evento_gb
 from events import EventoEstado as evento_estado
 
 class SpriteCelda(pygame.sprite.Sprite):
+    imagenes = [CELDA['libre'], CELDA['marcada']]
 
+
+        
     def __init__(self):
-
-        self.imagenes = [CELDA['libre'], CELDA['marcada']]
-        self.image = self.imagenes[0]
+        self.image = SpriteCelda.imagenes[0]
         self.rect = self.image.get_rect()
         self.posicion = None
         self._presionado = False
 
 
+    @staticmethod
+    def set_tamaño(nuevo_tamaño):
+        for i in range(len(SpriteCelda.imagenes)):
+            SpriteCelda.imagenes[i] = pygame.transform.scale(
+                SpriteCelda.imagenes[i],nuevo_tamaño
+            )
+
+
     def update(self, marca = False):
         """Recibe un booleano que indica si la celda tiene que estar marcada"""
 
-        self.image = self.imagenes[marca]
+        self.image = SpriteCelda.imagenes[marca]
 
         if pygame.mouse.get_pressed()[0] and not self._presionado:
             self._presionado = not self._presionado
@@ -46,4 +55,3 @@ class SpriteCelda(pygame.sprite.Sprite):
         """ Recibe una superficie y se dibuja a si misma en ella."""
 
         surface.blit(self.image, self.rect)
-

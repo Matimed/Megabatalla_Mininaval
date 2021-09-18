@@ -5,8 +5,12 @@ import string
 
 class TableroView(AbstractGroup):
     def __init__(self, cant_barcos, posiciones, origen, limite):
+        # Verifica que el origen y el limite formen un cuadrado.
+        assert (origen[0] < limite[0]) and (origen[1] < limite[1])
+
+        
         self.posiciones = self._generar_matriz_posiciones(posiciones)
-        self.celdas = self._preparar_celdas(posiciones, origen)
+        self.celdas = self._preparar_celdas(posiciones, origen, limite)
         self.barcos = self._generar_barcos(cant_barcos)
 
 
@@ -66,12 +70,12 @@ class TableroView(AbstractGroup):
         return barcos
 
 
-    def _preparar_celdas(self, posiciones, origen):
+    def _preparar_celdas(self, posiciones, origen, limite):
         """ Segun la lista de objetos tipo Posicion dada genera y ubica
             una celda por cada posicion y devuelve dicha lista.
         """
         
-        celdas = self._generar_celdas(posiciones)
+        celdas = self._generar_celdas(posiciones, origen, limite)
         self._ubicar_celdas(celdas, origen)
         return celdas
 
@@ -92,21 +96,26 @@ class TableroView(AbstractGroup):
             origen = fila[0].rect.bottomleft
 
 
-    def _generar_celdas(self, posiciones):
+    def _generar_celdas(self, posiciones, origen, limite):
         """ Recibe una lista de posiciones y genera 
             una matriz bidimensional de SpritesCeldas ordenadas.
         """
 
         celdas = []
-
         # La raiz de la cantidad de posiciones es el ancho y alto de la matriz 
         orden = int(len(posiciones)**(1/2))
+
+        SpriteCelda.set_tamaño((
+            int((limite[0] - origen[0]) / orden), 
+            int((limite[1] - origen[1]) / orden)
+            ))
+
         for y in range(orden):
             lista_columnas = []
 
             for x in range(orden):
                 celda = SpriteCelda()
-                
+
                 index_actual = x + y * orden
                 celda.set_posicion(posiciones[index_actual])
                 lista_columnas.append(celda)
