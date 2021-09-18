@@ -29,6 +29,14 @@ class Bautizo(Estado):
                     nombre_j2 = self.sprites['in_jugador_2'].get_texto()
                     # ToDo: Validar que se hayan escrito los nombres.
 
+                    if not (nombre_j1 and nombre_j2):
+                        self.sprites['tx_error'].set_texto('Ambos jugadores deben tener nombre')
+                        return
+
+                    if (nombre_j1 == nombre_j2):
+                        self.sprites['tx_error'].set_texto('Ambos jugadores deben tener nombre distinto')
+                        return
+
                     asignar_nombres = pygame.event.Event(
                                         evento_gb.ASIGNAR_NOMBRES.valor, 
                                         nombre_j1 = nombre_j1,
@@ -43,6 +51,8 @@ class Bautizo(Estado):
 
                     pygame.event.post(asignar_nombres)
                     pygame.event.post(finalizar_estado)
+
+
 
                 if sprite == self.sprites['bt_volver']:
                     volver = pygame.event.Event(
@@ -69,6 +79,7 @@ class Bautizo(Estado):
         in_jugador_2 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44))
         bt_jugar = SpriteBotonTexto('Jugar', 55)
         bt_volver = SpriteBotonTexto('Vover', 55)
+        tx_error = SpriteCajaTexto('', (0,0,0), 15)
         
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]
@@ -95,7 +106,8 @@ class Bautizo(Estado):
             'in_jugador_1' : in_jugador_1,
             'in_jugador_2' : in_jugador_2,
             'bt_jugar' :     bt_jugar,
-            'bt_volver' :    bt_volver
+            'bt_volver' :    bt_volver,
+            'tx_error' : tx_error
         }
 
         return sprites

@@ -7,7 +7,10 @@ class SpriteCajaTexto(pygame.sprite.Sprite):
 
     def __init__(self, texto, color=(0,0,0), alto=8):
         super().__init__()
-        
+        self.color = color
+        self.alto = alto
+
+        self.set_texto(texto)
         self.image = self._escalar(FUENTE.render(texto, True, color), alto)
         self.rect = self.image.get_rect()
 
@@ -43,3 +46,8 @@ class SpriteCajaTexto(pygame.sprite.Sprite):
         """ Recibe una superficie y se dibuja a si misma en ella."""
 
         surface.blit(self.image, self.rect)
+
+
+    def set_texto(self, texto):
+        self.image = self._escalar(FUENTE.render(texto, True, self.color), self.alto)
+        self.rect = self.image.get_rect()

@@ -9,7 +9,12 @@ import string
 class TableroView(AbstractGroup):
     def __init__(self, cant_barcos, posiciones, origen, limite):
         assert (origen[0] < limite[0]) and (origen[1] < limite[1]), (
-        "El origen y el limite no forman un cuadrilatero")
+        "El origen y el limite no forman un cuadrilatero"
+        )
+
+        assert cant_barcos <= len(posiciones), (
+            'No pueden haber mas barcos que posiciones.'
+        )
 
         # La raiz de la cantidad de posiciones es el ancho y alto del tablero.
         orden = int(len(posiciones)**(1/2))
@@ -19,6 +24,7 @@ class TableroView(AbstractGroup):
         self.celdas = self._generar_celdas(posiciones)
         self.barcos = self._generar_barcos(cant_barcos)
 
+        self.cant_barcos = cant_barcos
 
         self._ubicar_celdas(self.celdas, origen)
 
@@ -53,22 +59,25 @@ class TableroView(AbstractGroup):
             for y,fila in enumerate(self.celdas):
                 for x,celda in enumerate(fila):
                     if celda.update(False):
-                        pos_celda = self.posiciones[y][x]
+                        if self.cant_barcos:    
+                            self.cant_barcos = self.cant_barcos-1
 
-                        if pos_celda in pos_barcos:
-                            evento = pygame.event.Event(
-                                            evento_gb.TABLERO.valor, 
-                                            tipo= evento_tablero.QUITAR_BARCO,
-                                            posicion = pos_celda
-                                            )
-                        else:
-                            evento = pygame.event.Event(
-                                            evento_gb.TABLERO.valor, 
-                                            tipo= evento_tablero.COLOCAR_BARCO,
-                                            posicion = pos_celda
-                                            )
-                        
-                        pygame.event.post(evento)
+                            pos_celda = self.posiciones[y][x]
+
+                            if pos_celda in pos_barcos:
+                                evento = pygame.event.Event(
+                                                evento_gb.TABLERO.valor, 
+                                                tipo= evento_tablero.QUITAR_BARCO,
+                                                posicion = pos_celda
+                                                )
+                            else:
+                                evento = pygame.event.Event(
+                                                evento_gb.TABLERO.valor, 
+                                                tipo= evento_tablero.COLOCAR_BARCO,
+                                                posicion = pos_celda
+                                                )
+                            
+                            pygame.event.post(evento)
 
         return barcos
 
@@ -212,4 +221,3 @@ class TableroView(AbstractGroup):
         
         SpriteCelda.set_size((size_x, size_y))
         SpriteBarco.set_size((size_x, size_y))
-

@@ -21,22 +21,26 @@ class Configuracion(Estado):
         for sprite in self.sprites.values():
             if sprite.update():
                 if sprite == self.sprites['bt_continuar']:
-                    configurado = pygame.event.Event(
-                                        evento_gb.CONFIGURADO.valor, 
-                                        orden = self.sprites['sn_orden'].get_numero(), 
-                                        cant_barcos = self.sprites['sn_barcos'].get_numero()
-                                        )
-                                        
-                    pygame.event.post(configurado)
+                    if not (self.sprites['sn_orden'].get_numero()**2) < self.sprites['sn_barcos'].get_numero():
+                        configurado = pygame.event.Event(
+                                            evento_gb.CONFIGURADO.valor, 
+                                            orden = self.sprites['sn_orden'].get_numero(), 
+                                            cant_barcos = self.sprites['sn_barcos'].get_numero()
+                                            )
+                                            
+                        pygame.event.post(configurado)
 
 
-                    finalizar_estado = pygame.event.Event(
-                                        evento_gb.ESTADO.valor, 
-                                        tipo = evento_estado.FINALIZAR_ESTADO, 
-                                        estado=Configuracion
-                                        )
-                                        
-                    pygame.event.post(finalizar_estado)
+                        finalizar_estado = pygame.event.Event(
+                                            evento_gb.ESTADO.valor, 
+                                            tipo = evento_estado.FINALIZAR_ESTADO, 
+                                            estado=Configuracion
+                                            )
+                                            
+                        pygame.event.post(finalizar_estado)
+                        
+                    else:
+                        self.sprites['tx_error'].set_texto('No pueden haber mas barcos que posiciones')
 
             sprite.draw(Estado.ventana_sur)
 
@@ -50,8 +54,9 @@ class Configuracion(Estado):
 
         tx_titulo = SpriteCajaTexto('Configuracion', (0,0,0), 36)
         tx_orden = SpriteCajaTexto('Orden', (0,0,0), 26)
+        tx_error = SpriteCajaTexto('', (0,0,0), 15)
         tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 26)
-        sn_orden = SelectorNumerico(24, 2, (100,60))
+        sn_orden = SelectorNumerico(26, 2, (100,60))
         sn_barcos = SelectorNumerico(99, 4, (100,60))
         bt_continuar = SpriteBotonTexto('Continuar', 70)
 
@@ -76,7 +81,8 @@ class Configuracion(Estado):
             'sn_orden' : sn_orden,
             'tx_barcos' : tx_barcos,
             'sn_barcos' : sn_barcos,
-            'bt_continuar' : bt_continuar
+            'bt_continuar' : bt_continuar,
+            'tx_error' : tx_error
         }
 
         return sprites
