@@ -19,8 +19,8 @@ class Juego:
     def actualizar(self, eventos):
         for ev in eventos:
             if ev.type == evento_gb.CONFIGURADO:
-                Tablero.posiciones = self._generar_posiciones(ev.orden)
-                Tablero.cant_barcos = ev.cant_barcos
+                Tablero.set_cant_barcos(ev.cant_barcos)
+                Tablero.set_posiciones(self._generar_posiciones(ev.orden))
 
                 # Genera los tableros:
                 [self.tableros.append(Tablero()) for i in range(2)]
@@ -28,6 +28,9 @@ class Juego:
             if ev.type == evento_gb.ASIGNAR_NOMBRES:
                 self.jugadores[0].set_nombre(ev.nombre_j1)
                 self.jugadores[1].set_nombre(ev.nombre_j2)
+
+            if ev.type == evento_gb.CAMBIAR_TURNO:
+                self.turno = ev.nuevo_turno
 
             if ev.type == evento_gb.TABLERO:
                 if ev.tipo == evento_tablero.COLOCAR_BARCO: 
@@ -45,6 +48,19 @@ class Juego:
             if ev.type == evento_gb.DISPARAR:
                 self._disparar()
                 
+
+    def get_tableros(self):
+        return self.tableros
+
+
+    def get_jugadores(self):
+        """ Devuelve una lista con el nombre de cada jugador.
+        """
+
+        nombre_jugadores = []
+        for jugador in self.jugadores:
+            nombre_jugadores.append(jugador.get_nombre())
+        return nombre_jugadores
 
 
     def _generar_posiciones(self, orden): 
@@ -77,7 +93,11 @@ class Juego:
         if not celda.haber_barco(): self.turno = not self.turno
         else:
             if self.comprobar_ganador(self.jugadores[self.turno]): 
-                ganar = pygame.Event(evento_gb.ESTADO.valor, tipo= evento_estado.VICTORIA ,ganador = self.jugadores[self.turno])
+                ganar = pygame.event.Event(
+                            evento_gb.ESTADO.valor, 
+                            tipo= evento_estado.VICTORIA,
+                            ganador = self.jugadores[self.turno]
+                            )
                 pygame.event.post(ganar)
                 
 
@@ -95,7 +115,8 @@ class Juego:
         for celda in celdas:
             if (celda.haber_barco()):
                 barcos_hundidos += 1
-                if barcos_hundidos == Tablero.cant_barcos: return True
+                if barcos_hundidos == Tablero.get_cant_barcos(): return True
 
         return False
+
 

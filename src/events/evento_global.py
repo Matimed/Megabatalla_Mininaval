@@ -13,3 +13,4 @@ class EventoGlobal(Evento):
     ASIGNAR_NOMBRES = pygame.event.custom_type(), 'nombre_j1 (string)', 'nombre_j2 (string)'
     DISPARAR = pygame.event.custom_type(), 'posicion (Posicion)'
 
+    CAMBIAR_TURNO = pygame.event.custom_type(), 'nuevo_turno (int)'

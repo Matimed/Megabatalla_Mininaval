@@ -4,8 +4,8 @@ class Principal:
     """ Prepara el juego para ser iniciado y lo ejecuta."""
     
     def __init__(self):
-        gestor_estados = GestorEstados()
         juego = Juego()
+        gestor_estados = GestorEstados(juego)
         controlador_eventos = ControladorEventos(juego, gestor_estados)
         self.controlador_tics = ControladorTics(controlador_eventos)
 

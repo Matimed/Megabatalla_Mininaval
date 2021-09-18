@@ -21,12 +21,34 @@ class Tablero:
         self.barcos_disponibles = []
 
         #Crea el diccionario de celdas a partir de las posiciones.
-        for posicion in Tablero.posiciones: 
+        for posicion in Tablero.get_posiciones(): 
             self.celdas[posicion] = Celda()
 
         #Crea la lista de barcos de la cantidad pedida.
-        for i in range(Tablero.cant_barcos):
+        for i in range(Tablero.get_cant_barcos()):
             self.barcos_disponibles.append(Barco())
+
+    # Usamos metodos estaticos para acceder 
+    # a los atributos de clase de manera más limpia.
+
+    @staticmethod
+    def get_cant_barcos():       
+       return Tablero.cant_barcos
+
+
+    @staticmethod
+    def get_posiciones():        
+       return Tablero.posiciones
+
+
+    @staticmethod
+    def set_cant_barcos(cant_barcos):       
+       Tablero.cant_barcos = cant_barcos
+
+
+    @staticmethod
+    def set_posiciones(posiciones):       
+       Tablero.posiciones = posiciones      
 
 
     def get_celda(self, posicion):
@@ -119,7 +141,7 @@ class Tablero:
 
                 self.quitar_barco(posicion)
 
-                if self.count_barcos_disponibles() == Tablero.cant_barcos:
+                if self.count_barcos_disponibles() == Tablero.get_cant_barcos():
                     break
 
 
