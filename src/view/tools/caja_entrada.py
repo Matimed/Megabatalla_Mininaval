@@ -2,6 +2,7 @@ import pygame
 from view.referencias import FUENTE
 from events import EventoGlobal as ev
 from view.tools import SpriteCajaTexto
+from events import EventoGlobal as evento_gb
 
 class SpriteCajaEntrada(pygame.sprite.Sprite):
     """ Rectángulo en el cual se puede digitar texto y acceder a este."""
@@ -28,11 +29,15 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         focus = self.rect.collidepoint(pygame.mouse.get_pos())
 
         if focus:
-            if pygame.mouse.get_pressed()[0] and not self._presionado:
-                self._presionado = True
+            for ev in eventos:
+                if ev.type == evento_gb.CLICK:
+                    if ev.button == 1:
+                        self._presionado = True
         else:
-            if pygame.mouse.get_pressed()[0] and self._presionado: 
-                self._presionado = False
+            for ev in eventos:
+                if ev.type == evento_gb.CLICK:
+                    if ev.button == 1:
+                        self._presionado = False
 
         return self._presionado
 

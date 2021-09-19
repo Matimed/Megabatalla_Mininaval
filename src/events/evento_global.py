@@ -3,7 +3,7 @@ import pygame
 
 class EventoGlobal(Evento):
     SALIR = pygame.QUIT
-    CLICK = pygame.MOUSEBUTTONDOWN, 'pos (x (int), y (int))', 'button (int)'
+    CLICK = pygame.MOUSEBUTTONUP, 'pos (x (int), y (int))', 'button (int)'
     TECLA_PRESIONADA = pygame.KEYDOWN
 
     ESTADO = pygame.event.custom_type(), 'tipo (EventoEstado)', '*args'

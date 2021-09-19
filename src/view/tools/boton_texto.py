@@ -1,6 +1,7 @@
 import pygame
 from view.tools import SpriteCajaTexto
 from view.referencias import BOTON_TEXTO
+from events import EventoGlobal as evento_gb
 
 
 class SpriteBotonTexto(pygame.sprite.Sprite):
@@ -19,7 +20,6 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         self.boton = self._crear_imagenes()
         self.image = self.boton[0]
         self.rect = self.image.get_rect()
-        self._presionado = 0
 
 
     def update(self, eventos):
@@ -27,17 +27,15 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
 
         if focus:
             index = 1
-            if pygame.mouse.get_pressed()[0] and not self._presionado:
-                self._presionado = not self._presionado
-                
-                return True
+            for ev in eventos:
+                if ev.type == evento_gb.CLICK:
+                    if ev.button == 1:
+                        return True
+
         else:
             index = 0
 
         self.image = self.boton[index]
-
-        if not pygame.mouse.get_pressed()[0] and self._presionado: 
-            self._presionado = not self._presionado
         
         return False
 
