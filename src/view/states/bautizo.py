@@ -72,9 +72,9 @@ class Bautizo(Estado):
             y devuelve un diccinario que los contiene.
         """
 
-        tx_titulo = SpriteCajaTexto('Ingrese   su   nombre', (0,0,0), 30)
-        tx_jugador_1 = SpriteCajaTexto('Jugador   1', (0,0,0), 26)
-        tx_jugador_2 = SpriteCajaTexto('Jugador   2', (0,0,0), 26)
+        tx_titulo = SpriteCajaTexto('Ingrese su nombre', (0,0,0), 30)
+        tx_jugador_1 = SpriteCajaTexto('Jugador 1', (0,0,0), 26)
+        tx_jugador_2 = SpriteCajaTexto('Jugador 2', (0,0,0), 26)
         in_jugador_1 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44))
         in_jugador_2 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44))
         bt_jugar = SpriteBotonTexto('Jugar', 55)

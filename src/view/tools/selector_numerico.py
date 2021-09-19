@@ -37,7 +37,6 @@ class SelectorNumerico(AbstractGroup):
                 self.numero -= 1
 
         self.caja.set_texto(str(self.numero))
-        self.caja.generar_texto_sprite()
     
 
     def draw(self, superficie):
