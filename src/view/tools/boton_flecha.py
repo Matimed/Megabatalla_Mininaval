@@ -38,7 +38,7 @@ class SpriteBotonFlecha(pygame.sprite.Sprite):
 
     def get_surface(self): return self.image
 
-    def update(self):
+    def update(self, eventos):
         focus = self.rect.collidepoint(pygame.mouse.get_pos())
 
         if focus:

@@ -22,7 +22,7 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         self._presionado = 0
 
 
-    def update(self):
+    def update(self, eventos):
         focus = self.rect.collidepoint(pygame.mouse.get_pos())
 
         if focus:

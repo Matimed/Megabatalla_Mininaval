@@ -31,7 +31,7 @@ class SpriteCelda(pygame.sprite.Sprite):
             SpriteCelda.imagenes[i] = lista_imagenes_escaladas
 
 
-    def update(self, marca = False):
+    def update(self,eventos, marca = False):
         """Recibe un booleano que indica si la celda tiene que estar marcada.
         """
 

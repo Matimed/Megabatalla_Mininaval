@@ -18,7 +18,7 @@ class Bautizo(Estado):
 
     def actualizar(self, eventos):
         for sprite in self.sprites.values():
-            if sprite.update():
+            if sprite.update(eventos):
                 if (sprite == self.sprites['in_jugador_1'] or 
                     sprite == self.sprites['in_jugador_2']):
                     

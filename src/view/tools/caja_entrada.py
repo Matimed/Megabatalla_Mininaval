@@ -24,7 +24,7 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         self._presionado = False
 
 
-    def update(self):
+    def update(self, eventos):
         focus = self.rect.collidepoint(pygame.mouse.get_pos())
 
         if focus:

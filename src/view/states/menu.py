@@ -15,7 +15,7 @@ class Menu(Estado):
 
     def actualizar(self, eventos):
         for sprite in self.sprites.values():
-            if sprite.update():
+            if sprite.update(eventos):
                 if sprite == self.sprites['bt_jugar']:
                     finalizar_estado = pygame.event.Event(
                                         evento_gb.ESTADO.valor, 

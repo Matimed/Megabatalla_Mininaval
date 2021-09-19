@@ -33,12 +33,15 @@ class Colocacion(Estado):
                 self.sprites['tx_jugador'].set_texto(
                     self.jugadores[self.turno])
         
+                eventos.remove(ev)
+            
+
         
         self.sprites['tx_cant_barcos'].set_texto(
             str(self._get_barcos_disponibles()))
 
         for sprite in self.sprites.values():
-            if sprite.update():
+            if sprite.update(eventos):
                 if sprite == self.sprites['bt_vaciar']:
                     vaciar = pygame.event.Event(
                                 evento_gb.TABLERO.valor, 

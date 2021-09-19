@@ -19,7 +19,7 @@ class Configuracion(Estado):
 
     def actualizar(self, eventos):
         for sprite in self.sprites.values():
-            if sprite.update():
+            if sprite.update(eventos):
                 if sprite == self.sprites['bt_continuar']:
                     if not (self.sprites['sn_orden'].get_numero()**2) < self.sprites['sn_barcos'].get_numero():
                         configurado = pygame.event.Event(
