@@ -27,30 +27,23 @@ class Bautizo(Estado):
                 if sprite == self.sprites['bt_jugar']:
                     nombre_j1 = self.sprites['in_jugador_1'].get_texto()
                     nombre_j2 = self.sprites['in_jugador_2'].get_texto()
-                    # ToDo: Validar que se hayan escrito los nombres.
 
-                    if not (nombre_j1 and nombre_j2):
-                        self.sprites['tx_error'].set_texto('Ambos jugadores deben tener nombre')
-                        return
+                    if self._validar_entradas(nombre_j1, nombre_j2):
+                        
+                        asignar_nombres = pygame.event.Event(
+                                            evento_gb.ASIGNAR_NOMBRES.valor, 
+                                            nombre_j1 = nombre_j1,
+                                            nombre_j2 = nombre_j2
+                                            )
+                        
+                        finalizar_estado = pygame.event.Event(
+                                            evento_gb.ESTADO.valor, 
+                                            tipo=evento_estado.FINALIZAR_ESTADO, 
+                                            estado=Bautizo
+                                            )
 
-                    if (nombre_j1 == nombre_j2):
-                        self.sprites['tx_error'].set_texto('Ambos jugadores deben tener nombre distinto')
-                        return
-
-                    asignar_nombres = pygame.event.Event(
-                                        evento_gb.ASIGNAR_NOMBRES.valor, 
-                                        nombre_j1 = nombre_j1,
-                                        nombre_j2 = nombre_j2
-                                        )
-                    
-                    finalizar_estado = pygame.event.Event(
-                                        evento_gb.ESTADO.valor, 
-                                        tipo=evento_estado.FINALIZAR_ESTADO, 
-                                        estado=Bautizo
-                                        )
-
-                    pygame.event.post(asignar_nombres)
-                    pygame.event.post(finalizar_estado)
+                        pygame.event.post(asignar_nombres)
+                        pygame.event.post(finalizar_estado)
 
 
 
@@ -87,28 +80,40 @@ class Bautizo(Estado):
         # Posiciona los sprites de forma
         # relativa al centro de la ventana.
 
-        tx_titulo.get_rect().center = (centro_x, centro_y - centro_y* 3/4 )
+        tx_titulo.get_rect().center = (centro_x, centro_y* 1/4 )
         
-        tx_jugador_1.get_rect().center = (centro_x - centro_x*1/2 , centro_y - centro_y*1/5)
-        in_jugador_1.get_rect().center = (centro_x - centro_x*1/2 , centro_y)
+        tx_jugador_1.get_rect().center = ( centro_x*1/2 , centro_y*4/5)
+        in_jugador_1.get_rect().center = (centro_x*1/2 , centro_y)
         
-        tx_jugador_2.get_rect().center = (centro_x + centro_x*1/2 , centro_y - centro_y*1/5)
-        in_jugador_2.get_rect().center = (centro_x + centro_x*1/2 , centro_y)
+        tx_jugador_2.get_rect().center = (centro_x*3/2 , centro_y*4/5)
+        in_jugador_2.get_rect().center = (centro_x*3/2 , centro_y)
 
-        bt_jugar.get_rect().center = (centro_x + centro_x*3/4 , centro_y + centro_y*4/5)
-        bt_volver.get_rect().center = (centro_x - centro_x*3/4 , centro_y + centro_y*4/5)
+        bt_jugar.get_rect().center = (centro_x*7/4 , centro_y*9/5)
+        bt_volver.get_rect().center = (centro_x*1/4 , centro_y*9/5)
         
+        tx_error.get_rect().center = (centro_x, centro_y*1/2)
 
         sprites = {
-            'tx_titulo' :    tx_titulo,
-            'tx_jugador_1' : tx_jugador_1,
-            'tx_jugador_2' : tx_jugador_2,
-            'in_jugador_1' : in_jugador_1,
-            'in_jugador_2' : in_jugador_2,
-            'bt_jugar' :     bt_jugar,
-            'bt_volver' :    bt_volver,
-            'tx_error' : tx_error
+            'tx_titulo'     : tx_titulo,
+            'tx_jugador_1'  : tx_jugador_1,
+            'tx_jugador_2'  : tx_jugador_2,
+            'in_jugador_1'  : in_jugador_1,
+            'in_jugador_2'  : in_jugador_2,
+            'bt_jugar'      : bt_jugar,
+            'bt_volver'     : bt_volver,
+            'tx_error'      : tx_error
         }
 
         return sprites
 
+
+    def _validar_entradas(self, nombre_j1, nombre_j2):
+        if not (nombre_j1 and nombre_j2):
+            self.sprites['tx_error'].set_texto('Ambos jugadores deben tener nombre')
+            return False
+
+        if (nombre_j1 == nombre_j2):
+            self.sprites['tx_error'].set_texto('Ambos jugadores deben tener nombre distinto')
+            return False
+
+        return True
