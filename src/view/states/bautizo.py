@@ -79,7 +79,7 @@ class Bautizo(Estado):
         in_jugador_2 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44))
         bt_jugar = SpriteBotonTexto('Jugar', 55)
         bt_volver = SpriteBotonTexto('Vover', 55)
-        tx_error = SpriteCajaTexto('', (0,0,0), 15)
+        tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
         
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]

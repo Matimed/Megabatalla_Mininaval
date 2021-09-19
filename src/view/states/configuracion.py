@@ -56,10 +56,7 @@ class Configuracion(Estado):
         tx_orden = SpriteCajaTexto('Orden', (0,0,0), 26)
         tx_error = SpriteCajaTexto('', (0,0,0), 15)
         tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 26)
-        sn_orden = SelectorNumerico(26, 2, (100,60))
-        sn_barcos = SelectorNumerico(99, 4, (100,60))
-        bt_continuar = SpriteBotonTexto('Continuar', 70)
-
+        tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]
 
