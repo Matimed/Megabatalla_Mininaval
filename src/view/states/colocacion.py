@@ -32,7 +32,7 @@ class Colocacion(Estado):
                 self.turno = ev.nuevo_turno
                 self.sprites['tx_jugador'].set_texto(
                     self.jugadores[self.turno])
-        
+
                 eventos.remove(ev)
             
 
@@ -79,7 +79,12 @@ class Colocacion(Estado):
 
 
 
-        barcos = self.vista_tablero.update(self._get_pos_barcos()) 
+        barcos = self.vista_tablero.update_colocacion(
+                    eventos,
+                    self._get_pos_barcos(),
+                    bool(self._get_barcos_disponibles())
+                    ) 
+
         self.vista_tablero.draw(Estado.ventana_sur, barcos)
         
         Estado.ventana.actualizar()
@@ -197,7 +202,6 @@ class Colocacion(Estado):
         pos_barcos = [pos  for (pos, barco) in posiciones if barco == True]
         return pos_barcos
 
-    
+
     def _get_barcos_disponibles(self):
         return self.modelo_tableros[self.turno].count_barcos_disponibles()
-    
