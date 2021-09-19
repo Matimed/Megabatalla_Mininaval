@@ -52,10 +52,13 @@ class Configuracion(Estado):
             y devuelve un diccinario que los contiene.
         """
 
-        tx_titulo = SpriteCajaTexto('Configuracion', (0,0,0), 36)
+        tx_titulo = SpriteCajaTexto('Configuracion', (0,0,0), 30)
+
         tx_orden = SpriteCajaTexto('Orden', (0,0,0), 26)
-        tx_error = SpriteCajaTexto('', (0,0,0), 15)
+        sn_orden = SelectorNumerico(26, 2, (80,55))
         tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 26)
+        sn_barcos = SelectorNumerico(99, 4, (80,55))
+        bt_continuar = SpriteBotonTexto('Continuar', 55)
         tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]
@@ -63,13 +66,16 @@ class Configuracion(Estado):
         # Posiciona los sprites de forma
         # relativa al centro de la ventana.
 
-        tx_titulo.get_rect().center = (centro_x, centro_y - centro_y* 2/3 )
-        tx_orden.get_rect().center = (centro_x * (1 / 2), centro_y)
-        sn_orden.get_rect().center = (centro_x*(4/5), centro_y)
-        tx_barcos.get_rect().center = (centro_x * (4 / 3), centro_y)
-        sn_barcos.get_rect().center = (centro_x * (5 / 3), centro_y)
-        bt_continuar.get_rect().center = (centro_x, centro_y * 20/11)
+        tx_titulo.get_rect().center = (centro_x, centro_y* 1/4 )
+
+        tx_orden.get_rect().center = (centro_x * 6/10, centro_y*13/20)
+        sn_orden.get_rect().center = (centro_x* 6/10, centro_y*22/20)
         
+        tx_barcos.get_rect().center = (centro_x *14/10, centro_y*13/20)
+        sn_barcos.get_rect().center = (centro_x *14/10, centro_y*22/20)
+        
+        bt_continuar.get_rect().center = (centro_x*8/5 , centro_y*9/5)        
+        tx_error.get_rect().center = (centro_x, centro_y*9/20)
         
 
         sprites = {
