@@ -1,7 +1,9 @@
 from view.states import *
 from events import EventoGlobal as evento_gb
 from events import EventoEstado as evento_estado
-
+from view.referencias import MUSICA_MENU
+from view.referencias import MUSICA_JUEGO
+from pygame.mixer import music
 
 class GestorEstados:
     """ Intermediario en la comunicación con los estados, 
@@ -22,7 +24,14 @@ class GestorEstados:
             'batalla': Batalla
         }
 
+        music.load(MUSICA_MENU)
+        music.set_volume(0.5)
+        music.play(loops = -1)
+
         self.estado_actual = self.estados['menu']()
+
+        
+
 
 
     def actualizar(self, eventos):
@@ -42,6 +51,8 @@ class GestorEstados:
                        self._set_estado_actual(self.estados['bautizo'])
                     
                     if ev.estado == self.estados['bautizo']:
+                        music.load(MUSICA_JUEGO)
+                        music.play(loops = -1)
                         self._set_estado_actual(
                             self.estados['colocacion'],
                             self.juego.get_tableros(),

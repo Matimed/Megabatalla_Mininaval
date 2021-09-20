@@ -7,7 +7,7 @@ from view.tools.boton_flecha import SpriteBotonFlecha
 class SelectorNumerico(AbstractGroup):
     """ Herramienta para seleccionar en un determinado rango de numeros."""
 
-    def __init__(self, maximo, minimo, tamaño_caja=(60,60), color_texto=(255,255,255), color_caja=(0,0,0)):
+    def __init__(self, maximo, minimo, tamaño_caja=(60,60), color_texto=(255,255,255), color_caja=(0,0,0), sonido=None):
         assert maximo > minimo, (
             'El valor maximo no puede ser menor o igual que el minimo.'
         )
@@ -17,8 +17,8 @@ class SelectorNumerico(AbstractGroup):
         self.maximo = maximo
         self.minimo = minimo
         self.numero = minimo
-        self.boton_arriba = SpriteBotonFlecha(self.tamaño_caja[0], 90)
-        self.boton_abajo = SpriteBotonFlecha(self.tamaño_caja[0], 270)
+        self.boton_arriba = SpriteBotonFlecha(self.tamaño_caja[0], 90, sonido)
+        self.boton_abajo = SpriteBotonFlecha(self.tamaño_caja[0], 270, sonido)
         self.caja = SpriteCajaEntrada(
             str(minimo),
             (10, int(self.tamaño_caja[1] * 1/3)),

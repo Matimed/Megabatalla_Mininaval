@@ -7,7 +7,10 @@ from events import EventoGlobal as evento_gb
 class SpriteCajaEntrada(pygame.sprite.Sprite):
     """ Rectángulo en el cual se puede digitar texto y acceder a este."""
 
-    def __init__(self, texto_inicial = '', margen=(5,20), tamaño=(350,50), color_texto=(255,255,255), color_caja=(0,0,0), solo_lectura=False):
+    def __init__(self, texto_inicial = '', margen=(5,20), tamaño=(350,50),
+                 color_texto=(255,255,255), color_caja=(0,0,0), 
+                 solo_lectura=False, sonido_tecla=None, sonido_retroceso=None):
+    
         super().__init__()
         self.solo_lectura = solo_lectura
 
@@ -23,6 +26,8 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
         self.rect = self.caja_sur.get_rect()
 
         self._presionado = False
+        self.sonido_tecla = sonido_tecla
+        self.sonido_retroceso = sonido_retroceso
 
 
     def update(self, eventos):
@@ -48,10 +53,12 @@ class SpriteCajaEntrada(pygame.sprite.Sprite):
                 if evento.type == ev.TECLA_PRESIONADA:
                     texto = self.get_texto()
                     if evento.key == pygame.K_BACKSPACE:
+                        pygame.mixer.Sound.play(self.sonido_retroceso)
                         self.set_texto(texto[:-1])
                     elif evento.key == pygame.K_SPACE:
                         continue
                     else:
+                        pygame.mixer.Sound.play(self.sonido_tecla)
                         texto += evento.unicode
                         self.set_texto(texto)
 

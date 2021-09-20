@@ -6,6 +6,7 @@ from view.states import Estado
 from view.tablero import TableroView
 from view.tools import SpriteCajaTexto
 from view.tools import SpriteBotonTexto
+from view.referencias import SONIDO_BOTON_CLICK
 
 class Colocacion(Estado):
     """ Etapa donde los jugadores distribuyen sus barcos
@@ -23,7 +24,6 @@ class Colocacion(Estado):
         self.jugadores = jugadores
         self.modelo_tableros = tableros
         self.sprites, self.vista_tablero = self._setup_interfaz()
-
 
 
     def actualizar(self, eventos):
@@ -124,9 +124,9 @@ class Colocacion(Estado):
         tx_cant_barcos = SpriteCajaTexto('5', (0,0,0), 18)
 
 
-        bt_vaciar = SpriteBotonTexto('Vaciar', 40)
-        bt_automatico = SpriteBotonTexto('Automatico', 40)
-        bt_continuar = SpriteBotonTexto('Continuar', 50)
+        bt_vaciar = SpriteBotonTexto('Vaciar', 40, (0,0,0), SONIDO_BOTON_CLICK)
+        bt_automatico = SpriteBotonTexto('Automatico', 40, (0,0,0), SONIDO_BOTON_CLICK)
+        bt_continuar = SpriteBotonTexto('Continuar', 50, (0,0,0), SONIDO_BOTON_CLICK)
 
         sprites = {
             'tx_titulo' : tx_titulo,

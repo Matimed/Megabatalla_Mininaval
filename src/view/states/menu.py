@@ -4,7 +4,7 @@ from events import EventoGlobal as evento_gb
 from view.states import Estado
 from view.tools import SpriteCajaTexto
 from view.tools import SpriteBotonTexto
-
+from view.referencias import SONIDO_EXPLOSION
 
 class Menu(Estado):
     def __init__(self):
@@ -27,6 +27,7 @@ class Menu(Estado):
 
 
                 if sprite == self.sprites['bt_salir']:
+                    pygame.time.wait(900)
                     salir = pygame.event.Event(evento_gb.SALIR.valor)
                     pygame.event.post(salir)
             sprite.draw(Estado.ventana_sur)
@@ -40,8 +41,8 @@ class Menu(Estado):
         """
 
         tx_titulo = SpriteCajaTexto('Batalla Naval', (0,0,0), 36)
-        bt_jugar = SpriteBotonTexto('Jugar', 70)
-        bt_salir = SpriteBotonTexto('Salir', 70)
+        bt_jugar = SpriteBotonTexto('Jugar', 70, (0,0,0), SONIDO_EXPLOSION)
+        bt_salir = SpriteBotonTexto('Salir', 70, (0,0,0), SONIDO_EXPLOSION)
         
         centro_x = Estado.ventana.get_center()[0]
         centro_y = Estado.ventana.get_center()[1]
