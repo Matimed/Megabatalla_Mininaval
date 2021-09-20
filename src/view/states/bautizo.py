@@ -6,6 +6,8 @@ from view.tools import SpriteCajaTexto
 from view.tools import SpriteBotonTexto
 from view.tools import SpriteCajaEntrada
 from view.referencias import SONIDO_BOTON_CLICK
+from view.referencias import SONIDO_TECLA_PRESIONADA
+from view.referencias import SONIDO_TECLA_RETROCESO
 
 
 class Bautizo(Estado):
@@ -69,6 +71,8 @@ class Bautizo(Estado):
         tx_titulo = SpriteCajaTexto('Ingrese su nombre', (0,0,0), 30)
         tx_jugador_1 = SpriteCajaTexto('Jugador 1', (0,0,0), 26)
         tx_jugador_2 = SpriteCajaTexto('Jugador 2', (0,0,0), 26)
+        in_jugador_1 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44),False, SONIDO_TECLA_PRESIONADA, SONIDO_TECLA_RETROCESO)
+        in_jugador_2 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44),False, SONIDO_TECLA_PRESIONADA, SONIDO_TECLA_RETROCESO)
         bt_jugar = SpriteBotonTexto('Jugar', 55, (0,0,0), SONIDO_BOTON_CLICK)
         bt_volver = SpriteBotonTexto('Vover', 55, (0,0,0), SONIDO_BOTON_CLICK)
         tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
