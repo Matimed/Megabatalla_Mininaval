@@ -28,6 +28,8 @@ BOTON_FLECHA = {
 }
 
 SONIDO_BOTON_CLICK = pygame.mixer.Sound('./resources/audio/button_click.mp3')
+SONIDO_TECLA_PRESIONADA = pygame.mixer.Sound('./resources/audio/keyboard_click_1.mp3')
+SONIDO_TECLA_RETROCESO = pygame.mixer.Sound('./resources/audio/keyboard_click_2.mp3')
 SONIDO_AGUA = pygame.mixer.Sound('./resources/audio/splash.mp3')
 SONIDO_EXPLOSION = pygame.mixer.Sound('./resources/audio/explotion.mp3')
 
