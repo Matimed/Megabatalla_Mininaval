@@ -26,3 +26,7 @@ BOTON_FLECHA = {
     'liberado':pygame.image.load('resources/graphics/boton_flecha/boton_liberado.png').convert_alpha(),
     'presionado':pygame.image.load('resources/graphics/boton_flecha/boton_presionado.png').convert_alpha()
 }
+
+# Musica proporcionado por Eric F. Ricci
+MUSICA_MENU = './resources/audio/Arcade_1.mp3'
+MUSICA_JUEGO = './resources/audio/Arcade_4.mp3'
