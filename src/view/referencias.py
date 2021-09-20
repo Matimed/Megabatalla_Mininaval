@@ -27,7 +27,9 @@ BOTON_FLECHA = {
     'presionado':pygame.image.load('resources/graphics/boton_flecha/boton_presionado.png').convert_alpha()
 }
 
+SONIDO_BOTON_CLICK = pygame.mixer.Sound('./resources/audio/button_click.mp3')
 SONIDO_AGUA = pygame.mixer.Sound('./resources/audio/splash.mp3')
+SONIDO_EXPLOSION = pygame.mixer.Sound('./resources/audio/explotion.mp3')
 
 # Musica proporcionado por Eric F. Ricci
 MUSICA_MENU = './resources/audio/Arcade_1.mp3'
