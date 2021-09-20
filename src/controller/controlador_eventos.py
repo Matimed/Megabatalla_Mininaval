@@ -36,6 +36,8 @@ class ControladorEventos:
             if ev.type == evento_gb.ASIGNAR_NOMBRES:
                 eventos_modelo.append(ev)
 
+            if ev.type == evento_gb.CLICK:
+                eventos_visuales.append(ev)
 
         self.juego.actualizar(eventos_modelo)
         self.gestor_estados.actualizar(eventos_visuales)

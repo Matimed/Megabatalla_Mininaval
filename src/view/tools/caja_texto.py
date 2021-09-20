@@ -10,9 +10,13 @@ class SpriteCajaTexto(pygame.sprite.Sprite):
         self.color = color
         self.alto = alto
 
-        self.set_texto(texto)
-        self.image = self._escalar(FUENTE.render(texto, True, color), alto)
-        self.rect = self.image.get_rect()
+        self.rect = None
+        self.image = None
+
+        self.set_texto(texto) 
+        self.texto = self.get_texto()
+        
+        
 
 
     def _escalar(self, superficie, alto):
@@ -49,5 +53,27 @@ class SpriteCajaTexto(pygame.sprite.Sprite):
 
 
     def set_texto(self, texto):
-        self.image = self._escalar(FUENTE.render(texto, True, self.color), self.alto)
+
+
+        if texto == '': texto = ' '
+        
+        # Le agrega espacios a las palabras 
+        # porque la fuente tiene espacios muy cortos.
+        self.texto = texto
+        texto_tabulado = texto.replace(' ', '    ')
+        
+        self.image = self._escalar(FUENTE.render(texto_tabulado, True, self.color), self.alto)
+        
+        if self.rect:   
+            ubicacion= self.rect.center
+        else :  
+            ubicacion = (0,0)
+        
         self.rect = self.image.get_rect()
+        self.rect.center = ubicacion
+
+    
+    def get_texto(self):
+        texto = self.texto
+        if texto == ' ': texto = ''
+        return texto

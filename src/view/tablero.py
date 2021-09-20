@@ -24,12 +24,10 @@ class TableroView(AbstractGroup):
         self.celdas = self._generar_celdas(posiciones)
         self.barcos = self._generar_barcos(cant_barcos)
 
-        self.cant_barcos = cant_barcos
-
         self._ubicar_celdas(self.celdas, origen)
 
 
-    def update(self, pos_barcos, pos_celdas_marcadas = []):
+    def update_batalla(self, eventos, pos_barcos, pos_celdas_marcadas ):
         """ Actualiza el estado de todos los sprites del tablero en
             base a los argumentos dados y devuelve los barcos visibles. 
 
@@ -42,42 +40,53 @@ class TableroView(AbstractGroup):
         """
 
         barcos = self._ubicar_barcos(pos_barcos)
-        if pos_celdas_marcadas:
-            for barco in barcos:
-                barco.update(True)
-            
-            for fila in self.posiciones:
-                for posicion in fila:
-                    
-                    marcada = posicion in pos_celdas_marcadas
-                    index=self.convertir_posicion_index(posicion)
-                    self.celdas[index[0]][index[1]].update(marcada)
-        else:
-            for barco in barcos:
-                barco.update(False)
-            
-            for y,fila in enumerate(self.celdas):
-                for x,celda in enumerate(fila):
-                    if celda.update(False):
-                        if self.cant_barcos:    
-                            self.cant_barcos = self.cant_barcos-1
 
-                            pos_celda = self.posiciones[y][x]
+        for barco in barcos:
+            barco.update(True)
+        
+        for fila in self.posiciones:
+            for posicion in fila:
+                
+                marcada = posicion in pos_celdas_marcadas
+                index=self.convertir_posicion_index(posicion)
+                self.celdas[index[0]][index[1]].update(marcada)
+       
+        for y,fila in enumerate(self.celdas):
+            for x,celda in enumerate(fila):
+                if celda.update(eventos,False):
+                    self._interactuar_celda(self.posiciones[y][x])
+        return barcos
 
-                            if pos_celda in pos_barcos:
-                                evento = pygame.event.Event(
-                                                evento_gb.TABLERO.valor, 
-                                                tipo= evento_tablero.QUITAR_BARCO,
-                                                posicion = pos_celda
-                                                )
-                            else:
-                                evento = pygame.event.Event(
-                                                evento_gb.TABLERO.valor, 
-                                                tipo= evento_tablero.COLOCAR_BARCO,
-                                                posicion = pos_celda
-                                                )
-                            
-                            pygame.event.post(evento)
+
+    def update_colocacion(self,eventos, pos_barcos, barco_disponible):
+        """ Actualiza el estado de todos los sprites del tablero
+            recibiendo una lista de Posiciones con los barcos colocados 
+            y un booleano que indica si quedan barcos disponibles para colocar
+            y devuelve los barcos visibles. 
+
+            Recibe:
+                pos_barcos: Posicion[]   
+                barco_disponible: boolean
+
+            Devuelve:
+                barcos: SpriteBarco[]
+        """
+
+        barcos = self._ubicar_barcos(pos_barcos)
+        
+        for barco in barcos:
+            barco.update(False)
+        
+        for y,fila in enumerate(self.celdas):
+            for x,celda in enumerate(fila):
+                if celda.update(eventos,False):
+                    evento = self. _interactuar_barco(
+                                self.posiciones[y][x], 
+                                pos_barcos,
+                                barco_disponible
+                                )
+
+                    if evento: pygame.event.post(evento)
 
         return barcos
 
@@ -196,23 +205,52 @@ class TableroView(AbstractGroup):
         return barcos_visibles
         
 
-    def _interactuar_barco(self, pos_celda, pos_barcos):
-        """ Recibe la posicion de la celda con la que se va a interactuar y la lista de los barcos colocados """
+    def _interactuar_barco(self, pos_celda, pos_barcos, barco_disponible):
+        """ Recibe la posicion de la celda con la que se va a interactuar,
+            una la lista de los barcos colocado y un booleano que indica 
+            si quedan barcos disponibles para colocar.
+        """
 
+        evento = None
         if pos_celda in pos_barcos:
-            evento = pygame.Event(
+            evento = pygame.event.Event(
                             evento_gb.TABLERO.valor, 
                             tipo= evento_tablero.QUITAR_BARCO,
                             posicion = pos_celda
                             )
         else:
-            evento = pygame.Event(
+            if barco_disponible:
+                evento = pygame.event.Event(
                             evento_gb.TABLERO.valor, 
                             tipo= evento_tablero.COLOCAR_BARCO,
                             posicion = pos_celda
                             )
         
         return evento
+
+
+    def _interactuar_celda(self, pos_celda):
+            """ Recibe la posicion de la celda con la que se va a interactuar,
+                una la lista de los barcos colocado y un booleano que indica 
+                si quedan barcos disponibles para colocar.
+            """
+
+            evento = None
+            if pos_celda in pos_barcos:
+                evento = pygame.event.Event(
+                                evento_gb.TABLERO.valor, 
+                                tipo= evento_tablero.QUITAR_BARCO,
+                                posicion = pos_celda
+                                )
+            else:
+                if barco_disponible:
+                    evento = pygame.event.Event(
+                                evento_gb.TABLERO.valor, 
+                                tipo= evento_tablero.COLOCAR_BARCO,
+                                posicion = pos_celda
+                                )
+            
+            return evento
 
 
     def set_size(self, origen, limite, orden):

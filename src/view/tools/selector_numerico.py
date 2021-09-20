@@ -27,17 +27,16 @@ class SelectorNumerico(AbstractGroup):
         )
 
 
-    def update(self):
-        if self.boton_arriba.update():
+    def update(self , eventos):
+        if self.boton_arriba.update(eventos):
             if self.numero < self.maximo:
                 self.numero += 1
         
-        if self.boton_abajo.update():
+        if self.boton_abajo.update(eventos):
             if self.numero > self.minimo:
                 self.numero -= 1
 
         self.caja.set_texto(str(self.numero))
-        self.caja.generar_texto_sprite()
     
 
     def draw(self, superficie):

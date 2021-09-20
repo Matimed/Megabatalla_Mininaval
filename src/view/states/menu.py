@@ -15,7 +15,7 @@ class Menu(Estado):
 
     def actualizar(self, eventos):
         for sprite in self.sprites.values():
-            if sprite.update():
+            if sprite.update(eventos):
                 if sprite == self.sprites['bt_jugar']:
                     finalizar_estado = pygame.event.Event(
                                         evento_gb.ESTADO.valor, 
@@ -39,7 +39,7 @@ class Menu(Estado):
             y devuelve un diccinario que los contiene.
         """
 
-        tx_titulo = SpriteCajaTexto('Batalla      Naval', (0,0,0), 36)
+        tx_titulo = SpriteCajaTexto('Batalla Naval', (0,0,0), 36)
         bt_jugar = SpriteBotonTexto('Jugar', 70)
         bt_salir = SpriteBotonTexto('Salir', 70)
         

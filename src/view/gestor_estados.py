@@ -47,8 +47,7 @@ class GestorEstados:
                             self.juego.get_tableros(),
                             self.juego.get_jugadores()
                         )
-                        
-
+                    
                     if ev.estado == self.estados['colocacion']:
                          self._set_estado_actual(self.estados['batalla'])
 
