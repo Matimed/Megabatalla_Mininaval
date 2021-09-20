@@ -10,7 +10,7 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         Lo unico que cambia entre estos dos estados es la parte derecha del botón.
     """
 
-    def __init__(self, texto, alto, color=(0,0,0)):
+    def __init__(self, texto, alto, color=(0,0,0), sonido=None):
         super().__init__()
         
         self.texto = SpriteCajaTexto(texto, color)
@@ -20,6 +20,7 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
         self.boton = self._crear_imagenes()
         self.image = self.boton[0]
         self.rect = self.image.get_rect()
+        self.sonido = sonido
 
 
     def update(self, eventos):
@@ -30,6 +31,7 @@ class SpriteBotonTexto(pygame.sprite.Sprite):
             for ev in eventos:
                 if ev.type == evento_gb.CLICK:
                     if ev.button == 1:
+                        if self.sonido: pygame.mixer.Sound.play(self.sonido)
                         return True
 
         else:

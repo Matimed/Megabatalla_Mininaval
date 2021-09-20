@@ -8,7 +8,7 @@ class SpriteBotonFlecha(pygame.sprite.Sprite):
         cuyo angulo puede ser modificado.
     """
 
-    def __init__(self, alto, angulo=0):
+    def __init__(self, alto, angulo=0, sonido= None):
         super().__init__()
         self.boton = [
             self._ajustar_superficie(BOTON_FLECHA['liberado'], alto, angulo),
@@ -19,6 +19,7 @@ class SpriteBotonFlecha(pygame.sprite.Sprite):
         self.image = self.boton[self.index]
 
         self.rect = self.image.get_rect()
+        self.sonido = sonido
 
 
     def _ajustar_superficie(self, superficie, alto, angulo):
@@ -45,6 +46,7 @@ class SpriteBotonFlecha(pygame.sprite.Sprite):
             for ev in eventos:
                 if ev.type == evento_gb.CLICK:
                     if ev.button == 1:
+                        if self.sonido: pygame.mixer.Sound.play(self.sonido)
                         return True
         else:
             self.index = 0
