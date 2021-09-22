@@ -57,23 +57,27 @@ class Colocacion(Estado):
                                         )
 
                     pygame.event.post(ubicar_aleatorio)
-
+                
                 if sprite == self.sprites['bt_continuar']:
-                    if self.turno == 0:
-                        cambiar_turno = pygame.event.Event(
-                            evento_gb.CAMBIAR_TURNO.valor, 
-                            nuevo_turno=not self.turno
-                            )                                
-                        pygame.event.post(cambiar_turno)
-                    else:
-                    
-                        finalizar_estado = pygame.event.Event(
-                                            evento_gb.ESTADO.valor, 
-                                            tipo=evento_estado.FINALIZAR_ESTADO, 
-                                            estado=Colocacion
-                                            )
+                    if not self._get_barcos_disponibles():
+                        if self.turno == 0:
+                            cambiar_turno = pygame.event.Event(
+                                evento_gb.CAMBIAR_TURNO.valor, 
+                                nuevo_turno=not self.turno
+                                )                                
+                            pygame.event.post(cambiar_turno)
+                            self.sprites['tx_error'].set_texto('')
+
+                        else:
+                            finalizar_estado = pygame.event.Event(
+                                                evento_gb.ESTADO.valor, 
+                                                tipo=evento_estado.FINALIZAR_ESTADO, 
+                                                estado=Colocacion
+                                                )
                                         
-                        pygame.event.post(finalizar_estado)
+                            pygame.event.post(finalizar_estado)
+                    else:
+                        self.sprites['tx_error'].set_texto('Debe posicionar todos sus barcos para continuar')
             
             sprite.draw(Estado.ventana_sur)
 
@@ -128,6 +132,8 @@ class Colocacion(Estado):
         bt_automatico = SpriteBotonTexto('Automatico', 40, (0,0,0), SONIDO_BOTON_CLICK)
         bt_continuar = SpriteBotonTexto('Continuar', 50, (0,0,0), SONIDO_BOTON_CLICK)
 
+        tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
+
         sprites = {
             'tx_titulo' : tx_titulo,
             'tx_turno' : tx_turno,
@@ -137,7 +143,8 @@ class Colocacion(Estado):
             'tx_cant_barcos' : tx_cant_barcos,
             'bt_vaciar' : bt_vaciar,
             'bt_automatico' : bt_automatico,
-            'bt_continuar' : bt_continuar
+            'bt_continuar' : bt_continuar,
+            'tx_error' : tx_error
         }
         return sprites
 
@@ -190,6 +197,10 @@ class Colocacion(Estado):
             )
         sprites['bt_continuar'].get_rect().center = (
             centro_zona_info_x, centro_y * 22/12
+            )
+
+        sprites['tx_error'].get_rect().center = (
+            centro_x, centro_y*6/20
             )
 
 
