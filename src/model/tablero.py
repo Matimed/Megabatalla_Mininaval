@@ -147,7 +147,7 @@ class Tablero:
 
     def get_estado_celdas(self):
         """ Devuelve un diccionario con todas las posiciones 
-            y los estados de las celdas:
+            y los estados (en cuanto a barco) de las celdas:
             
             estado_celdas<Dict>{
                 key = posicion <Posicion>,
@@ -162,3 +162,45 @@ class Tablero:
         
         return estado_celdas
 
+
+    def get_celdas_marcadas(self):
+        """ Devuelve un diccionario con todas las posiciones 
+            y los estados (en cuanto a marca) de las celdas:
+            
+            estado_celdas<Dict>{
+                key = posicion <Posicion>,
+                value = celda_marcada <bool>
+            }
+        """
+
+        marca_celdas = {}
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+            marca_celdas[posicion] = celda.get_marca()
+        
+        return marca_celdas
+
+    
+    def get_barcos_hundidos(self):
+        """ Devuelve una lista de posiciones de barcos hundidos."""
+
+        pos_barcos_hundidos = []
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+
+            if celda.haber_barco() and celda.get_marca():
+                pos_barcos_hundidos.append(posicion)
+        
+        return pos_barcos_hundidos
+        
+
+    def get_barcos(self):
+        pos_barcos = []
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+
+            if celda.haber_barco():
+                pos_barcos.append(posicion)
+        
+        return pos_barcos
+        
