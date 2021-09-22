@@ -28,7 +28,7 @@ class TableroView(AbstractGroup):
         self._ubicar_celdas(self.celdas, origen)
 
 
-    def update_batalla(self, eventos, pos_barcos, pos_celdas_marcadas ):
+    def update_batalla(self, eventos, pos_barcos_marcados, pos_celdas_marcadas,):
         """ Actualiza el estado de todos los sprites del tablero en
             base a los argumentos dados y devuelve los barcos visibles. 
 
@@ -40,7 +40,7 @@ class TableroView(AbstractGroup):
                 barcos: SpriteBarco[]
         """
 
-        barcos = self._ubicar_barcos(pos_barcos)
+        barcos = self._ubicar_barcos(pos_barcos_marcados)
 
         for barco in barcos:
             barco.update(True)
@@ -48,14 +48,20 @@ class TableroView(AbstractGroup):
         for fila in self.posiciones:
             for posicion in fila:
                 
-                marcada = posicion in pos_celdas_marcadas
+                marcada = (posicion in pos_celdas_marcadas) and not (posicion in pos_barcos_marcados)
                 index=self.convertir_posicion_index(posicion)
-                self.celdas[index[0]][index[1]].update(marcada)
+                self.celdas[index[0]][index[1]].update(eventos, marcada)
        
         for y,fila in enumerate(self.celdas):
             for x,celda in enumerate(fila):
-                if celda.update(eventos,False):
-                    self._interactuar_celda(self.posiciones[y][x])
+
+                # Verifica que la celda no haya sido marcada con anterioridad.
+                ya_marcada = (self.posiciones[x][y] in pos_celdas_marcadas)
+                if celda.update(eventos,False): 
+                    evento = self._disparar(self.posiciones[y][x])
+
+                    if evento: pygame.event.post(evento)
+
         return barcos
 
 
@@ -234,29 +240,15 @@ class TableroView(AbstractGroup):
         return evento
 
 
-    def _interactuar_celda(self, pos_celda):
-            """ Recibe la posicion de la celda con la que se va a interactuar,
-                una la lista de los barcos colocado y un booleano que indica 
-                si quedan barcos disponibles para colocar.
-            """
+    def _disparar(self, pos_celda):
+        """ Recibe la posicion de la celda donde se pretende disparar.
+        """
 
-            evento = None
-            if pos_celda in pos_barcos:
-                evento = pygame.event.Event(
-                                evento_gb.TABLERO.valor, 
-                                tipo= evento_tablero.QUITAR_BARCO,
-                                posicion = pos_celda
-                                )
-            else:
-                if barco_disponible:
-                    evento = pygame.event.Event(
-                                evento_gb.TABLERO.valor, 
-                                tipo= evento_tablero.COLOCAR_BARCO,
-                                posicion = pos_celda
-                                )
-            
-            return evento
-
+        return pygame.event.Event(
+                        evento_gb.DISPARAR.valor, 
+                        posicion= pos_celda
+                        )
+        
 
     def set_size(self, origen, limite, orden):
         size_x = int((limite[0] - origen[0]) / orden)
