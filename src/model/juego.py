@@ -46,7 +46,11 @@ class Juego:
                     self.tableros[self.turno].ubicar_aleatoriamente()
             
             if ev.type == evento_gb.DISPARAR:
-                self._disparar()
+                self._disparar(ev.posicion)
+        
+                
+    def get_turno(self):
+        return self.turno
                 
 
     def get_tableros(self):
@@ -92,7 +96,7 @@ class Juego:
 
         if not celda.haber_barco(): self.turno = not self.turno
         else:
-            if self.comprobar_ganador(self.jugadores[self.turno]): 
+            if self._comprobar_ganador(self.jugadores[self.turno]): 
                 ganar = pygame.event.Event(
                             evento_gb.ESTADO.valor, 
                             tipo= evento_estado.VICTORIA,
