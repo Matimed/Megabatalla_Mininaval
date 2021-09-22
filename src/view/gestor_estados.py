@@ -60,7 +60,10 @@ class GestorEstados:
                         )
                     
                     if ev.estado == self.estados['colocacion']:
-                         self._set_estado_actual(self.estados['batalla'])
+                        self._set_estado_actual(
+                            self.estados['batalla'],
+                            self.juego
+                        )
 
                     eventos.remove(ev)
 
