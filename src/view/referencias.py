@@ -32,6 +32,8 @@ SONIDO_TECLA_PRESIONADA = pygame.mixer.Sound('./resources/audio/keyboard_click_1
 SONIDO_TECLA_RETROCESO = pygame.mixer.Sound('./resources/audio/keyboard_click_2.mp3')
 SONIDO_AGUA = pygame.mixer.Sound('./resources/audio/splash.mp3')
 SONIDO_EXPLOSION = pygame.mixer.Sound('./resources/audio/explotion.mp3')
+SONIDO_ERROR = pygame.mixer.Sound('./resources/audio/error_beep.wav')
+VICTORIA = pygame.mixer.Sound('./resources/audio/victory.wav')
 
 # Musica proporcionado por Eric F. Ricci
 MUSICA_MENU = './resources/audio/Arcade_1.mp3'
