@@ -1,11 +1,11 @@
 import pygame
+from view.referencias import SONIDO_AGUA
+from view.referencias import SONIDO_EXPLOSION
 from events import EventoGlobal as evento_gb
-from events import EventoEstado as evento_et
+from events import EventoBatalla as evento_bt
 from view.states import Estado
 from view.tablero import TableroView
 from view.tools import SpriteCajaTexto
-from view.tools import SpriteBotonTexto
-
 
 
 class Batalla(Estado):
@@ -20,30 +20,51 @@ class Batalla(Estado):
         self.modelo_tableros = self.juego.get_tableros()
         self.sprites, self.vista_tablero = self._setup_interfaz()
 
+        # Se necesita para poder dibujar el tablero por primera vez.
+        self.barcos = self.vista_tablero.update_batalla(
+                    [],
+                    self._get_pos_barcos_hundidos(),
+                    self._get_pos_celdas_marcadas()
+                    ) 
+
 
     def actualizar(self, eventos):
-        for ev in eventos:
-            if ev.type == evento_et.VICTORIA:
-                print('gano:', ev.ganador)
+        # Es necesario que el tablero se dibuje antes 
+        # de que se actualicen los barcos. Esto para que
+        # pueda escucharse un sonido antes de que cambie el turno.
+        self.vista_tablero.draw(Estado.ventana_sur, self.barcos)
 
-                eventos.remove(ev)
+        for ev in eventos:
+            if ev.type == evento_gb.BATALLA:
+                if ev.tipo == evento_bt.AGUA:
+                    pygame.mixer.Sound.play(SONIDO_AGUA)
+                    pygame.time.wait(900)
+                    eventos.remove(ev)
+
+                elif ev.tipo == evento_bt.BARCO_DAÑADO:
+                    pygame.mixer.Sound.play(SONIDO_EXPLOSION)
+                    eventos.remove(ev)
 
 
         for sprite in self.sprites.values():
-            if sprite.update(eventos):
-                pass
-
+            sprite.update(eventos)
             sprite.draw(Estado.ventana_sur)
 
-        barcos = self.vista_tablero.update_batalla(
+
+        self.barcos = self.vista_tablero.update_batalla(
                     eventos,
                     self._get_pos_barcos_hundidos(),
                     self._get_pos_celdas_marcadas()
                     ) 
 
-        self.vista_tablero.draw(Estado.ventana_sur, barcos)
-
         Estado.ventana.actualizar()
+        self.actualizar_turno()
+
+
+    def actualizar_turno(self):
+        self.sprites['tx_turno'].set_texto(
+            f'Es el turno de {self.jugadores[self.get_turno()]}'
+            )
 
 
     def _setup_interfaz(self):
@@ -71,25 +92,14 @@ class Batalla(Estado):
             y devuelve un diccinario que los contiene.
         """
 
-
         tx_titulo = SpriteCajaTexto('Dispara a tu enemigo', (0,0,0), 28)
-        tx_turno = SpriteCajaTexto('Turno', (0,0,0), 18)
-        tx_jugador = SpriteCajaTexto(self.jugadores[0], (0,0,0), 18)
-
-        tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 18)
-        tx_restantes = SpriteCajaTexto('Restantes', (0,0,0), 18)
-        tx_cant_barcos = SpriteCajaTexto('5', (0,0,0), 18)
-
-        tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
+        tx_turno = SpriteCajaTexto(
+            f'Es el turno de {self.jugadores[self.get_turno()]}', (0,0,0), 18
+            )
 
         sprites = {
             'tx_titulo' : tx_titulo,
             'tx_turno' : tx_turno,
-            'tx_jugador' : tx_jugador,
-            'tx_barcos' : tx_barcos,
-            'tx_restantes' : tx_restantes,
-            'tx_cant_barcos' : tx_cant_barcos,
-            'tx_error' : tx_error
         }
         return sprites
 
@@ -106,61 +116,41 @@ class Batalla(Estado):
         origen_tablero = (centro_x*7/12, centro_y * 4/10)
         limite_tablero = (centro_x*17/12, centro_y*17/10)
 
-        centro_zona_botones_x = origen_tablero[0] / 2
-        centro_zona_info_x= ((centro_x*2 - limite_tablero[0])/ 2) + limite_tablero[0]
-
         # Posiciona los sprites de forma relativa 
         # al centro de la ventana las zonas.
 
         sprites['tx_titulo'].get_rect().center = (centro_x, centro_y* 1/6 )
         
         sprites['tx_turno'].get_rect().center = (
-            centro_zona_info_x , centro_y*5/8
-            )
-        sprites['tx_jugador'].get_rect().center = (
-            sprites['tx_turno'].get_rect().centerx, 
-            sprites['tx_turno'].get_rect().bottom + centro_y*1/12 
-            )
-
-        sprites['tx_barcos'].get_rect().center = (
-            centro_zona_info_x , centro_y
-            )
-        sprites['tx_restantes'].get_rect().center = (
-            sprites['tx_barcos'].get_rect().centerx, 
-            sprites['tx_barcos'].get_rect().bottom + centro_y*1/12 
-            )
-        sprites['tx_cant_barcos'].get_rect().center = (
-            sprites['tx_restantes'].get_rect().centerx, 
-            sprites['tx_restantes'].get_rect().bottom + centro_y*1/12 
-            )
-
-        sprites['tx_error'].get_rect().center = (
             centro_x, centro_y*6/20
             )
-
 
         return origen_tablero, limite_tablero
 
 
     def get_turno(self):
+        """ Devuelve el turno actual según el modelo."""
+
         return self.juego.get_turno()
 
 
     def _get_pos_barcos_hundidos(self):
-        turno = not self.get_turno()
+        """ Devuelve la Posicion de los barcos hundidos 
+            del jugador que no tiene el turno.
+        """
+
+        # Toma el turno del contrario.
+        # Solo funciona con dos jugadores 0 y 1.
+        turno = not self.get_turno() 
         return self.modelo_tableros[turno].get_barcos_hundidos()
 
 
     def _get_pos_celdas_marcadas(self):
-        turno = not self.get_turno()
-        posiciones = self.modelo_tableros[turno].get_celdas_marcadas()
-        posiciones = posiciones.items()
+        """ Devuelve la Posicion de las celdas marcadas."""
 
-        pos_celdas_marcadas = [
-            pos  for (pos, marca) in posiciones if marca == True
-            ]
-            
-        return pos_celdas_marcadas
+        turno = not self.get_turno()
+        return self.modelo_tableros[turno].get_celdas_marcadas()
+
 
     
     def _get_barcos(self):
