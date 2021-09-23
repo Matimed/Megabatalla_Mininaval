@@ -48,16 +48,6 @@ class Bautizo(Estado):
                         pygame.event.post(asignar_nombres)
                         pygame.event.post(finalizar_estado)
 
-
-
-                if sprite == self.sprites['bt_volver']:
-                    volver = pygame.event.Event(
-                                evento_gb.ESTADO.valor, 
-                                tipo=evento_estado.VOLVER_MENU
-                                )
-                    
-                    pygame.event.post(volver)
-
             sprite.draw(Estado.ventana_sur)
 
         Estado.ventana.actualizar()
@@ -74,7 +64,6 @@ class Bautizo(Estado):
         in_jugador_1 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44),False, SONIDO_TECLA_PRESIONADA, SONIDO_TECLA_RETROCESO)
         in_jugador_2 = SpriteCajaEntrada('',(5,20),(350,50),(255,255,255),(44, 44, 44),False, SONIDO_TECLA_PRESIONADA, SONIDO_TECLA_RETROCESO)
         bt_jugar = SpriteBotonTexto('Jugar', 55, (0,0,0), SONIDO_BOTON_CLICK)
-        bt_volver = SpriteBotonTexto('Vover', 55, (0,0,0), SONIDO_BOTON_CLICK)
         tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
         
         centro_x = Estado.ventana.get_center()[0]
@@ -92,7 +81,6 @@ class Bautizo(Estado):
         in_jugador_2.get_rect().center = (centro_x*3/2 , centro_y)
 
         bt_jugar.get_rect().center = (centro_x*7/4 , centro_y*9/5)
-        bt_volver.get_rect().center = (centro_x*1/4 , centro_y*9/5)
         
         tx_error.get_rect().center = (centro_x, centro_y*1/2)
 
@@ -103,7 +91,6 @@ class Bautizo(Estado):
             'in_jugador_1'  : in_jugador_1,
             'in_jugador_2'  : in_jugador_2,
             'bt_jugar'      : bt_jugar,
-            'bt_volver'     : bt_volver,
             'tx_error'      : tx_error
         }
 
