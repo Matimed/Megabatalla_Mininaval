@@ -8,6 +8,8 @@ class Ventana:
 
     def __init__(self):
         pygame.display.set_caption('Batalla naval')
+        icon = pygame.image.load('./resources/graphics/icono.png')
+        pygame.display.set_icon(icon)
 
         self.resolucion_maxima = (
             pygame.display.Info().current_w,
