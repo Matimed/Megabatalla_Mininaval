@@ -1,4 +1,5 @@
 from events.evento_global import EventoGlobal as evento_gb
+from events.evento_estado import EventoEstado as evento_et
 import pygame
 
 
@@ -38,6 +39,11 @@ class ControladorEventos:
 
             if ev.type == evento_gb.CLICK:
                 eventos_visuales.append(ev)
+            
+            if ev.type == evento_gb.BATALLA:
+                eventos_visuales.append(ev)
+                eventos_modelo.append(ev)
+
 
         self.juego.actualizar(eventos_modelo)
         self.gestor_estados.actualizar(eventos_visuales)

@@ -147,7 +147,7 @@ class Tablero:
 
     def get_estado_celdas(self):
         """ Devuelve un diccionario con todas las posiciones 
-            y los estados de las celdas:
+            y los estados (en cuanto a barco) de las celdas:
             
             estado_celdas<Dict>{
                 key = posicion <Posicion>,
@@ -162,3 +162,63 @@ class Tablero:
         
         return estado_celdas
 
+
+    def get_celdas_marcas(self):
+        """ Devuelve un diccionario con todas las posiciones 
+            y los estados (en cuanto a marca) de las celdas:
+            
+            estado_celdas<Dict>{
+                key = posicion <Posicion>,
+                value = celda_marcada <bool>
+            }
+        """
+
+        marca_celdas = {}
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+            marca_celdas[posicion] = celda.get_marca()
+        
+        return marca_celdas
+
+
+    def get_celdas_marcadas(self):
+        """ Devuelve una lista SOLO con las posiciones 
+            de las celdas que fueron marcadas.
+        """
+        # Pido publicas disculpas por la similitud de nombres entre 
+        # get_celdas_marcas y este metodo. Espero que la documentación ayude.
+
+        pos_celdas_marcadas = []
+
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+
+            if celda.get_marca():
+                pos_celdas_marcadas.append(posicion)
+
+        return pos_celdas_marcadas
+
+    
+    def get_barcos_hundidos(self):
+        """ Devuelve una lista de posiciones de barcos hundidos."""
+
+        pos_barcos_hundidos = []
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+
+            if celda.haber_barco() and celda.get_marca():
+                pos_barcos_hundidos.append(posicion)
+        
+        return pos_barcos_hundidos
+        
+
+    def get_barcos(self):
+        pos_barcos = []
+        for posicion in self.celdas: 
+            celda = self.get_celda(posicion)
+
+            if celda.haber_barco():
+                pos_barcos.append(posicion)
+        
+        return pos_barcos
+        
