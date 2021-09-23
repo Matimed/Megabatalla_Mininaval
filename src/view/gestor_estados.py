@@ -21,7 +21,8 @@ class GestorEstados:
             'configuracion': Configuracion,
             'bautizo': Bautizo,
             'colocacion': Colocacion,
-            'batalla': Batalla
+            'batalla': Batalla,
+            'victoria': Victoria
         }
 
         music.load(MUSICA_MENU)
@@ -60,9 +61,21 @@ class GestorEstados:
                         )
                     
                     if ev.estado == self.estados['colocacion']:
-                         self._set_estado_actual(self.estados['batalla'])
+                        self._set_estado_actual(
+                            self.estados['batalla'],
+                            self.juego
+                        )
 
                     eventos.remove(ev)
+
+                if ev.tipo == evento_estado.VICTORIA:
+                    music.stop()
+                    self._set_estado_actual(
+                            self.estados['victoria'],
+                            ev.ganador
+                        )
+
+
 
         self.estado_actual.actualizar(eventos)
 
