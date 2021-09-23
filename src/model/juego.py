@@ -1,7 +1,8 @@
 import pygame
-from events import EventoGlobal as evento_gb, evento_estado
+from events import EventoGlobal as evento_gb
+from events import EventoEstado  as evento_et
+from events import EventoBatalla  as evento_bt
 from events import EventoTablero  as evento_tablero
-from events import EventoEstado  as evento_estado
 from model import Posicion, Tablero, Jugador
 import string
 
@@ -45,8 +46,9 @@ class Juego:
                 if ev.tipo == evento_tablero.UBICAR_ALEATORIAMENTE:
                     self.tableros[self.turno].ubicar_aleatoriamente()
             
-            if ev.type == evento_gb.DISPARAR:
-                self._disparar(ev.posicion)
+            if ev.type == evento_gb.BATALLA:
+                if ev.tipo == evento_bt.DISPARAR:
+                    self._disparar(ev.posicion)
         
                 
     def get_turno(self):
@@ -94,12 +96,25 @@ class Juego:
         celda = self.tableros[not self.turno].get_celda(posicion)
         self.jugadores[self.turno].mapa_add(posicion, celda)
 
-        if not celda.haber_barco(): self.turno = not self.turno
+        if not celda.haber_barco():
+            agua = pygame.event.Event(
+                            evento_gb.BATALLA.valor, 
+                            tipo = evento_bt.AGUA
+                            )
+            pygame.event.post(agua)
+
+            self.turno = not self.turno
         else:
+            barco_dañado = pygame.event.Event(
+                            evento_gb.BATALLA.valor, 
+                            tipo= evento_bt.BARCO_DAÑADO
+                            )
+            pygame.event.post(barco_dañado)
+
             if self._comprobar_ganador(self.jugadores[self.turno]): 
                 ganar = pygame.event.Event(
                             evento_gb.ESTADO.valor, 
-                            tipo= evento_estado.VICTORIA,
+                            tipo= evento_et.VICTORIA,
                             ganador = self.jugadores[self.turno]
                             )
                 pygame.event.post(ganar)
