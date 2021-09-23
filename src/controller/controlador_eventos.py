@@ -40,11 +40,10 @@ class ControladorEventos:
             if ev.type == evento_gb.CLICK:
                 eventos_visuales.append(ev)
             
-            if ev.type == evento_gb.DISPARAR:
+            if ev.type == evento_gb.BATALLA:
+                eventos_visuales.append(ev)
                 eventos_modelo.append(ev)
 
-            if ev.type == evento_et.VICTORIA:
-                eventos_visuales.append(ev)
 
         self.juego.actualizar(eventos_modelo)
         self.gestor_estados.actualizar(eventos_visuales)
