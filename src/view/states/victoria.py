@@ -74,6 +74,6 @@ class Victoria(Estado):
         # Posiciona los sprites de forma relativa 
         # al centro de la ventana las zonas.
 
-        sprites['tx_titulo'].get_rect().center = (centro_x, centro_y* 1/6)
+        sprites['tx_titulo'].get_rect().center = (centro_x, centro_y* 4/6)
         sprites['tx_jugador'].get_rect().center = (centro_x, centro_y* 2/6)
-        sprites['bt_salir'].get_rect().center = (centro_x, centro_y)
+        sprites['bt_salir'].get_rect().center = (centro_x, centro_y * 8/6)
