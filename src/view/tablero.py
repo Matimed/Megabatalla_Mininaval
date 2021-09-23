@@ -1,11 +1,14 @@
 import pygame
 from pygame.sprite import AbstractGroup
 from events import EventoGlobal as evento_gb
+from events import EventoBatalla as evento_bt
 from events import EventoTablero as evento_tablero
 from view.sprites import SpriteCelda
 from view.sprites import SpriteBarco
 import string
 from view.referencias import SONIDO_AGUA
+from view.referencias import SONIDO_ERROR
+
 
 class TableroView(AbstractGroup):
     def __init__(self, cant_barcos, posiciones, origen, limite):
@@ -47,20 +50,15 @@ class TableroView(AbstractGroup):
         
         for fila in self.posiciones:
             for posicion in fila:
-                
                 marcada = (posicion in pos_celdas_marcadas) and not (posicion in pos_barcos_marcados)
                 index=self.convertir_posicion_index(posicion)
-                self.celdas[index[0]][index[1]].update(eventos, marcada)
-       
-        for y,fila in enumerate(self.celdas):
-            for x,celda in enumerate(fila):
 
-                # Verifica que la celda no haya sido marcada con anterioridad.
-                ya_marcada = (self.posiciones[x][y] in pos_celdas_marcadas)
-                if celda.update(eventos,False): 
-                    evento = self._disparar(self.posiciones[y][x])
+                if self.celdas[index[0]][index[1]].update(eventos, marcada):
+                    if not (posicion in pos_celdas_marcadas):
+                        evento = self._disparar(posicion)
+                        pygame.event.post(evento)
 
-                    if evento: pygame.event.post(evento)
+                    else: pygame.mixer.Sound.play(SONIDO_ERROR)
 
         return barcos
 
@@ -229,8 +227,7 @@ class TableroView(AbstractGroup):
                             tipo= evento_tablero.QUITAR_BARCO,
                             posicion = pos_celda
                             )
-        else:
-            if barco_disponible:
+        elif barco_disponible:
                 evento = pygame.event.Event(
                             evento_gb.TABLERO.valor, 
                             tipo= evento_tablero.COLOCAR_BARCO,
@@ -245,8 +242,9 @@ class TableroView(AbstractGroup):
         """
 
         return pygame.event.Event(
-                        evento_gb.DISPARAR.valor, 
-                        posicion= pos_celda
+                        evento_gb.BATALLA.valor, 
+                        tipo = evento_bt.DISPARAR,
+                        posicion = pos_celda
                         )
         
 
