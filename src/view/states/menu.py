@@ -40,7 +40,7 @@ class Menu(Estado):
             y devuelve un diccinario que los contiene.
         """
 
-        tx_titulo = SpriteCajaTexto('Batalla Naval', (0,0,0), 36)
+        tx_titulo = SpriteCajaTexto('Megabatalla Mininaval', (0,0,0), 36)
         bt_jugar = SpriteBotonTexto('Jugar', 70, (0,0,0), SONIDO_EXPLOSION)
         bt_salir = SpriteBotonTexto('Salir', 70, (0,0,0), SONIDO_EXPLOSION)
         

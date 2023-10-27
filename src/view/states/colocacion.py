@@ -77,7 +77,7 @@ class Colocacion(Estado):
                                         
                             pygame.event.post(finalizar_estado)
                     else:
-                        self.sprites['tx_error'].set_texto('Debe posicionar todos sus barcos para continuar')
+                        self.sprites['tx_error'].set_texto('Debe posicionar todos sus botes para continuar')
             
             sprite.draw(Estado.ventana_sur)
 
@@ -119,11 +119,11 @@ class Colocacion(Estado):
         """
 
 
-        tx_titulo = SpriteCajaTexto('Coloca tus barcos', (0,0,0), 28)
+        tx_titulo = SpriteCajaTexto('Coloca tus botes', (0,0,0), 28)
         tx_turno = SpriteCajaTexto('Turno', (0,0,0), 18)
         tx_jugador = SpriteCajaTexto(self.jugadores[0], (0,0,0), 18)
 
-        tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 18)
+        tx_barcos = SpriteCajaTexto('Botes', (0,0,0), 18)
         tx_restantes = SpriteCajaTexto('Restantes', (0,0,0), 18)
         tx_cant_barcos = SpriteCajaTexto('5', (0,0,0), 18)
 

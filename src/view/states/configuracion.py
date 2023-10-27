@@ -40,7 +40,7 @@ class Configuracion(Estado):
                         pygame.event.post(finalizar_estado)
                         
                     else:
-                        self.sprites['tx_error'].set_texto('No pueden haber mas barcos que posiciones')
+                        self.sprites['tx_error'].set_texto('No pueden haber mas botes que posiciones')
 
             sprite.draw(Estado.ventana_sur)
 
@@ -56,7 +56,7 @@ class Configuracion(Estado):
 
         tx_orden = SpriteCajaTexto('Orden', (0,0,0), 26)
         sn_orden = SelectorNumerico(26, 2, (90,55), (255,255,255), (0,0,0),SONIDO_BOTON_CLICK)
-        tx_barcos = SpriteCajaTexto('Barcos', (0,0,0), 26)
+        tx_barcos = SpriteCajaTexto('Botes', (0,0,0), 26)
         sn_barcos = SelectorNumerico(99, 4, (90,55), (255,255,255), (0,0,0),SONIDO_BOTON_CLICK)
         bt_continuar = SpriteBotonTexto('Continuar', 55, (0,0,0), SONIDO_BOTON_CLICK)
         tx_error = SpriteCajaTexto('', (209, 31, 31), 15)
