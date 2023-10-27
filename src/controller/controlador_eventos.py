@@ -1,6 +1,7 @@
+import sys
+import pygame
 from src.events import EventoGlobal as evento_gb
 from src.events import EventoEstado as evento_et
-import pygame
 
 
 class ControladorEventos:
@@ -16,7 +17,7 @@ class ControladorEventos:
         for ev in pygame.event.get():
             if ev.type == evento_gb.SALIR:
                 pygame.quit()
-                exit()
+                sys.exit()
             
             if ev.type == evento_gb.CONFIGURADO:
                 eventos_modelo.append(ev)
