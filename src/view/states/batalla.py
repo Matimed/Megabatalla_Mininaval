@@ -1,11 +1,11 @@
 import pygame
-from view.referencias import SONIDO_AGUA
-from view.referencias import SONIDO_EXPLOSION
-from events import EventoGlobal as evento_gb
-from events import EventoBatalla as evento_bt
-from view.states import Estado
-from view.tablero import TableroView
-from view.tools import SpriteCajaTexto
+from src.view.referencias import SONIDO_AGUA
+from src.view.referencias import SONIDO_EXPLOSION
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoBatalla as evento_bt
+from src.view.states import Estado
+from src.view.tablero import TableroView
+from src.view.tools import SpriteCajaTexto
 
 
 class Batalla(Estado):

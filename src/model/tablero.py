@@ -1,6 +1,6 @@
-from custom_errors import CellFullError, NotEnoughtBoatsError
-from model import Celda, Barco
 import random
+from src.custom_errors import CellFullError, NotEnoughtBoatsError
+from src.model import Celda, Barco
 
 
 class Tablero:

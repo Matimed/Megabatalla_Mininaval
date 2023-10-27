@@ -1,2 +1,2 @@
-from view.sprites.sprite_barco import SpriteBarco
-from view.sprites.sprite_celda import SpriteCelda
+from src.view.sprites.sprite_barco import SpriteBarco
+from src.view.sprites.sprite_celda import SpriteCelda

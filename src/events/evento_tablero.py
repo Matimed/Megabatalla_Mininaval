@@ -1,5 +1,5 @@
 from aenum import auto
-from events import Evento
+from src.events import Evento
 
 class EventoTablero(Evento):
     COLOCAR_BARCO = auto(), 'posicion (Posicion)'

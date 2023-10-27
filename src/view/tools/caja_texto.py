@@ -1,5 +1,5 @@
 import pygame
-from view.referencias import FUENTE
+from src.view.referencias import FUENTE
 
 
 class SpriteCajaTexto(pygame.sprite.Sprite):

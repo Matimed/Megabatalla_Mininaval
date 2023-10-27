@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+from src.view import GestorEstados
+from src.model import Juego
+from src.controller import *
 
 class Principal:
     """ Prepara el juego para ser iniciado y lo ejecuta."""
@@ -8,18 +10,8 @@ class Principal:
         gestor_estados = GestorEstados(juego)
         controlador_eventos = ControladorEventos(juego, gestor_estados)
         self.controlador_tics = ControladorTics(controlador_eventos)
+        self.ejecutar()
 
 
     def ejecutar(self):
         self.controlador_tics.ejecutar()
-
-    
-if __name__ == '__main__':
-    import pygame
-    pygame.init()
-    from view import GestorEstados
-    from model import Juego
-    from controller import *
-
-    principal = Principal()
-    principal.ejecutar()

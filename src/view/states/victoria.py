@@ -1,10 +1,10 @@
 import pygame
-from events import EventoGlobal as evento_gb
-from view.states import Estado
-from view.tools import SpriteCajaTexto
-from view.tools import SpriteBotonTexto
-from view.referencias import SONIDO_EXPLOSION
-from view.referencias import VICTORIA
+from src.events import EventoGlobal as evento_gb
+from src.view.states import Estado
+from src.view.tools import SpriteCajaTexto
+from src.view.tools import SpriteBotonTexto
+from src.view.referencias import SONIDO_EXPLOSION
+from src.view.referencias import VICTORIA
 
 
 class Victoria(Estado):

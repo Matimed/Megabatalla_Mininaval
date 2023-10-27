@@ -1,5 +1,5 @@
-from events import Evento
 import pygame
+from src.events import Evento
 
 class EventoGlobal(Evento):
     SALIR = pygame.QUIT

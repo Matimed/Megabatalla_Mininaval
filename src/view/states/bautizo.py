@@ -1,13 +1,13 @@
-from view.states import Estado
 import pygame
-from events import EventoEstado as evento_estado
-from events import EventoGlobal as evento_gb
-from view.tools import SpriteCajaTexto
-from view.tools import SpriteBotonTexto
-from view.tools import SpriteCajaEntrada
-from view.referencias import SONIDO_BOTON_CLICK
-from view.referencias import SONIDO_TECLA_PRESIONADA
-from view.referencias import SONIDO_TECLA_RETROCESO
+from src.view.states import Estado
+from src.events import EventoEstado as evento_estado
+from src.events import EventoGlobal as evento_gb
+from src.view.tools import SpriteCajaTexto
+from src.view.tools import SpriteBotonTexto
+from src.view.tools import SpriteCajaEntrada
+from src.view.referencias import SONIDO_BOTON_CLICK
+from src.view.referencias import SONIDO_TECLA_PRESIONADA
+from src.view.referencias import SONIDO_TECLA_RETROCESO
 
 
 class Bautizo(Estado):

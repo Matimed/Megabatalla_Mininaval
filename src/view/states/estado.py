@@ -1,4 +1,4 @@
-from view.ventana import Ventana
+from src.view.ventana import Ventana
 
 
 class Estado:

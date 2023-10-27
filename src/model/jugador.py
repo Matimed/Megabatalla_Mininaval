@@ -1,6 +1,4 @@
-
-
-from view.states import estado
+from src.view.states import estado
 
 
 class Jugador:

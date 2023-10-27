@@ -1,6 +1,6 @@
 import pygame
-from view.referencias import BOTON_FLECHA
-from events import EventoGlobal as evento_gb
+from src.view.referencias import BOTON_FLECHA
+from src.events import EventoGlobal as evento_gb
 
 
 class SpriteBotonFlecha(pygame.sprite.Sprite):

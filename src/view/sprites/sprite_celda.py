@@ -1,7 +1,7 @@
 import pygame
-from view.referencias import CELDA
-from events import EventoGlobal as evento_gb
-from events import EventoEstado as evento_estado
+from src.view.referencias import CELDA
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoEstado as evento_estado
 
 class SpriteCelda(pygame.sprite.Sprite):
     celda_vacia = [CELDA['libre'], CELDA['libre_presionada']]

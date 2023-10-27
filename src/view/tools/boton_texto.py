@@ -1,7 +1,7 @@
 import pygame
-from view.tools import SpriteCajaTexto
-from view.referencias import BOTON_TEXTO
-from events import EventoGlobal as evento_gb
+from src.view.tools import SpriteCajaTexto
+from src.view.referencias import BOTON_TEXTO
+from src.events import EventoGlobal as evento_gb
 
 
 class SpriteBotonTexto(pygame.sprite.Sprite):

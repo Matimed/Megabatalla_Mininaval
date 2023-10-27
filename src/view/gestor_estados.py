@@ -1,9 +1,9 @@
-from view.states import *
-from events import EventoGlobal as evento_gb
-from events import EventoEstado as evento_estado
-from view.referencias import MUSICA_MENU
-from view.referencias import MUSICA_JUEGO
 from pygame.mixer import music
+from src.view.states import *
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoEstado as evento_estado
+from src.view.referencias import MUSICA_MENU
+from src.view.referencias import MUSICA_JUEGO
 
 class GestorEstados:
     """ Intermediario en la comunicación con los estados, 

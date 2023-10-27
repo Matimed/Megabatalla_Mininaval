@@ -1,2 +1,2 @@
-from controller.controlador_tics import ControladorTics
-from controller.controlador_eventos import ControladorEventos
+from src.controller.controlador_tics import ControladorTics
+from src.controller.controlador_eventos import ControladorEventos

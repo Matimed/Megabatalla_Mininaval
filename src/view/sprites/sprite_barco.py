@@ -1,5 +1,5 @@
 import pygame
-from view.referencias import BARCO
+from src.view.referencias import BARCO
 
 class SpriteBarco(pygame.sprite.Sprite): 
     imagenes = [BARCO['sano'], BARCO['roto']]

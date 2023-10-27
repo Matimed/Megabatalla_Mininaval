@@ -1,8 +1,8 @@
 import pygame
-from view.referencias import FUENTE
-from events import EventoGlobal as ev
-from view.tools import SpriteCajaTexto
-from events import EventoGlobal as evento_gb
+from src.view.referencias import FUENTE
+from src.events import EventoGlobal as ev
+from src.view.tools import SpriteCajaTexto
+from src.events import EventoGlobal as evento_gb
 
 class SpriteCajaEntrada(pygame.sprite.Sprite):
     """ Rectángulo en el cual se puede digitar texto y acceder a este."""

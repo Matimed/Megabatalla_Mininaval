@@ -1,7 +1,7 @@
 import pygame
 from pygame.sprite import AbstractGroup
-from view.tools.caja_entrada import SpriteCajaEntrada
-from view.tools.boton_flecha import SpriteBotonFlecha
+from src.view.tools.caja_entrada import SpriteCajaEntrada
+from src.view.tools.boton_flecha import SpriteBotonFlecha
 
 
 class SelectorNumerico(AbstractGroup):

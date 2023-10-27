@@ -1,5 +1,5 @@
-from events.evento_global import EventoGlobal as evento_gb
-from events.evento_estado import EventoEstado as evento_et
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoEstado as evento_et
 import pygame
 
 

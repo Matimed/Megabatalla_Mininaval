@@ -1,10 +1,10 @@
 import pygame
-from events import EventoGlobal as evento_gb
-from events import EventoEstado  as evento_et
-from events import EventoBatalla  as evento_bt
-from events import EventoTablero  as evento_tablero
-from model import Posicion, Tablero, Jugador
 import string
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoEstado  as evento_et
+from src.events import EventoBatalla  as evento_bt
+from src.events import EventoTablero  as evento_tablero
+from src.model import Posicion, Tablero, Jugador
 
 
 class Juego:

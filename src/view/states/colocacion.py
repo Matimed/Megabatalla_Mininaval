@@ -1,12 +1,12 @@
 import pygame
-from events import EventoGlobal as evento_gb
-from events import EventoTablero as evento_tablero
-from events import EventoEstado as evento_estado
-from view.states import Estado
-from view.tablero import TableroView
-from view.tools import SpriteCajaTexto
-from view.tools import SpriteBotonTexto
-from view.referencias import SONIDO_BOTON_CLICK
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoTablero as evento_tablero
+from src.events import EventoEstado as evento_estado
+from src.view.states import Estado
+from src.view.tablero import TableroView
+from src.view.tools import SpriteCajaTexto
+from src.view.tools import SpriteBotonTexto
+from src.view.referencias import SONIDO_BOTON_CLICK
 
 class Colocacion(Estado):
     """ Etapa donde los jugadores distribuyen sus barcos

@@ -1,13 +1,13 @@
 import pygame
-from pygame.sprite import AbstractGroup
-from events import EventoGlobal as evento_gb
-from events import EventoBatalla as evento_bt
-from events import EventoTablero as evento_tablero
-from view.sprites import SpriteCelda
-from view.sprites import SpriteBarco
 import string
-from view.referencias import SONIDO_AGUA
-from view.referencias import SONIDO_ERROR
+from pygame.sprite import AbstractGroup
+from src.events import EventoGlobal as evento_gb
+from src.events import EventoBatalla as evento_bt
+from src.events import EventoTablero as evento_tablero
+from src.view.sprites import SpriteCelda
+from src.view.sprites import SpriteBarco
+from src.view.referencias import SONIDO_AGUA
+from src.view.referencias import SONIDO_ERROR
 
 
 class TableroView(AbstractGroup):
