@@ -35,6 +35,9 @@ SONIDO_EXPLOSION = pygame.mixer.Sound('resources/audio/explotion.ogg')
 SONIDO_ERROR = pygame.mixer.Sound('resources/audio/error_beep.ogg')
 VICTORIA = pygame.mixer.Sound('resources/audio/victory.ogg')
 
+# Cuanto se deja sonar un efecto antes de seguir, en milisegundos.
+ESPERA_SONIDO = 900
+
 # Musica proporcionado por Eric F. Ricci
 MUSICA_MENU = 'resources/audio/Arcade_1.ogg'
 MUSICA_JUEGO = 'resources/audio/Arcade_4.ogg'

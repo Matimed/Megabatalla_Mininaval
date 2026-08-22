@@ -5,15 +5,20 @@ from src.view.states import Estado
 from src.view.tools import SpriteCajaTexto
 from src.view.tools import SpriteBotonTexto
 from src.view.referencias import SONIDO_EXPLOSION
+from src.view.referencias import ESPERA_SONIDO
+from src.view.temporizador import Temporizador
 
 class Menu(Estado):
     def __init__(self):
         super().__init__()
         Estado.ventana.set_fondo((192, 192, 192))
         self.sprites = self._crear_sprites()
+        self.salida = Temporizador()
 
 
     def actualizar(self, eventos):
+        self.salida.actualizar()
+
         for sprite in self.sprites.values():
             if sprite.update(eventos):
                 if sprite == self.sprites['bt_jugar']:
@@ -27,12 +32,16 @@ class Menu(Estado):
 
 
                 if sprite == self.sprites['bt_salir']:
-                    pygame.time.wait(900)
-                    salir = pygame.event.Event(evento_gb.SALIR.valor)
-                    pygame.event.post(salir)
+                    # Le da tiempo al sonido del boton antes de salir,
+                    # sin frenar el bucle.
+                    self.salida.programar(ESPERA_SONIDO, self._salir)
             sprite.draw(Estado.ventana_sur)
 
         Estado.ventana.actualizar()
+
+
+    def _salir(self):
+        pygame.event.post(pygame.event.Event(evento_gb.SALIR.valor))
 
 
     def _crear_sprites(self):

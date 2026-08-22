@@ -72,6 +72,9 @@ tiene que servirse por HTTP.
   cederle el control a la pestaña en cada frame con `await`.
   `MegabatallaMininaval.py` sigue siendo la entrada de escritorio.
 - Todo el audio está en formato OGG Vorbis: pygbag rechaza MP3 y WAV.
+- Ninguna espera bloquea el bucle. `pygame.time.wait()` congelaría la
+  pestaña entera, así que las pausas se miden con
+  `src/view/temporizador.py`, que se consulta una vez por frame.
 - El botón **Salir** vuelve al menú principal en vez de cerrar el juego,
   porque en el navegador cerrarlo solo deja el canvas congelado. En
   escritorio sigue cerrando; la diferencia se decide en

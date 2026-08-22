@@ -1,6 +1,8 @@
 import pygame
 from src.view.referencias import SONIDO_AGUA
 from src.view.referencias import SONIDO_EXPLOSION
+from src.view.referencias import ESPERA_SONIDO
+from src.view.temporizador import Temporizador
 from src.events import EventoGlobal as evento_gb
 from src.events import EventoBatalla as evento_bt
 from src.view.states import Estado
@@ -19,6 +21,7 @@ class Batalla(Estado):
         self.jugadores = self.juego.get_jugadores()
         self.modelo_tableros = self.juego.get_tableros()
         self.sprites, self.vista_tablero = self._setup_interfaz()
+        self.pausa = Temporizador()
 
         # Se necesita para poder dibujar el tablero por primera vez.
         self.barcos = self.vista_tablero.update_batalla(
@@ -34,16 +37,30 @@ class Batalla(Estado):
         # pueda escucharse un sonido antes de que cambie el turno.
         self.vista_tablero.draw(Estado.ventana_sur, self.barcos)
 
-        for ev in eventos:
+        # Se itera sobre una copia porque adentro se saca de la lista.
+        for ev in list(eventos):
             if ev.type == evento_gb.BATALLA:
                 if ev.tipo == evento_bt.AGUA:
                     pygame.mixer.Sound.play(SONIDO_AGUA)
-                    pygame.time.wait(900)
+                    self.pausa.programar(ESPERA_SONIDO)
                     eventos.remove(ev)
 
                 elif ev.tipo == evento_bt.BARCO_DAÑADO:
                     pygame.mixer.Sound.play(SONIDO_EXPLOSION)
                     eventos.remove(ev)
+
+
+        if self.pausa.corriendo():
+            # Deja oir el disparo al agua antes de cambiar de turno.
+            # En vez de bloquear se redibuja lo mismo cuadro a cuadro:
+            # el tablero queda quieto pero el navegador sigue vivo. Los
+            # eventos de este rato se descartan, asi no se puede volver
+            # a disparar mientras suena.
+            for sprite in self.sprites.values():
+                sprite.draw(Estado.ventana_sur)
+
+            Estado.ventana.actualizar()
+            return
 
 
         for sprite in self.sprites.values():
