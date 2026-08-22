@@ -1,4 +1,4 @@
-from aenum import auto
+from enum import auto
 from src.events import Evento
 
 class EventoEstado(Evento):

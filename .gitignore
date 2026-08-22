@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Build web (pygbag)
+build/web-cache/
+*.apk

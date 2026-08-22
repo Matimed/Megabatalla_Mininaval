@@ -1,0 +1,3 @@
+# Dependencias para compilar y servir la version web (WebAssembly).
+# No hacen falta para jugar en escritorio.
+pygbag>=0.9.3

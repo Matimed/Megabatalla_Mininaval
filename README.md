@@ -20,14 +20,59 @@ git clone https://github.com/Matimed/Megabatalla_Mininaval
 
 2.  Ejecuta el juego.
 
-```python MegabatallaMininaval.py``` 
+```bash
+./run.sh
+```
+
+El script crea el entorno virtual (`venv/`) e instala las dependencias la
+primera vez, así que no hace falta instalarlas a mano. Si preferís usar tu
+propio entorno, también podés ejecutarlo directamente:
+
+```bash
+python MegabatallaMininaval.py
+```
 
 4.  Personaliza el tamaño del tablero y la cantidad de barcos en el menú de configuración.
     
 5.  Invita a un amigo para jugar una emocionante partida de batalla naval en versión mini.
     
 6.  ¡Diviértete hundiendo los barcos de tu oponente!
-    
+
+
+## Jugar en el navegador
+
+El juego también corre en el navegador, compilado a WebAssembly con
+[pygbag](https://pygame-web.github.io/) (CPython + SDL2 sobre wasm, sin
+reescribir el juego).
+
+```bash
+./run_web.sh
+```
+
+Después abrí <http://localhost:8000> y hacé click en la pantalla para
+arrancar (los navegadores exigen una interacción del usuario antes de
+habilitar el audio).
+
+El script compila y levanta un servidor de prueba. Para generar solo los
+archivos estáticos, que quedan en `build/web/`:
+
+```bash
+./run_web.sh --build
+```
+
+Ese directorio es autocontenido (`index.html` + el `.apk` con el juego) y
+se puede publicar en cualquier hosting estático: GitHub Pages, Netlify,
+itch.io, etc. **No** se puede abrir el `index.html` con `file://`, siempre
+tiene que servirse por HTTP.
+
+### Notas de la versión web
+
+- El punto de entrada web es `main.py` (nombre obligatorio para pygbag) y
+  usa un bucle asincrónico: en el navegador el bucle principal tiene que
+  cederle el control a la pestaña en cada frame con `await`.
+  `MegabatallaMininaval.py` sigue siendo el entrada de escritorio.
+- Todo el audio está en formato OGG Vorbis: pygbag rechaza MP3 y WAV.
+
 
 ## Requisitos
 
