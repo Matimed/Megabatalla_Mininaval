@@ -7,7 +7,7 @@ class Ventana:
     """
 
     def __init__(self):
-        pygame.display.set_caption('Batalla naval')
+        pygame.display.set_caption('MegaBatalla MiniNaval')
         icon = pygame.image.load('resources/graphics/icono.png')
         pygame.display.set_icon(icon)
 

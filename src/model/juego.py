@@ -9,13 +9,24 @@ from src.model import Posicion, Tablero, Jugador
 
 class Juego:
     def __init__(self):
+        self.reiniciar()
+
+
+    def reiniciar(self):
+        """ Devuelve el juego a su estado inicial.
+
+            Hace falta al volver al menu principal: los tableros y los
+            mapas de disparos de cada jugador se acumulan partida tras
+            partida si no se los descarta.
+        """
+
         self.tableros = []
         self.jugadores = []
         self.turno = 0
 
         # Genera los jugadores:
         [self.jugadores.append(Jugador()) for i in range(2)]
-        
+
 
     def actualizar(self, eventos):
         for ev in eventos:

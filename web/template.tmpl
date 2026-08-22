@@ -1,0 +1,721 @@
+<html lang="en-us"><script src="{{cookiecutter.cdn}}pythons.js" type=module id="site" data-python="python{{cookiecutter.PYBUILD}}" data-LINES=42 data-COLUMNS=132 data-os="vtx,snd,gui" async defer>#<!--
+
+print("""
+Loading {{cookiecutter.title}} from {{cookiecutter.archive}}.apk
+    Pygbag Version : {{cookiecutter.version}}
+    Template Version : 0.9.3
+    Python  : {{cookiecutter.PYBUILD}}
+    CDN URL : {{cookiecutter.cdn}}
+    Screen  : {{cookiecutter.width}}x{{cookiecutter.height}}
+    Title   : {{cookiecutter.title}}
+    Folder  : {{cookiecutter.directory}}
+    Authors : {{cookiecutter.authors}}
+    SPDX-License-Identifier: {{cookiecutter.spdx}}
+
+""")
+
+import sys
+import asyncio
+import platform
+import json
+from pathlib import Path
+
+# do not rename
+async def custom_site():
+    import embed
+    platform.document.body.style.background = "#7f7f7f"
+
+    platform.window.transfer.hidden = true
+    platform.window.canvas.style.visibility = "visible"
+
+
+    bundle = "{{cookiecutter.archive}}"
+
+    # the C or js loader could do that but be explicit.
+    appdir = Path(f"/data/data/{bundle}") # /data/data/{{cookiecutter.archive}}
+    appdir.mkdir()
+
+
+    # unpack filesystem from compressed archive into work dir
+    if platform.window.location.host.find('.itch.zone')>0:
+        import zipfile
+        async with platform.fopen("{{cookiecutter.archive}}.apk", "rb") as archive:
+            with zipfile.ZipFile(archive) as zip_ref:
+                zip_ref.extractall(appdir.as_posix())
+    else:
+        import tarfile
+        async with platform.fopen("{{cookiecutter.archive}}.tar.gz", "rb") as archive:
+            tar = tarfile.open(fileobj=archive, mode="r:gz")
+            tar.extractall(path=appdir.as_posix(), filter='tar')
+            tar.close()
+
+    # preloader will change to work dir and prepend it to sys.path
+    platform.run_main(PyConfig, loaderhome= appdir / "assets", loadermain=None)
+
+
+    # wait preloading complete : that includes images and wasm compilation of bundled modules
+    while embed.counter()<0:
+        await asyncio.sleep(.1)
+
+    main = appdir / "assets" / "main.py"
+
+    # TODO: test for window.webkitAudioContext and block aio loop until gesture if accessing media manager play
+    # before a gesture is recorded ( touch or click )
+
+    # test/wait user media interaction
+    if not platform.window.MM.UME:
+
+        # now that apk is mounted we have access to font cache
+        # but we need to fill __file__ that is not yet set
+        __import__(__name__).__file__ = main
+
+        # now make a prompt
+        msg  = "Ready to start ! Please click/touch page"
+        platform.window.infobox.innerText = msg
+        print("\n"*4, f"    * Waiting for media user engagement. {msg} *" , "\n"*4)
+
+        while not platform.window.MM.UME:
+            await asyncio.sleep(.1)
+
+    # start async top level machinery if not started and add a console in any case if requested.
+    await TopLevel_async_handler.start_toplevel(platform.shell, console=window.python.config.debug)
+
+    # now that apk is mounted we have access to font cache
+    # but we need to fill __file__/__name__ that are not yet set
+    __import__(__name__).__file__ = main
+
+
+    def ui_callback(pkg):
+        platform.window.infobox.innerText = f"installing {pkg}"
+
+    await shell.source(main, callback=ui_callback)
+
+    # if you don't reach that step
+    # your main.py has an infinite sync loop somewhere !
+
+    platform.window.infobox.style.display = "none"
+    platform.window.config.gui_divider = 1
+    platform.window.window_resize()
+    print("default.tmpl: done")
+
+    shell.interactive()
+
+asyncio.run( custom_site() )
+
+
+
+
+
+
+
+
+
+
+
+
+# BEGIN BLOCK
+#
+# now this is the html part you can (and should) customize
+# It is not mandatory : pygame-script when it reads the first line (also called
+# shebang ) of above code create absolute minimal widget set
+# required for running with default rules
+#
+# do not alter that comment block it is separating python code from html code
+# =============================================================================
+# --></script><head><!--
+//=============================================================================
+//
+//
+//
+//
+//
+//
+//
+
+    {%- if cookiecutter.comment != "" -%}
+{{cookiecutter.comment}}
+    {% endif %}
+
+--><script type="application/javascript">
+// END BLOCK
+
+
+
+// this dict is available under PyConfig.config from __main__
+
+config = {
+    xtermjs : "{{cookiecutter.xtermjs}}" ,
+    _sdl2 : "canvas",
+    user_canvas : 0,
+    user_canvas_managed : 0,
+    gui_divider : 2,
+    ume_block : {{cookiecutter.ume_block}},
+    can_close : {{cookiecutter.can_close}},
+    archive : "{{cookiecutter.archive}}",
+    gui_debug : 2,
+    cdn : "{{cookiecutter.cdn}}",
+    autorun : {{cookiecutter.autorun}},
+    PYBUILD : "{{cookiecutter.PYBUILD}}",
+    fb_ar   :  1.77,
+    fb_width : "{{cookiecutter.width}}",
+    fb_height : "{{cookiecutter.height}}"
+}
+
+function show_infobox() {
+    infobox.style.display = "block";
+
+    // Measure box
+    const w = infobox.offsetWidth;
+    const h = infobox.offsetHeight;
+
+    // Center in viewport
+    const left = (window.innerWidth - w) / 2;
+    const top = (window.innerHeight - h) / 2;
+
+    infobox.style.left = left + "px";
+    infobox.style.top = top + "px";
+}
+
+</script>
+
+    <title>{{cookiecutter.title}}</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="height=device-height, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+
+    <style>
+        #status {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 20px;
+            margin-left: 30px;
+            font-weight: bold;
+            color: rgb(120, 120, 120);
+        }
+
+        #progress {
+            height: 20px;
+            width: 300px;
+        }
+
+        /* ---- pantalla de carga de Megabatalla Mininaval ---- */
+
+        @font-face {
+            font-family: 'Mininaval';
+            src: url(data:font/ttf;base64,AAEAAAAKAIAAAwAgT1MvMgSWBtUAAAqQAAAAYGNtYXD/ZvnfAAAArAAAAaxnbHlm2PwFEgAACxAAABZ0aGVhZF8Q/5AAAAJYAAAANmhoZWEBgQB9AAACkAAAACRobXR4GAAE4wAAArQAAAEIbG9jYQAAGOUAACGEAAABDG1heHAAQv/hAAADvAAAACBuYW1lvl3UjgAAA9wAAAaxcG9zdAAC//0AAArwAAAAIAAAAAIAAAADAAAAFAADAAEAAADgAAQAzAAAAA4ACAACAAYAAAANACAAOQBaAHr//wAAAAAADQAgADAAQQBh//8AAf/1/+P/1P/N/8cAQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAzAAAAA4ACAACAAYAAAANACAAOQBaAHr//wAAAAAADQAgADAAQQBh//8AAf/1/+P/1P/N/8cAQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAADG5cK8Xw889QAABAAAAAAAydALhwAAAADJ0AuHAAAAAAKAAoAAAAAIAAIAAQAAAAAAAQAAAoAAAAAAAwAAAACAAoAAAQAAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAAAAgAAAAwAAAAGAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAKAAAACgAAAAoAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAoAAAAKAAAACgAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAAAAQAAAEIAJAAJAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAACIBngABAAAAAAAAABkAAAABAAAAAAABAAkAGQABAAAAAAACAAcAIgABAAAAAAADABQAKQABAAAAAAAEABEAPQABAAAAAAAFAAsATgABAAAAAAAGAAkAWQABAAAAAAAHADwAYgABAAAAAAAIABUAngABAAAAAAAJAAoAswABAAAAAAAKACYAvQABAAAAAAALABcA4wABAAAAAAAMADAA+gABAAAAAAANACgBKgABAAAAAAAOAC4BUgABAAAAAAATACkBgAABAAAAAAEAAAgBqQADAAEECQAAADIBsQADAAEECQABABIB4wADAAEECQACAA4B9QADAAEECQADACgCAwADAAEECQAEACICKwADAAEECQAFABYCTQADAAEECQAGABICYwADAAEECQAHAHgCdQADAAEECQAIACoC7QADAAEECQAJABQDFwADAAEECQAKAEwDKwADAAEECQALAC4DdwADAAEECQAMAGADpQADAAEECQANAFAEBQADAAEECQAOAFwEVQADAAEECQATAFIEsQADAAEECQEAABAFA0NvcHlyaWdodCBOZWdvY2lhdG9yIDIwMTE1eDUgUGl4ZWxSZWd1bGFyRm9udFN0cnVjdCA1eDUgUGl4ZWw1eDUgUGl4ZWwgUmVndWxhclZlcnNpb24gMS4wNXg1LVBpeGVsRm9udFN0cnVjdCBpcyBhIHRyYWRlbWFyayBvZiBGU0kgRm9udFNob3AgSW50ZXJuYXRpb25hbCBHbWJIaHR0cDovL2ZvbnRzdHJ1Y3QuY29tTmVnb2NpYXRvchw1eDUgUGl4ZWwdIHdhcyBidWlsdCB3aXRoIEZvbnRTdHJ1Y3QKaHR0cDovL3d3dy5mb250c2hvcC5jb21odHRwOi8vZm9udHN0cnVjdC5jb20vZm9udHN0cnVjdGlvbnMvc2hvdy80NzQyOTVDcmVhdGl2ZSBDb21tb25zIEF0dHJpYnV0aW9uIFNoYXJlIEFsaWtlaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbGljZW5zZXMvYnktc2EvMy4wL0ZpdmUgYmlnIHF1YWNraW5nIHplcGh5cnMgam9sdCBteSB3YXggYmVkQmc0TWQxQmgAQwBvAHAAeQByAGkAZwBoAHQAIABOAGUAZwBvAGMAaQBhAHQAbwByACAAMgAwADEAMQA1AHgANQAgAFAAaQB4AGUAbABSAGUAZwB1AGwAYQByAEYAbwBuAHQAUwB0AHIAdQBjAHQAIAA1AHgANQAgAFAAaQB4AGUAbAA1AHgANQAgAFAAaQB4AGUAbAAgAFIAZQBnAHUAbABhAHIAVgBlAHIAcwBpAG8AbgAgADEALgAwADUAeAA1AC0AUABpAHgAZQBsAEYAbwBuAHQAUwB0AHIAdQBjAHQAIABpAHMAIABhACAAdAByAGEAZABlAG0AYQByAGsAIABvAGYAIABGAFMASQAgAEYAbwBuAHQAUwBoAG8AcAAgAEkAbgB0AGUAcgBuAGEAdABpAG8AbgBhAGwAIABHAG0AYgBIAGgAdAB0AHAAOgAvAC8AZgBvAG4AdABzAHQAcgB1AGMAdAAuAGMAbwBtAE4AZQBnAG8AYwBpAGEAdABvAHIgHAA1AHgANQAgAFAAaQB4AGUAbCAdACAAdwBhAHMAIABiAHUAaQBsAHQAIAB3AGkAdABoACAARgBvAG4AdABTAHQAcgB1AGMAdAAKAGgAdAB0AHAAOgAvAC8AdwB3AHcALgBmAG8AbgB0AHMAaABvAHAALgBjAG8AbQBoAHQAdABwADoALwAvAGYAbwBuAHQAcwB0AHIAdQBjAHQALgBjAG8AbQAvAGYAbwBuAHQAcwB0AHIAdQBjAHQAaQBvAG4AcwAvAHMAaABvAHcALwA0ADcANAAyADkANQBDAHIAZQBhAHQAaQB2AGUAIABDAG8AbQBtAG8AbgBzACAAQQB0AHQAcgBpAGIAdQB0AGkAbwBuACAAUwBoAGEAcgBlACAAQQBsAGkAawBlAGgAdAB0AHAAOgAvAC8AYwByAGUAYQB0AGkAdgBlAGMAbwBtAG0AbwBuAHMALgBvAHIAZwAvAGwAaQBjAGUAbgBzAGUAcwAvAGIAeQAtAHMAYQAvADMALgAwAC8ARgBpAHYAZQAgAGIAaQBnACAAcQB1AGEAYwBrAGkAbgBnACAAegBlAHAAaAB5AHIAcwAgAGoAbwBsAHQAIABtAHkAIAB3AGEAeAAgAGIAZQBkAEIAZwA0AE0AZAAxAEIAaAAAAAACAnEBkAAFAAQCAAIAAAAAAAIAAgAAAAIAADMAzAAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAAAAAAABGU1RSAEAADQB6AoAAAAAAAoAAAAAAAAEAAAAAAoACgAAAACAAAAADAAAAAAAAAGYAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAoACgAADAAcACwASABYAAAEBAQEBAQEBAQEBAQEBAQABAAEBAQEBAUAAAP+aAAAAywAA/zUAAABmAAD/mgAAAMsAAP+b/9X/4//iAAD/JgAAAoAAAABaAGYAAP+aAHcAZgAA/5oAdwBmAAD/mgB3AGUAAAAA/+P/4f/X/kECgAAA/YAAAAAABAAAAAACgAKAAAMABwALAA8AAAEBAQEBAQEBAQEBAQEBAQEAgAAAAYAAAP4AAAAAgAAAAYAAAACAAAD+AAAAAYAAAAAAAIAAAP+AAIABgAAA/oAAAAGAAAD+gAGAAIAAAP+AAAEAAAAAAQACgAAFAAABAQEBAQEAgAAA/4AAAAEAAAAAAAIAAAAAgAAA/YAABQAAAAACAAKAAAcACwAPABMAFwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAACAAAAAgAAAAQAAAP8AAAAAgAAA/oAAAACAAAABAAAAAIAAAP6AAAABAAAAAAAAgAAAAIAAAP+AAAD/gAEAAIAAAP+AAIAAgAAA/4AAAACAAAD/gACAAIAAAP+AAAAAAQAAAAACAAKAAAsAAAEBAQEBAQEBAQEBAQAAAAABgAAA/wAAAAEAAAD+gAAAAgAAAAAAAIAAAACAAAAAgAAAAIAAAACAAAD9gAAAAAEAAAAAAgACgAAJAAABAQEBAQEBAQEBAYAAAP6AAAAAgAAAAQAAAACAAAAAAAEAAAABgAAA/wAAAAEAAAD9gAACAAAAAAIAAoAACQANAAABAQEBAQEBAQEBAQEBAQAAAAABgAAA/oAAAACAAAABgAAA/oAAAAGAAAAAAACAAAAAgAAAAQAAAP+AAAD+gAIAAIAAAP+AAAAAAgAAAAACAAKAAAMACwAAAQEBAQEBAQEBAQEBAYAAAP8AAAD/gAAAAgAAAP6AAAABgAAAAIAAgAAA/4D/gAKAAAD/gAAA/4AAAP6AAAQAAAAAAgACgAADAAcACwARAAABAQEBAQEBAQEBAQEBAQEBAQEAAAAAAIAAAAAAAAAAgAAAAAAAAACAAAAAAAAA/oAAAAIAAAAAAACAAAD/gACAAIAAAP+AAIAAgAAA/4AAgACAAAAAgAAA/wAAAAADAAAAAAIAAoAABwALABMAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAACAAAABAAAAAIAAAP6AAAABAAAA/oAAAAIAAAD/gAAA/wAAAAAAAQAAAP+AAAAAgAAA/wABAACAAAD/gACAAQAAAP8AAAAAgAAA/4AAAAACAAAAAAIAAoAAAwALAAABAQEBAQEBAQEBAQEBgAAA/wAAAP+AAAABgAAA/oAAAAIAAAABgACAAAD/gP6AAIAAAACAAAABgAAA/YAAAgAAAAACgAKAAAMACwAAAQEBAQEBAQEBAQEBAgAAAP6AAAD/gAAAAoAAAP+AAAD+gAAAAYAAgAAA/4D+gAKAAAD9gAAAAQAAAP8AAAEAAAAAAoACgAAPAAABAQEBAQEBAQEBAQEBAQEBAAAAAAIAAAD+gAAAAYAAAACAAAD/gAAA/oAAAAGAAAAAAAKAAAD/gAAA/4AAAACAAAD+gAAAAIAAAP+AAAD/gAAAAAEAAAAAAoACgAAHAAABAQEBAQEBAQAAAAACgAAA/gAAAAIAAAAAAAKAAAD/gAAA/oAAAP+AAAAAAgAAAAACgAKAAAMACwAAAQEBAQEBAQEBAQEBAgAAAACAAAD9gAAAAgAAAP6AAAABgAAAAIABgAAA/oD/gAKAAAD/gAAA/oAAAP+AAAEAAAAAAoACgAALAAABAQEBAQEBAQEBAQEAAAAAAoAAAP4AAAABgAAA/oAAAAIAAAAAAAKAAAD/gAAA/4AAAP+AAAD/gAAA/4AAAAABAAAAAAKAAoAACQAAAQEBAQEBAQEBAQAAAAACgAAA/gAAAAGAAAD+gAAAAAACgAAA/4AAAP+AAAD/gAAA/wAAAQAAAAACgAKAAAsAAAEBAQEBAQEBAQEBAQAAAAACgAAA/gAAAAGAAAD/AAAAAYAAAAAAAoAAAP+AAAD+gAAAAIAAAACAAAD+gAAAAAEAAAAAAoACgAALAAABAQEBAQEBAQEBAQEAAAAAAIAAAAGAAAAAgAAA/4AAAP6AAAAAAAKAAAD/AAAAAQAAAP2AAAABAAAA/wAAAAABAAAAAAKAAoAACwAAAQEBAQEBAQEBAQEBAAAAAAEAAAD/AAAAAoAAAP8AAAABAAAAAAAAgAAAAYAAAACAAAD/gAAA/oAAAP+AAAAAAQAAAAACAAKAAAsAAAEBAQEBAQEBAQEBAQAAAAAAgAAAAIAAAP8AAAACAAAA/4AAAAAAAQAAAP+AAAABgAAAAIAAAP+AAAD+AAAAAAUAAAAAAgACgAADAAcACwATABcAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQGAAAAAgAAA/wAAAACAAAD/gAAAAIAAAP6AAAAAgAAAAIAAAP+AAAABAAAAAIAAAAAAAIAAAP+AAIAAgAAA/4ABAACAAAD/gP6AAoAAAP8AAAD/gAAA/wACAACAAAD/gAAAAAEAAAAAAgACgAAFAAABAQEBAQEAAAAAAIAAAAGAAAAAAAKAAAD+AAAA/4AAAwAAAAACgAKAAAMACwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAgAAA/oAAAACAAAAAgAAA/4AAAAGAAAD/gAAAAIAAAACAAAABAACAAAD/gP8AAoAAAP+AAAD/gAAA/oAAAAGAAAAAgAAAAIAAAP2AAAAAAwAAAAACgAKAAAMACwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAgAAA/oAAAACAAAAAgAAA/4AAAAGAAAD/gAAAAIAAAACAAAABAACAAAD/gP8AAoAAAP+AAAD/gAAA/oAAAACAAAAAgAAAAYAAAP2AAAAAAgAAAAACgAKAAAMABwAAAQEBAQEBAQECAAAA/oAAAP+AAAACgAAAAIABgAAA/oD/gAKAAAD9gAACAAAAAAKAAoAAAwAJAAABAQEBAQEBAQEBAgAAAP6AAAD/gAAAAoAAAP4AAAABgACAAAD/gP6AAoAAAP6AAAD/AAAAAAIAAAAAAoACgAAFAAkAAAEBAQEBAQEBAQEBgAAAAIAAAP6AAAD/gAAAAoAAAACAAIAAAAEAAAD+gP+AAoAAAP2AAAAAAwAAAAACgAKAAAMABwARAAABAQEBAQEBAQEBAQEBAQEBAQECAAAAAIAAAP+AAAD+gAAA/4AAAAKAAAD/gAAA/4AAAP8AAAAAAACAAAD/gAGAAIAAAP+A/oACgAAA/oAAAP+AAAAAgAAA/wAAAQAAAAACgAKAAAsAAAEBAQEBAQEBAQEBAQAAAAACAAAA/gAAAAKAAAD+AAAAAgAAAAAAAIAAAACAAAABgAAA/4AAAP+AAAD+gAAAAAEAAAAAAoACgAAHAAABAQEBAQEBAQEAAAD/AAAAAoAAAP8AAAAAAAIAAAAAgAAA/4AAAP4AAAAAAQAAAAACgAKAAAcAAAEBAQEBAQEBAAAAAACAAAABgAAAAIAAAAAAAoAAAP4AAAACAAAA/YAAAAAFAAAAAAKAAoAAAwAHAAsADwATAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAgAAA/wAAAACAAAAAgAAAAIAAAP4AAAAAgAAAAYAAAACAAAAAAACAAAD/gACAAQAAAP8AAAABAAAA/wABAAEAAAD/AAAAAQAAAP8AAAAAAwAAAAACgAKAAAMACQAPAAABAQEBAQEBAQEBAQEBAQEBAQAAAACAAAD+gAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgACAAAD/gP+AAoAAAP4AAAD/gAAAAIAAAAIAAAD9gAAAAAkAAAAAAoACgAADAAcACwAPABMAFwAbAB8AIwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAACAAAABgAAAAIAAAP4AAAAAgAAAAIAAAACAAAD/AAAAAIAAAP8AAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAAAAAAgAAA/4AAAACAAAD/gACAAIAAAP+AAAAAgAAA/4AAgACAAAD/gACAAIAAAP+AAAAAgAAA/4AAgACAAAD/gAAAAIAAAP+AAAAABQAAAAACgAKAAAMABwALAA8AEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAIAAAP8AAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAAAAABgAAA/oABgACAAAD/gAAAAIAAAP+AAIAAgAAA/4AAAACAAAD/gAAAAAMAAAAAAoACgAAHAAsAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAAIAAAACAAAABgAAA/oAAAACAAAAAAAAA/oAAAAKAAAD/gAAAAAAAgAAAAIAAAP+AAAD/gAEAAIAAAP+AAIAAgAAAAIAAAP+AAAD/gAAAAAIAAAAAAoACgAADAAsAAAEBAQEBAQEBAQEBAQIAAAD+gAAA/4AAAAKAAAD/gAAA/oAAAAGAAIAAAP+A/oACgAAA/YAAAAEAAAD/AAABAAAAAAKAAoAADwAAAQEBAQEBAQEBAQEBAQEBAQAAAAACAAAA/oAAAAGAAAAAgAAA/4AAAP6AAAABgAAAAAACgAAA/4AAAP+AAAAAgAAA/oAAAACAAAD/gAAA/4AAAAABAAAAAAKAAoAABwAAAQEBAQEBAQEAAAAAAoAAAP4AAAACAAAAAAACgAAA/4AAAP6AAAD/gAAAAAIAAAAAAoACgAADAAsAAAEBAQEBAQEBAQEBAQIAAAAAgAAA/YAAAAIAAAD+gAAAAYAAAACAAYAAAP6A/4ACgAAA/4AAAP6AAAD/gAABAAAAAAKAAoAACwAAAQEBAQEBAQEBAQEBAAAAAAKAAAD+AAAAAYAAAP6AAAACAAAAAAACgAAA/4AAAP+AAAD/gAAA/4AAAP+AAAAAAQAAAAACgAKAAAkAAAEBAQEBAQEBAQEAAAAAAoAAAP4AAAABgAAA/oAAAAAAAoAAAP+AAAD/gAAA/4AAAP8AAAEAAAAAAoACgAALAAABAQEBAQEBAQEBAQEAAAAAAoAAAP4AAAABgAAA/wAAAAGAAAAAAAKAAAD/gAAA/oAAAACAAAAAgAAA/oAAAAABAAAAAAKAAoAACwAAAQEBAQEBAQEBAQEBAAAAAACAAAABgAAAAIAAAP+AAAD+gAAAAAACgAAA/wAAAAEAAAD9gAAAAQAAAP8AAAAAAQAAAAACgAKAAAsAAAEBAQEBAQEBAQEBAQAAAAABAAAA/wAAAAKAAAD/AAAAAQAAAAAAAIAAAAGAAAAAgAAA/4AAAP6AAAD/gAAAAAEAAAAAAgACgAALAAABAQEBAQEBAQEBAQEAAAAAAIAAAACAAAD/AAAAAgAAAP+AAAAAAAEAAAD/gAAAAYAAAACAAAD/gAAA/gAAAAAFAAAAAAIAAoAAAwAHAAsAEwAXAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBgAAAAIAAAP8AAAAAgAAA/4AAAACAAAD+gAAAAIAAAACAAAD/gAAAAQAAAACAAAAAAACAAAD/gACAAIAAAP+AAQAAgAAA/4D+gAKAAAD/AAAA/4AAAP8AAgAAgAAA/4AAAAABAAAAAAIAAoAABQAAAQEBAQEBAAAAAACAAAABgAAAAAACgAAA/gAAAP+AAAMAAAAAAoACgAADAAsAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAIAAAP6AAAAAgAAAAIAAAP+AAAABgAAA/4AAAACAAAAAgAAAAQAAgAAA/4D/AAKAAAD/gAAA/4AAAP6AAAABgAAAAIAAAACAAAD9gAAAAAMAAAAAAoACgAADAAsAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAIAAAP6AAAAAgAAAAIAAAP+AAAABgAAA/4AAAACAAAAAgAAAAQAAgAAA/4D/AAKAAAD/gAAA/4AAAP6AAAAAgAAAAIAAAAGAAAD9gAAAAAIAAAAAAoACgAADAAcAAAEBAQEBAQEBAgAAAP6AAAD/gAAAAoAAAACAAYAAAP6A/4ACgAAA/YAAAgAAAAACgAKAAAMACQAAAQEBAQEBAQEBAQIAAAD+gAAA/4AAAAKAAAD+AAAAAYAAgAAA/4D+gAKAAAD+gAAA/wAAAAACAAAAAAKAAoAABQAJAAABAQEBAQEBAQEBAYAAAACAAAD+gAAA/4AAAAKAAAAAgACAAAABAAAA/oD/gAKAAAD9gAAAAAMAAAAAAoACgAADAAcAEQAAAQEBAQEBAQEBAQEBAQEBAQEBAgAAAACAAAD/gAAA/oAAAP+AAAACgAAA/4AAAP+AAAD/AAAAAAAAgAAA/4ABgACAAAD/gP6AAoAAAP6AAAD/gAAAAIAAAP8AAAEAAAAAAoACgAALAAABAQEBAQEBAQEBAQEAAAAAAgAAAP4AAAACgAAA/gAAAAIAAAAAAACAAAAAgAAAAYAAAP+AAAD/gAAA/oAAAAABAAAAAAKAAoAABwAAAQEBAQEBAQEBAAAA/wAAAAKAAAD/AAAAAAACAAAAAIAAAP+AAAD+AAAAAAEAAAAAAoACgAAHAAABAQEBAQEBAQAAAAAAgAAAAYAAAACAAAAAAAKAAAD+AAAAAgAAAP2AAAAABQAAAAACgAKAAAMABwALAA8AEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAIAAAP8AAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAAAAAAgAAA/4AAgAEAAAD/AAAAAQAAAP8AAQABAAAA/wAAAAEAAAD/AAAAAAMAAAAAAoACgAADAAsAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAIAAAP6AAAAAgAAAAIAAAP+AAAABgAAA/4AAAACAAAAAgAAAAQAAgAAA/4D/AAKAAAD+gAAA/4AAAP+AAAAAgAAAAIAAAAGAAAD9gAAAAAkAAAAAAoACgAADAAcACwAPABMAFwAbAB8AIwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAACAAAABgAAAAIAAAP4AAAAAgAAAAIAAAACAAAD/AAAAAIAAAP8AAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAAAAAAgAAA/4AAAACAAAD/gACAAIAAAP+AAAAAgAAA/4AAgACAAAD/gACAAIAAAP+AAAAAgAAA/4AAgACAAAD/gAAAAIAAAP+AAAAABQAAAAACgAKAAAMABwALAA8AEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAIAAAP8AAAAAgAAAAIAAAACAAAD+AAAAAIAAAAGAAAAAgAAAAAABgAAA/oABgACAAAD/gAAAAIAAAP+AAIAAgAAA/4AAAACAAAD/gAAAAAMAAAAAAoACgAAHAAsAEwAAAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAAIAAAACAAAABgAAA/oAAAACAAAAAAAAA/oAAAAKAAAD/gAAAAAAAgAAAAIAAAP+AAAD/gAEAAIAAAP+AAIAAgAAAAIAAAP+AAAD/gAAAAAAAAAAAAIwAAACMAAAAjAAAAIwAAADwAAABHAAAAawAAAH4AAACOAAAApAAAALcAAADTAAAA8QAAAQQAAAEXAAABLwAAAT0AAAFQAAABYwAAAXMAAAGGAAABmQAAAawAAAG/AAAB4wAAAe4AAAIMAAACKgAAAjgAAAJJAAACWgAAAnUAAAKIAAAClgAAAqQAAALDAAAC3AAAAxEAAAMwAAADTgAAA2EAAAN5AAADhwAAA5oAAAOtAAADvQAAA9AAAAPjAAAD9gAABAkAAAQtAAAEOAAABFYAAAR0AAAEggAABJMAAASkAAAEvwAABNIAAATgAAAE7gAABQ0AAAUrAAAFYAAABX8AAAWdA==) format('truetype');
+            font-display: block;
+        }
+
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 26px;
+            overflow: hidden;
+            text-align: center;
+            color: #e8f4ff;
+            font-family: 'Mininaval', 'Courier New', monospace;
+            background:
+                /* luz que entra desde arriba, difusa como bajo el agua */
+                radial-gradient(ellipse 85% 50% at 50% -8%,
+                                rgba(150, 245, 255, .20) 0%, transparent 65%),
+                /* reflejo sobre la superficie del agua */
+                radial-gradient(ellipse 65% 28% at 50% 84%,
+                                rgba(105, 225, 245, .16) 0%, transparent 70%),
+                /* mar */
+                linear-gradient(180deg,
+                                #021620 0%,
+                                #05303f 24%,
+                                #0a5468 46%,
+                                #0b6b7d 60%,
+                                #075263 74%,
+                                #032430 100%);
+            transition: opacity .45s ease;
+        }
+
+        #splash.oculto {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Las capas decorativas van en z-index -1: quedan por encima del
+           fondo de #splash pero por debajo del titulo y el barco. */
+
+        /* rayos de luz filtrandose en diagonal */
+        #splash::before {
+            content: "";
+            position: absolute;
+            inset: -20% -30% 35% -30%;
+            z-index: -1;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                104deg,
+                transparent 0 42px,
+                rgba(160, 250, 255, .05) 42px 78px,
+                transparent 78px 150px
+            );
+            animation: mininaval-rayos 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes mininaval-rayos {
+            from { transform: translateX(-40px); opacity: .55; }
+            to   { transform: translateX(40px);  opacity: 1; }
+        }
+
+        #splash-mar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 24%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #splash-mar i {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -10px;
+            height: 100%;
+            background-repeat: repeat-x;
+            background-position: 0 bottom;
+            image-rendering: pixelated;
+        }
+
+        #splash-mar .lejos {
+            background-size: 32.0vh 11vh;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc2NCcgaGVpZ2h0PScyMicgdmlld0JveD0nMCAwIDY0IDIyJz48cGF0aCBkPSdNMCA4IEg0IFY4IEg4IFY0IEgxMiBWNCBIMTYgVjQgSDIwIFY0IEgyNCBWNCBIMjggVjggSDMyIFY4IEgzNiBWOCBINDAgVjEyIEg0NCBWMTIgSDQ4IFYxMiBINTIgVjEyIEg1NiBWMTIgSDYwIFY4IEg2NCBWMjIgSDAgWicgZmlsbD0nIzhmZTNmNycgZmlsbC1vcGFjaXR5PScuMzAnLz48L3N2Zz4=);
+            animation: mininaval-corriente-lejos 23s linear infinite,
+                       mininaval-vaiven 7s ease-in-out infinite;
+        }
+
+        #splash-mar .medio {
+            background-size: 36.0vh 15vh;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc5NicgaGVpZ2h0PSc0MCcgdmlld0JveD0nMCAwIDk2IDQwJz48cGF0aCBkPSdNMCAxNSBINiBWOSBIMTIgVjkgSDE4IFY5IEgyNCBWMyBIMzAgVjkgSDM2IFY5IEg0MiBWOSBINDggVjE1IEg1NCBWMjEgSDYwIFYyMSBINjYgVjIxIEg3MiBWMjcgSDc4IFYyMSBIODQgVjIxIEg5MCBWMjEgSDk2IFY0MCBIMCBaJyBmaWxsPScjM2ZhOGM5JyBmaWxsLW9wYWNpdHk9Jy40NScvPjwvc3ZnPg==);
+            animation: mininaval-corriente-medio 15s linear infinite,
+                       mininaval-vaiven 5.5s ease-in-out infinite reverse;
+        }
+
+        #splash-mar .cerca {
+            background-size: 40.0vh 20vh;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMjgnIGhlaWdodD0nNjQnIHZpZXdCb3g9JzAgMCAxMjggNjQnPjxwYXRoIGQ9J00wIDIzIEg4IFYxNSBIMTYgVjE1IEgyNCBWNyBIMzIgVjcgSDQwIFY3IEg0OCBWMTUgSDU2IFYxNSBINjQgVjIzIEg3MiBWMzEgSDgwIFYzMSBIODggVjM5IEg5NiBWMzkgSDEwNCBWMzkgSDExMiBWMzEgSDEyMCBWMzEgSDEyOCBWNjQgSDAgWicgZmlsbD0nIzA0MjgzYycgZmlsbC1vcGFjaXR5PScuODUnLz48L3N2Zz4=);
+            animation: mininaval-corriente-cerca 9s linear infinite,
+                       mininaval-vaiven 4s ease-in-out infinite;
+        }
+
+        @keyframes mininaval-corriente-lejos {
+            from { background-position-x: 0; }
+            to   { background-position-x: -64.0vh; }
+        }
+
+        @keyframes mininaval-corriente-medio {
+            from { background-position-x: 0; }
+            to   { background-position-x: 72.0vh; }
+        }
+
+        @keyframes mininaval-corriente-cerca {
+            from { background-position-x: 0; }
+            to   { background-position-x: -80.0vh; }
+        }
+
+        @keyframes mininaval-vaiven {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-5px); }
+        }
+
+        /* oleaje: bandas horizontales que suben despacio */
+        #splash::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 55%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(255, 255, 255, .045) 0 3px,
+                transparent 3px 22px
+            );
+            animation: mininaval-marea 5s linear infinite;
+        }
+
+        @keyframes mininaval-marea {
+            from { transform: translateY(0); }
+            to   { transform: translateY(-22px); }
+        }
+
+        #splash-barco {
+            width: 132px;
+            image-rendering: pixelated;
+            animation: mininaval-flotar 2.6s ease-in-out infinite;
+        }
+
+        @keyframes mininaval-flotar {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50%      { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        #splash-titulo {
+            position: relative;
+            font-size: 30px;
+            line-height: 1.7;
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0 #04101c;
+        }
+
+        #splash-barra {
+            position: relative;
+            width: 260px;
+            height: 14px;
+            overflow: hidden;
+            background: #04101c;
+            border: 3px solid #e8f4ff;
+            box-shadow: 4px 4px 0 rgba(4, 16, 28, .55);
+        }
+
+        #splash-barra i {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 38%;
+            background: #62c8ff;
+            animation: mininaval-cargando 1.5s ease-in-out infinite;
+        }
+
+        @keyframes mininaval-cargando {
+            from { left: -38%; }
+            to   { left: 100%; }
+        }
+
+        /* la runtime de pygbag escribe el estado dentro de #infobox:
+           hay que anular su posicionamiento absoluto, pero NO el
+           display, porque lo usa para ocultarlo al terminar. */
+        #infobox {
+            position: static !important;
+            left: auto !important;
+            top: auto !important;
+            background: none;
+            color: #8fc4e8;
+            font-family: 'Mininaval', 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            padding: 0;
+        }
+
+        #splash-pie {
+            position: absolute;
+            bottom: 22px;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: #9fd8ea;
+            text-shadow: 2px 2px 0 rgba(2, 18, 28, .9);
+        }
+        div.emscripten { text-align: center; }
+        div.emscripten_border { border: 1px solid black; }
+        div.thick_border { border: 4px solid black; }
+
+        /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+        /* average size of droid screen 470dp x 320dp  */
+        canvas.emscripten {
+            border: 0px none;
+            background-color: transparent;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+
+            padding: 0;
+            margin: 0 auto;
+
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        body {
+            font-family: arial;
+            margin: 0;
+            padding: none;
+            background-color: #021620;
+        }
+
+        .topright{
+           position:absolute;
+           top:0px;
+           right:0px;
+        }
+
+        .bottomright {
+            position:absolute;
+            top: 40%;
+            right: 0px;
+        }
+
+        .center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trinfo{
+           position: relative;
+           right: 0px;
+           border: 1px solid black;
+        }
+
+        .framed{
+           position: relative;
+           top: 150px;
+           right: 10px;
+           border: 1px solid black;
+        }
+    </style>
+
+    <script>
+/*
+        if (navigator.serviceWorker)
+            navigator.serviceWorker.register("{{cookiecutter.cdn}}pygbag{{cookiecutter.version}}.js")
+        else
+            console.warn("Service workers not supported")
+*/
+    </script>
+
+    <script src="{{cookiecutter.cdn}}/browserfs.min.js"></script>
+
+</head>
+
+<body>
+
+    <div id="transfer" align=center>
+<!--        <div class="spinner" id='spinner'></div> -->
+        <div class="emscripten" id="status">Downloading...</div>
+        <div class="emscripten">
+            <progress value="0" max="100" id="progress"></progress>
+        </div>
+    </div>
+
+
+
+    <canvas class="emscripten" id="canvas"
+width="1px"
+height="1px"
+    oncontextmenu="event.preventDefault()" tabindex=1>
+    </canvas>
+
+    <canvas class="emscripten" id="canvas3d"
+width="{{cookiecutter.width}}px"
+height="{{cookiecutter.height}}px"
+    oncontextmenu="event.preventDefault()" tabindex=1 hidden>
+    </canvas>
+
+    <div id="splash">
+        <div id="splash-mar" aria-hidden="true">
+            <i class="lejos"></i>
+            <i class="medio"></i>
+            <i class="cerca"></i>
+        </div>
+        <img id="splash-barco" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGASURBVFhH7ZVLSgQxEIZ7BhVUfIB4Ajez8gbC6GncCN5AvIHgxtuM4A1czcYjuFBhRNBpq5KqmFdXp7rV2fQHRWWapOpPpTKpBgY6sk4eqcH27PDv2SbPYHK2f+UdzCS+mgQi1EJG5DWYJJA44XpOA0VcrYDG5IxWhEZAkPx413qfx1frNSLG5CUOyIs79ymdh5QIeCbvyO0eyXxvjR+UqJ5Xm6OJ6fAc9YmrRTsPVjbGRxGNNyRQKCTvwxIsmxzJNglUwi0AUTwH77wr882T9T6XR9ZjM1IjmrUN8QyJAH/y6fmURiEXi3sapdxu5dfM7n7W+CISAUhJBSSiCowh3pf5BcQVyHYpTmKjT31YSvFKEuyAvYF1vQUi0j3dB8MAn+ZXN9bA4hc0oEnABtgLGPaCu5pnh9a422PwO88hUPyHHebRnLFpQkRqxOg96HUECd4j82uoBDC8y5jMa9iKRkBQTkwWW0TR8aor0LY77TFpmpBx/5ICXeIODKyCqvoGGnVr8ws6AgMAAAAASUVORK5CYII=">
+        <div id="splash-titulo">MegaBatalla<br>MiniNaval</div>
+        <div id="splash-barra"><i></i></div>
+        <div id="infobox">Cargando...</div>
+        <div id="splash-pie">Arcos Juan &amp; Carazo Medley Matias</div>
+    </div>
+
+    <div id=html></div>
+
+    <div id=crt  class=bottomright >
+
+        <div id="system" hidden>
+            <div class="button-container">
+                <button id="aiostop" disabled>AIO ⏏︎</button>
+                <button id="aiopaused_true" disabled>AIO ■</button>
+                <button id="aiopaused_false" disabled>AIO ▶</button>
+                <button id="pygame_mixer_music_pause" disabled>Music ■</button>
+            </div>
+
+            <div class="button-container">
+                <div id=load_min>min</div>
+                <div id=load_avg>avg</div>
+                <div id=load_max>max</div>
+              <button id="load_rst" disabled>RESET</button>
+            </div>
+
+            <div id="level">(battery level unknown)</div>
+            <div id="stateBattery">(charging state unknown)</div>
+
+        </div>
+
+        <div id=box class="emscripten_border" hidden=true>
+
+            <div id="info" class="trinfo"></div>
+
+            <iframe id="iframe" class="framed" name="iframe"
+width="470px" height="90%"
+allowtransparency="true"
+style="z-index: 10;"
+style="background: #FFFFFF;"
+frameborder="1"
+                allowfullscreen="true"
+                webkitallowfullscreen="true"
+                msallowfullscreen="true"
+                mozallowfullscreen="true"
+                sandbox="allow-same-origin allow-top-navigation allow-scripts allow-pointer-lock"
+                allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated"
+                src="{{cookiecutter.cdn}}empty.html"
+                scrolling="yes">
+            </iframe>
+        </div>
+
+    </div>
+
+
+    <div id="dlg" hidden>
+        <input type="file" id="dlg_multifile" multiple accept="image/*">
+        <label for="dlg_multifile">Select files</label>
+    </div>
+
+    <div id="pyconsole">
+        <div id="terminal" tabIndex=1 align="left"></div>
+    </div>
+
+    <script type="application/javascript">
+
+    globalThis.__canvas_resized = (self, ecw, ech) => {
+        console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
+    }
+
+    async function custom_onload(debug_hidden) {
+        // this is called before anything python is loaded
+        // make your js customization here
+        console.log(__FILE__, "custom_onload")
+
+        pyconsole.hidden = debug_hidden
+        system.hidden = debug_hidden
+        transfer.hidden = debug_hidden
+        info.hidden = debug_hidden
+        box.hidden =  debug_hidden
+
+        show_infobox()
+    }
+
+    function custom_prerun(){
+        // no python main and no (MEMFS + VFS) yet.
+        console.log(__FILE__, "custom_prerun")
+
+    }
+
+    function custom_postrun(){
+        // python main and no VFS filesystem yet.
+        console.log(__FILE__, "custom_postrun")
+
+    }
+
+    function debug() {
+        // allow to gain access to dev tools from js console
+        // but only on desktop. difficult to reach when in iframe
+        python.config.debug = true
+        custom_onload(false)
+        Module.PyRun_SimpleString("shell.uptime()")
+        window_resize()
+    }
+
+    function info_inline(data){
+        document.getElementById("info").innerHTML = data
+    }
+
+    function info_online(url) {
+        // display info about current APK
+        fetch( url /*, options */)
+            .then((response) => response.text())
+            .then((html) => {
+                info_inline(html);
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
+    }
+
+    function frame_online(url) {
+        window.frames["iframe"].location = url;
+    }
+
+    </script>
+
+    <script type="application/javascript">
+    // Controla el splash de carga. La runtime de pygbag se comunica
+    // escribiendo texto en #infobox y, cuando el juego ya arranco, lo
+    // esconde con display:none. Eso es lo que se observa aca.
+    (function () {
+        const splash = document.getElementById("splash");
+        const infobox = document.getElementById("infobox");
+        if (!splash || !infobox) return;
+
+        const TRADUCCIONES = [
+            [/^Ready to start.*/i, "Hace click para empezar"],
+            [/^installing (.*)/i, "instalando $1"],
+            [/^Loading.*/i, "Cargando..."],
+            [/^Downloading.*/i, "Descargando..."],
+        ];
+
+        let escribiendo = false;
+
+        function traducir() {
+            if (escribiendo) return;
+            const texto = infobox.innerText.trim();
+            for (const [patron, es] of TRADUCCIONES) {
+                if (!patron.test(texto)) continue;
+                const nuevo = texto.replace(patron, es);
+                if (nuevo !== texto) {
+                    escribiendo = true;
+                    infobox.innerText = nuevo;
+                    escribiendo = false;
+                }
+                return;
+            }
+        }
+
+        function cerrar() {
+            if (splash.classList.contains("oculto")) return;
+            splash.classList.add("oculto");
+            setTimeout(function () { splash.remove(); }, 500);
+        }
+
+        new MutationObserver(function () {
+            if (infobox.style.display === "none") cerrar();
+            else traducir();
+        }).observe(infobox, {
+            attributes: true,
+            attributeFilter: ["style"],
+            childList: true,
+            characterData: true,
+            subtree: true,
+        });
+
+        // El click que habilita el audio se escucha en window, asi que
+        // burbujea igual desde el splash; de paso le devolvemos el foco
+        // al canvas para que el teclado siga funcionando.
+        splash.addEventListener("click", function () {
+            const canvas = document.getElementById("canvas");
+            if (canvas) try { canvas.focus(); } catch (e) {}
+        });
+
+        traducir();
+    })();
+    </script>
+
+</body>
+</html>

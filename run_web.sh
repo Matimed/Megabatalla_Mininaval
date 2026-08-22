@@ -31,8 +31,9 @@ fi
 
 exec "$VENV/bin/python" -m pygbag \
     --width 960 --height 540 \
-    --app_name MegabatallaMininaval \
-    --title "Megabatalla Mininaval" \
+    --app_name MegaBatallaMiniNaval \
+    --title "MegaBatalla MiniNaval" \
     --icon resources/graphics/icono.png \
+    --template web/template.tmpl \
     --port 8000 \
     "$@" main.py

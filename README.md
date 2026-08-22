@@ -70,8 +70,17 @@ tiene que servirse por HTTP.
 - El punto de entrada web es `main.py` (nombre obligatorio para pygbag) y
   usa un bucle asincrónico: en el navegador el bucle principal tiene que
   cederle el control a la pestaña en cada frame con `await`.
-  `MegabatallaMininaval.py` sigue siendo el entrada de escritorio.
+  `MegabatallaMininaval.py` sigue siendo la entrada de escritorio.
 - Todo el audio está en formato OGG Vorbis: pygbag rechaza MP3 y WAV.
+- El botón **Salir** vuelve al menú principal en vez de cerrar el juego,
+  porque en el navegador cerrarlo solo deja el canvas congelado. En
+  escritorio sigue cerrando; la diferencia se decide en
+  `src/controller/controlador_eventos.py` mirando `sys.platform`.
+- La pantalla de carga sale de `web/template.tmpl`, una copia del template
+  por defecto de pygbag con el splash del juego. La fuente y el sprite del
+  barco van embebidos en base64, así que no hace falta servir nada aparte.
+- `pygbag.ini` lista lo que no debe entrar en el `.apk` (la carpeta `web/`
+  y los scripts de arranque).
 
 
 ## Requisitos

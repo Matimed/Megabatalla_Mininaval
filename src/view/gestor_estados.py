@@ -40,9 +40,19 @@ class GestorEstados:
             if ev.type == evento_gb.ESTADO:
 
                 if ev.tipo == evento_estado.VOLVER_MENU:
+                    # El juego arrastra los tableros y los disparos de la
+                    # partida anterior, hay que descartarlos.
+                    self.juego.reiniciar()
+
+                    # Si ya estamos en el menu la musica sigue sonando:
+                    # recargarla la cortaria de golpe.
+                    if not isinstance(self.estado_actual, self.estados['menu']):
+                        music.load(MUSICA_MENU)
+                        music.play(loops = -1)
+
                     self._set_estado_actual(self.estados['menu'])
                     # Lo remueve porque los estados no necesitan ese evento.
-                    eventos.remove(ev) 
+                    eventos.remove(ev)
 
                 if ev.tipo == evento_estado.FINALIZAR_ESTADO:
                     if ev.estado == self.estados['menu']:

@@ -4,6 +4,11 @@ from src.events import EventoGlobal as evento_gb
 from src.events import EventoEstado as evento_et
 
 
+# En el navegador no hay a donde salir: cerrar el juego solo deja el
+# canvas congelado. Ahi "Salir" vuelve al menu principal.
+EN_WEB = sys.platform == 'emscripten'
+
+
 class ControladorEventos:
     def __init__(self, juego, gestor_estados):
         self.juego = juego
@@ -16,9 +21,17 @@ class ControladorEventos:
 
         for ev in pygame.event.get():
             if ev.type == evento_gb.SALIR:
+                if EN_WEB:
+                    volver_menu = pygame.event.Event(
+                        evento_gb.ESTADO.valor,
+                        tipo=evento_et.VOLVER_MENU
+                    )
+                    pygame.event.post(volver_menu)
+                    continue
+
                 pygame.quit()
                 sys.exit()
-            
+
             if ev.type == evento_gb.CONFIGURADO:
                 eventos_modelo.append(ev)
 
